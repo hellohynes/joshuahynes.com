@@ -13,16 +13,71 @@
     </head>
     <body>
 
-        <header class="editor-header">
-            <div class="-logo"></div>
-            <div class="-actions">
-                <span class="status">Last saved 30 seconds ago</span>
-                <a href="#" class="btn-clear">Close</a>
-                <a href="#" class="btn-confirm">Save</a>
-            </div>
-        </header>
+        <div class="editor-header">
+            <header>
+                <div class="-logo"><img src="img/logo-soCareers-gray.svg" alt="Stack Overflow Careers"/></div>
+                <div class="-actions">
+                    <span class="status">Last saved 30 seconds ago</span>
+                    <a href="#" class="btn-clear">Close</a>
+                    <a href="#" class="btn-confirm">Save</a>
+                </div>
+            </header>
+        </div>
         <main class="editor">
-            <div class="-form">Test</div>
+            <div class="-content">
+                <form>
+                    <div class="item">
+                        <header class="item-header">
+                            <div class="-status"></div>
+                            <div class="-title">Company Information</div>
+                            <div class="toggle"><i class="material-icons">keyboard_arrow_up</i></div>
+                        </header>
+                        <section class="-form">
+                            <div class="input-group">
+                                <label for="CompanyName">Company Name</label>
+                                <input type="text" id="CompanyName" placeholder="e.g. Stack Overflow, Trello, Fog Creek Software, Inc." />
+
+                                <div class="url-automatic">
+                                    <p>This will be your Company Page web address:</p>
+                                    <div class="url">
+                                        stackoverflow.com/jobs/companies/<span class="js-url-add"></span>
+                                        <a href="#" class="-edit">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label for="CompanyTagline">Tagline</label>
+                                <p class="-help">Include your organization's motto or what makes you unique <strong>within 100 characters.</strong></p>
+                                <textarea id="CompanyTagline" placeholder=""></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label for="CompanyIndustries">Company Industries</label>
+                                <input type="text" id="CompanyIndustries" placeholder="" />
+                            </div>
+                            <div class="input-group">
+                                <label for="CompanySize">Employee Size</label>
+                                <select id="CompanySize">
+                                    <option selected="selected">Please select</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="CompanyType">Type</label>
+                                <select id="CompanyType">
+                                    <option selected="selected">Please select</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="CompanyURL">Website URL</label>
+                                <div class="input-group_inline -prepend">
+                                    <div class="-fill">http://</div>
+                                    <input type="text" id="CompanyURL" placeholder="stackoverflow.com" />
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                </form>
+            </div>
             <div class="-preview">Test</div>
         </main>
 

@@ -4,7 +4,74 @@
 //  $ TYPE
 //  ----------------------------------------------------------------------------
 @code-font-family:                  Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,sans-serif;
+@fontSize-base:						16;
 
+// ===========================================================================
+//  $ MEDIA QUERY SIZES
+// ---------------------------------------------------------------------------
+@mediaQuery-small:      768px;
+@mediaQuery-medium:     992px;
+@mediaQuery-large:      1200px;
+
+
+//  ===========================================================================
+//  $ PADDING, MARGINS, WHITESPACE
+//  ---------------------------------------------------------------------------
+@padding-half:              ceil(@padding-base / 2);
+@padding-base:              @fontSize-base * 1px;
+@padding-double:            @padding-base * 2;
+
+@margin-half:               ceil(@margin-base / 2);
+@margin-base:               @fontSize-base * 1px;
+@margin-double:             @margin-base * 2;
+
+
+//  ===========================================================================
+//  $ Z-INDEX
+//  Used for a bird's eye view of components dependent on the z-axis.
+//  Try to avoid customizing these :)
+//  ---------------------------------------------------------------------------
+@zindex-content:             998;
+@zindex-fixed-bar-initial:   999;
+@zindex-dropdown:           1000;
+@zindex-navbar:             1000;
+@zindex-fixed-bar:          1005;
+@zindex-popover:            1010;
+@zindex-tooltip:            1020;
+@zindex-modal-backdrop:     1040;
+@zindex-modal:              1050;
+@zindexTopBar-container:	2000;
+@zindexTopBar-dropdown:		@zindexTopBar-container - 1;
+
+
+//  ============================================================================
+//  $ COLOR VARIABLES
+//  ============================================================================
+//  -- Global Background Variables
+@backgroundColor-grayLighter:   @black-050;
+@backgroundColor-grayLight:     @black-100;
+
+//  -- Global Border Variables
+@borderColor-grayLighter:       @black-050;
+@borderColor-grayLight:       	@black-075;
+@borderColor-gray:              @black-100;
+@borderColor-grayDark:          @black-350;
+
+//  -- Global Arrow Variables
+@arrowColor-gray:               @black-200;
+
+//  -- Colors
+@copy-color:                    @black-700;
+@copy_lead-color:               @black-350;
+@copy_muted-color:              @black-400;
+@copy_warning-color:            @red-300;
+
+@link-color:                    @blue-600;
+@link_hover-color:              @blue-700;
+@link_visited-color:            #0C65A5;
+@link_visited_hover-color:      darken(@link_visited-color,5%);
+@linkBody_visited-color:        spin(desaturate(@blue-500,10%),20);
+@linkBody_visited_hover-color:  darken(@linkBody_visited-color,15%);
 
 //  ============================================================================
 //  $ COLORS
