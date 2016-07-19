@@ -17,38 +17,60 @@
     <body>
         <div class="editor-header">
             <header>
-                <div class="-logo"><img src="img/logo-soCareers-gray.svg" alt="Stack Overflow Careers"/></div>
+                <div class="-logo">
+                    <img src="img/logo-soCareers-gray.svg" alt="Stack Overflow Careers"/>
+                </div>
                 <div class="-actions">
-                    <span class="status">Last saved 30 seconds ago</span>
-                    <a href="#" class="btn-clear">Close</a>
-                    <a href="#" class="btn-confirm">Publish</a>
+                    <a href="#" class="btn-clear">Save & Exit</a>
                 </div>
             </header>
         </div>
+        <div class="editor-progress">
+            <div class="-fill _step2"></div>
+        </div>
         <main class="editor">
-            <div class="cp-navigation">
-                <div class="nav-content">
-                    <h2 class="-title">Build your Company Page</h2>
-                    <div class="-item _selected"><a href="#" class="-link js-step-01">Basic Information</a></div>
-                    <div class="-item"><a href="#" class="-link js-step-02">Locations</a></div>
-                    <div class="-item"><a href="#" class="-link js-step-03">Statements</a></div>
-                    <div class="-item"><a href="#" class="-link js-step-04">Benefits</a></div>
-                    <div class="-item"><a href="#" class="-link js-step-05">Tech Stack</a></div>
-                    <div class="-item"><a href="#" class="-link js-step-06">Logo & Cover Photo</a></div>
-                    <div class="-item"><a href="#" class="-link js-step-07">Photo Gallery</a></div>
-                    <div class="-item"><a href="#" class="-link js-step-08">Team Members</a></div>
-                </div>
-            </div>
             <div class="cp-wizard">
-                <section class="-questions">
-                    <form>
-                        Form Questions
-                    </form>
-                </section>
-                <footer class="button-group">
-                    <a href="#" class="-back btn-clear"><i class="m-icon">keyboard_backspace</i> Back</a>
-                    <a href="#" class="-next btn">Next</a>
-                </footer>
+                <div class="-content">
+                    <div data-step="1" class="wizard-step js-focus">
+                        <h1 class="">What's your company name?</h1>
+                        <div class="input-group">Input group for company name</div>
+                        <div class="input-group">Then we'll show the URL generator here as well.</div>
+                    </div>
+                    <div data-step="2" class="wizard-step">
+                        <h1 class="">Organization Basics</h1>
+                        <div class="input-group">Employee Size</div>
+                        <div class="input-group">Company Type</div>
+                        <div class="input-group">Year Founded</div>
+                        <div class="input-group">Industries</div>
+                        <div class="input-group">Tagline</div>
+                        <div class="input-group">Social & Website URLS</div>
+                    </div>
+                    <div data-step="3" class="wizard-step">
+                        <h1 class="">Tell us about [Company Name]</h1>
+                        <div class="input-group">Statement 1</div>
+                        <div class="input-group">Statement 2</div>
+                    </div>
+                    <div data-step="4" class="wizard-step">
+                        <h1 class="">What are your benefits &amp; perks?</h1>
+                        <div class="input-group">Wouldn't a structured checkbox area be nice here? Otherwise our current benefits selector.</div>
+                    </div>
+                    <div data-step="5" class="wizard-step">
+                        <h1 class="">Have a logo?</h1>
+                        <div class="input-group">Select logo group, but also maybe pre-load a logo image that matches the company name from Crunchbase?</div>
+                        <div class="input-group">Cover Photo selection</div>
+                    </div>
+                    <div data-step="6" class="wizard-step">
+                        <h1 class="">What's your Tech Stack?</h1>
+                        <div class="input-group">So right now this is a free-form area, but maybe we should split this up for easier transition with Teams in the future. One field for selecting tags and then a free-form text field for any copy they also want to add.</div>
+                    </div>
+                </div>
+                <div class="-actions">
+                    <div class="buttons">
+                        <a class="-back btn-clear js-wizard-prev"><i class="m-icon">arrow_back</i> Back</a>
+                        <a class="-next btn js-wizard-next">Next <i class="m-icon">arrow_forward</i></a>
+                    </div>
+                </div>
+                <div class="-tips"><p>Tips Area</p></div>
             </div>
         </main>
 

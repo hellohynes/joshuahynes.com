@@ -1,5 +1,32 @@
+/* WIZARD */
+$(".js-wizard-next").click(function() {
+	var step = $(".js-focus").attr("data-step");
+
+	if(step != "6") {
+		$(".wizard-step[data-step=" + step + "]").removeClass("js-focus").addClass("js-hide").addClass("js-left");
+		$(".wizard-step[data-step=" + ++step + "]").removeClass("js-hide").removeClass("js-right").addClass("js-focus");
+	} else {
+		alert("No more things to fill in!");
+	}
+});
+
+$(".js-wizard-prev").click(function() {
+	var step = $(".js-focus").attr("data-step");
+
+	if(step != "1") {
+		$(".wizard-step[data-step=" + step + "]").removeClass("js-focus").addClass("js-hide").addClass("js-right");
+		$(".wizard-step[data-step=" + --step + "]").removeClass("js-hide").removeClass("js-left").addClass("js-focus");
+	} else {
+		alert("You just started man!");
+	}
+});
+
+
+
+
 
 /* Scroll navigation */
+/* This is old stuff */
 $(".js-nav-content").on("click", function() {
 	$(".nav-main").addClass("js-offpage");
 	$(".nav-company").addClass("js-focus").removeClass("js-offpage");
