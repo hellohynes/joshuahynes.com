@@ -17,62 +17,36 @@
     <body>
         <div class="editor-header">
             <header>
-                <div class="-logo"><img src="img/logo-soCareers-gray.svg" alt="Stack Overflow Careers"/></div>
+                <div class="-logo">
+                    <img src="img/logo-soCareers-gray.svg" alt="Stack Overflow Careers"/>
+
+                </div>
                 <div class="-actions">
-                    <span class="status">Last saved 30 seconds ago</span>
-                    <a href="#" class="btn-clear">Close</a>
-                    <a href="#" class="btn-confirm">Publish</a>
+                    <a href="#" class="btn-clear">Save & Exit</a>
                 </div>
             </header>
         </div>
+        <div class="editor-progress">
+            <div class="-fill _step1"></div>
+        </div>
         <main class="editor">
-            <div class="cp-navigation">
-                <div class="-panel">
-                    <div class="nav-main">
-                        <div class="-item"><a href="#" class="-link js-nav-content">Content</a></div>
-                        <div class="-item"><a href="#" class="-link js-nav-design">Design</a></div>
-                        <div class="-item"><a href="#" class="-link js-nav-analytics">Analytics</a></div>
-                        <div class="-item"><a href="#" class="-link js-nav-settings">Settings</a></div>
-                    </div>
-                    <div class="nav-company js-offpage">
-                        <div class="-item"><a href="#" class="-home"><i class="m-icon">keyboard_backspace</i> Home</a></div>
-                        <h2 class="-title">Content</h2>
-                        <div class="-item"><a href="#" class="-link">Basic Information</a></div>
-                        <div class="-item"><a href="#" class="-link">Statements</a></div>
-                        <div class="-item"><a href="#" class="-link">Benefits</a></div>
-                        <div class="-item"><a href="#" class="-link">Team Members</a></div>
-                        <div class="-item"><a href="#" class="-link">Photo Gallery</a></div>
-                        <div class="-item"><a href="#" class="-link">Tech Stack</a></div>
-                        <div class="-item"><a href="#" class="-link">Locations</a></div>
-                    </div>
-                    <div class="nav-design js-offpage">
-                        <div class="-item"><a href="#" class="-home"><i class="m-icon">keyboard_backspace</i> Home</a></div>
-                        <h2 class="-title">Design</h2>
-                        <div class="-item"><a href="#" class="-link">Logo</a></div>
-                        <div class="-item"><a href="#" class="-link">Cover Photo</a></div>
-                    </div>
-                    <div class="nav-analytics js-offpage">
-                        <div class="-item"><a href="#" class="-home"><i class="m-icon">keyboard_backspace</i> Home</a></div>
-                        <h2 class="-title">Analytics</h2>
-                        <div class="-item"><a href="#" class="-link">Traffic</a></div>
-                        <div class="-item"><a href="#" class="-link">Ad Campaigns</a></div>
-                        <div class="-item"><a href="#" class="-link">Applications</a></div>
-                        <div class="-item"><a href="#" class="-link">Referrers</a></div>
-                    </div>
-                    <div class="nav-settings js-offpage">
-                        <div class="-item"><a href="#" class="-home"><i class="m-icon">keyboard_backspace</i> Home</a></div>
-                        <h2 class="-title">Settings</h2>
-                        <div class="-item"><a href="#" class="-link">Change Owner</a></div>
-                        <div class="-item _mod"><a href="#" class="-link">Mod Actions</a></div>
+            <div class="cp-wizard">
+                <div class="-content">
+                    <div class="-form">
+                        <form>
+                            <h1 class="">What's your company name?</h1>
+                            <div class="input-group">Input group for company name</div>
+                            <div class="input-group">Then we'll show the URL generator here as well.</div>
+                        </form>
                     </div>
                 </div>
-            </div>
-            <div class="cp-preview">
-                <div class="cp-body">
-                    <div class="cp-preview-page">
-                        <p>Test</p>
+                <div class="-actions">
+                    <div class="buttons">
+                        <a href="/" class="-back btn-clear"><i class="m-icon">arrow_back</i> Back</a>
+                        <a href="wizard/step02.html" class="-next btn">Next <i class="m-icon">arrow_forward</i></a>
                     </div>
                 </div>
+                <div class="-tips"><p>Tips Area</p></div>
             </div>
         </main>
 
