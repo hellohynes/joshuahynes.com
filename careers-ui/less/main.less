@@ -48,6 +48,14 @@ body {
         border-color: transparent;
     }
 }
+.btn-confirm._pulse {
+    animation: pulse 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px 0 @green-500; }
+    70% { box-shadow: 0 0 10px 6px fade(@green-500,0%); }
+    100% { box-shadow: 0 0 10px 0 fade(@green-500,0%); }
+}
 
 
 //  MATERIAL ICONS
@@ -75,6 +83,10 @@ body {
 //  $   TYPE
 //  ----------------------------------------------------------------------------
 p { margin: 0 0 0.5em; }
+
+h1, h2, h3 {
+    &.-title { margin: 0 0 0.25em; }
+}
 
 .status {
     font-size: 12px;
@@ -116,14 +128,6 @@ p { margin: 0 0 0.5em; }
     }
 
     [class*="btn"] { font-size: 15px; }
-
-    // .btn-clear {
-    //     color: @black-400;
-    //     &:hover {
-    //         background-color: transparent;
-    //         color: @black-500;
-    //     }
-    // }
 }
 .editor-progress {
     width: 100%;
@@ -156,43 +160,26 @@ p { margin: 0 0 0.5em; }
     bottom: 0;
     height: 100%;
     padding-top: 110px;
+}
 
-    .cp-navigation,
-    .cp-preview {
-        position: absolute;
-        top: 0;
-        .flex(1 auto);
-        flex: initial;
-        height: calc(~"100% - 102px");
-        max-height: calc(~"100% - 102px");
-    }
-    .cp-navigation {
-        .flexbox();
-        .flex-flow(row nowrap);
-        .flex-justify(flex-start);
-        left: 0;
-        z-index: @zindex-content - 1;
+//  --  Dashboard area after you complete the wizard
+.cp-dashboard {
+    .flexbox();
+    .flex(0 1 auto);
+    .flex-flow(row nowrap);
+    width: 100%;
+    height: 100%;
 
-        > .-panel {
-            width: 36em;
-            transform: translateX(0);
-            
-            > div {
-                position: absolute;
-                display: inline-block;
-                width: 18em;
-                height: 100%;
-            }
-        }       
+    .cp-content,
+    .cp-preview { padding: 2em; }
+
+    .cp-content {
+        flex-basis: 45%;
+        max-width: 45%;
     }
     .cp-preview {
-        left: 18em;
-        right: 0;
-        flex-basis: calc(~"100% - 18em");
-        max-width: calc(~"100% - 18em");
-        z-index: @zindex-content;
-        padding-right: 2em;
-        padding-bottom: 2em;
+        flex-basis: 55%;
+        max-width: 55%;
     }
 }
 
