@@ -1,10 +1,11 @@
 /* WIZARD */
 $(".js-wizard-next").click(function() {
-	var step = $(".js-focus").attr("data-step");
+	var step = $(".js-focus").data("step");
 
 	if(step != "6") {
 		$(".wizard-step[data-step=" + step + "]").removeClass("js-focus").addClass("js-hide").addClass("js-left");
-		$(".wizard-step[data-step=" + ++step + "]").removeClass("js-hide").removeClass("js-right").addClass("js-focus");
+		$(".wizard-step[data-step=" + (step + 1) + "]").removeClass("js-hide").removeClass("js-right").addClass("js-focus");
+		$(".js-progress-fill").attr("data-step", (step + 1));
 	} else {
 		alert("No more things to fill in!");
 	}
@@ -15,7 +16,8 @@ $(".js-wizard-prev").click(function() {
 
 	if(step != "1") {
 		$(".wizard-step[data-step=" + step + "]").removeClass("js-focus").addClass("js-hide").addClass("js-right");
-		$(".wizard-step[data-step=" + --step + "]").removeClass("js-hide").removeClass("js-left").addClass("js-focus");
+		$(".wizard-step[data-step=" + (step - 1) + "]").removeClass("js-hide").removeClass("js-left").addClass("js-focus");
+		$(".js-progress-fill").attr("data-step", step - 1);
 	} else {
 		alert("You just started man!");
 	}

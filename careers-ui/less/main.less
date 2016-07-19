@@ -137,13 +137,13 @@ p { margin: 0 0 0.5em; }
         background-color: @green-400;
         box-shadow: inset 0 1px 0 fade(@green-500,50%);
 
-        &._step1 { width: @fill-width * 1; }
-        &._step2 { width: @fill-width * 2; }
-        &._step3 { width: @fill-width * 3; }
-        &._step4 { width: @fill-width * 4; }
-        &._step5 { width: @fill-width * 5; }
-        &._step6 { width: @fill-width * 6; }
-        &._step7 { width: @fill-width * 7; }
+        &[data-step="1"] { width: @fill-width * 1; }
+        &[data-step="2"] { width: @fill-width * 2; }
+        &[data-step="3"] { width: @fill-width * 3; }
+        &[data-step="4"] { width: @fill-width * 4; }
+        &[data-step="5"] { width: @fill-width * 5; }
+        &[data-step="6"] { width: @fill-width * 6; }
+        &[data-step="7"] { width: @fill-width * 7; }
     }
 }
 
