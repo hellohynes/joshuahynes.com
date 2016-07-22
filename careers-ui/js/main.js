@@ -7,7 +7,7 @@ $(".js-wizard-next").click(function() {
 		$(".wizard-step[data-step=" + (step + 1) + "]").removeClass("js-hide").removeClass("js-right").addClass("js-focus");
 		$(".js-progress-fill").attr("data-step", (step + 1));
 	} else {
-		window.location = "preview.html";
+		window.location = "preview-basics.html";
 	}
 });
 
