@@ -1,0 +1,90 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet/less" type="text/css" href="less/main.less">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,900|Source+Sans+Pro:400,400i,700,700i" rel="stylesheet">
+
+        <script type="text/javascript" src="js/vendor/modernizr-2.8.3.min.js"></script>
+        <script type="text/javascript" src="js/vendor/reactjs/react.js"></script>
+    </head>
+    <body>
+        <div class="editor-header">
+            <header>
+                <div class="-logo">
+                    <img src="img/logo-soCareers-gray.svg" alt="Stack Overflow Careers"/>
+
+                </div>
+                <div class="-actions">
+                    <a href="#" class="btn-clear">Save & Exit</a>
+                </div>
+            </header>
+        </div>
+        <main class="cp-dashboard">
+            <div class="cp-content">
+                <h1 class="-title">Build a Company Page</h1>
+                <ul class="steps">
+                    <li class="-item">
+                        <div class="step-content">
+                            <h2 class="-title">Let's start with the basics</h2>
+                            <p>Logo, tagline, benefits and more</p>
+                            <p><a href="wizard-basics_nav.html">Make an edit</a></p>
+                        </div>
+                        <div class="step-action">
+                            <span class="-checkmark"><span class="m-icon">check</span></span>
+                        </div>
+                    </li>
+                    <li class="-item">
+                        <div class="step-content">
+                            <h2 class="-title">Tell us about your culture</h2>
+                            <p>Team members, image galleries, and more</p>
+                        </div>
+                        <div class="step-action">
+                            <p><a href="wizard-advanced.html" class="btn">Continue</a></p>
+                        </div>
+                    </li>
+                    <li class="-item _disabled">
+                        <div class="step-content">
+                            <h2 class="-title">Share it with the world</h2>
+                            <p>Share it with the world</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="cp-preview">
+                <div class="cp-mode">
+                    <div class="toggle-switch">
+                        <input type="radio" id="preview-mobile"/>
+                        <label for="preview-mobile" class="-option">Mobile</label>
+                        <input type="radio" id="preview-tablet" />
+                        <label for="preview-tablet" class="-option">Tablet</label>
+                        <input type="radio" id="preview-desktop" checked="checked" />
+                        <label for="preview-desktop" class="-option">Desktop</label>
+                    </div>
+                </div>
+
+                <div class="cp-body">
+                    <div class="cp-preview-page">
+                        <p>This would be a preview of the page</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.js"><\/script>')</script>
+
+        <!-- LESS: Start LESS watch -->
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>
+        <script>less.watch();</script>
+
+        <script src="js/main.js"></script>
+    </body>
+</html>
