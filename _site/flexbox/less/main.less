@@ -1,0 +1,66 @@
+//
+//  Herein lies the twisted, gnarled roots of a prototype.
+//  Beware! There be dragons!
+//
+//  ============================================================================
+//  $   IMPORTS
+//  ----------------------------------------------------------------------------
+@import "reset";
+@import "vars";
+@import "mixins";
+@import "grid";
+
+//  ============================================================================
+//  RESETS & BASELINES
+//  ---------------------------------------------------------------------------- 
+*,
+*:after,
+*:before { box-sizing: border-box; }
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-size: 16px;
+    font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
+    line-height: 1.333333333;
+    color: @black-700;
+    background-color: @white;
+
+    -webkit-font-smoothing: antialiased;    // Support for all WebKit browsers.
+}
+
+a { text-decoration: none; }
+
+
+//  ============================================================================
+//  EXAMPLE #1
+//  ----------------------------------------------------------------------------
+@import "example-less";
+
+//  ============================================================================
+//  EXAMPLE #2
+//  ----------------------------------------------------------------------------
+.-bg1 { background-color: @orange; }
+.-bg2 { background-color: spin(@orange,5); }
+.-bg3 { background-color: spin(@orange,10); }
+.-bg4 { background-color: spin(@orange,15); }
+.-bg5 { background-color: spin(@orange,20); }
+.-bg6 { background-color: spin(@orange,25); }
+.-bg7 { background-color: spin(@orange,30); }
+.-bg8 { background-color: spin(@orange,35); }
+.-bg9 { background-color: spin(@orange,40); }
+.-bg10 { background-color: spin(@orange,45); }
+.-bg11 { background-color: spin(@orange,50); }
+.-bg12 { background-color: spin(@orange,55); }
+.-bg13 { background-color: spin(@orange,60); }
+.-bg14 { background-color: spin(@orange,65); }
+.-bg15 { background-color: spin(@orange,70); }
+.-bg16 { background-color: spin(@orange,75); }
+.-bg17 { background-color: spin(@orange,80); }
+.-bg18 { background-color: spin(@orange,85); }
+.-bg19 { background-color: spin(@orange,90); }
+.-bg20 { background-color: spin(@orange,95); }
