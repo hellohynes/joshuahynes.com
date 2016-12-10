@@ -1,0 +1,258 @@
+//
+//  STACK OVERFLOW CAREERS
+//
+//  MIXINS
+//
+//  TABLE OF CONTENTS
+//  • Type
+//  • Box Sizing
+//  • Transitions & Transformations
+//  • Clearfix
+//
+//  ============================================================================
+//  $ TYPE
+//  ----------------------------------------------------------------------------
+//  Unlike colors which are set and rarely changed, type values are altered
+//  regularly based on the need of the component and context. To maintain consistent
+//  sizes, line-heights, and letter-spacing; we have created a number of mixins.
+//  These mixins deliver the correct value based on the shorthand
+//  value passed to it. For example, if you want declare a large font-size using
+//  a light font-weight value, you will use the following:;
+//
+//  Example:  .title-page {
+//                .fontSize(l);
+//                .fontWeight(2);
+//            }
+//
+//  In this example we are declaring the shorthand values of "l" and "2" within
+//  their mixins. When compiled, this will output:
+//
+//  Output:   .title-page {
+//                font-size: 24px;
+//                font-size: 1.714285714rem;
+//            }
+//  ----------------------------------------------------------------------------
+//  -- REM Font Mixin
+//  This is primarily used within the .fontSize mixin, though sometimes it can
+//  be used on its own. In the interest of maintaining consistent font-sizes,
+//  it is highly discouraged to declare a font-size not already pre-defined.
+.fontRem(@fs) {
+    @remValue: @fs / @fontSize-base;
+    font-size: ~"@{fs}px";
+    font-size: ~"@{remValue}rem";
+}
+
+.fontSize (@s) {
+    & when (@s = xxs)   { .fontRem(10); }
+    & when (@s = xs)    { .fontRem(11); }
+    & when (@s = s)     { .fontRem(12); }
+    & when (@s = base)  { .fontRem(@fontSize-base); }
+    & when (@s = m)     { .fontRem(18); }
+    & when (@s = l)     { .fontRem(24); }
+    & when (@s = xl)    { .fontRem(36); }
+    & when (@s = xxl)   { .fontRem(48); }
+    & when (@s = xxxl)  { .fontRem(60); }
+}
+
+//  Line Height Mixin
+//  Do not declare values with your line-heights (i.e. px, em). This allows
+//  for the value to be relative to the declared font-size and have
+//  greater flexibility.
+.lineHeight (@lh) {
+    & when (@lh = base)     { line-height: (@fontSize-base + 6) / @fontSize-base; }
+    & when (@lh = tight)    { line-height: (@fontSize-base + 4) / @fontSize-base; }
+    & when (@lh = tighter)  { line-height: (@fontSize-base + 2) / @fontSize-base; }
+    & when (@lh = tightest) { line-height: @fontSize-base / @fontSize-base; }
+    & when (@lh = loose)    { line-height: (@fontSize-base + 8) / @fontSize-base; }
+    & when (@lh = looser)   { line-height: (@fontSize-base + 10) / @fontSize-base; }
+    & when (@lh = loosest)  { line-height: (@fontSize-base / @fontSize-base) * 2; }
+}
+
+
+//  ===========================================================================
+//  $ USER SELECT
+//  ---------------------------------------------------------------------------
+.userSelect(@userSelect: none) {
+    cursor: default;
+    -webkit-touch-callout: @userSelect;
+      -webkit-user-select: @userSelect;
+       -khtml-user-select: @userSelect;
+         -moz-user-select: @userSelect;
+          -ms-user-select: @userSelect;
+              user-select: @userSelect;
+}
+
+
+//  ===========================================================================
+//  $ CLEARFIX
+// ---------------------------------------------------------------------------
+.clearfix() {
+    &:before,
+    &:after {
+        content: " ";
+        display: table;
+    }
+    &:after { clear: both; }
+}
+
+
+//  ===========================================================================
+//  $ TEXT MIXINS
+//  ---------------------------------------------------------------------------
+//  Requires inline-block or block for proper styling
+.text-overflow() {
+    overflow: hidden;
+    white-space: nowrap;
+
+    -ms-text-overflow: ellipsis;
+     -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+}
+
+// Hyphenate long text
+.hyphens(@mode: auto) {
+  word-wrap: break-word;
+  -webkit-hyphens: @mode;
+     -moz-hyphens: @mode;
+      -ms-hyphens: @mode; // IE10+
+       -o-hyphens: @mode;
+          hyphens: @mode;
+}
+
+
+//  ===========================================================================
+//  $ TRANSITIONS, TRANSFORMATIONS, ANIMATIONS
+//  ---------------------------------------------------------------------------
+.transition-delay(@transition-delay) {
+    -webkit-transition-delay: @transition-delay;
+            transition-delay: @transition-delay;
+}
+.transition-duration(@transition-duration) {
+    -webkit-transition-duration: @transition-duration;
+            transition-duration: @transition-duration;
+}
+
+// Vendor prefixes still required for animation
+.animate(@animation) {
+  -webkit-animation: @animation;
+     -moz-animation: @animation;
+      -ms-animation: @animation;
+          animation: @animation;
+}
+.animate-delay(@delay: -1s) {
+  -webkit-animation-delay: @delay;
+     -moz-animation-delay: @delay;
+      -ms-animation-delay: @delay;
+       -o-animation-delay: @delay;
+          animation-delay: @delay;
+}
+
+// Transforms
+.transform(@transform) {
+    -webkit-transform: @transform;
+            transform: @transform;
+}
+
+.transform-origin(@transform-origin) {
+    -webkit-transform-origin: @transform-origin;
+            transform-origin: @transform-origin;
+}
+
+
+//  ===========================================================================
+//  $ GRADIENTS
+//  ---------------------------------------------------------------------------
+.gradientLinear(@gradientStart, @gradientEnd) {
+    background-image: -webkit-linear-gradient(left, @gradientStart, @gradientEnd);      // Safari 5.1, iOS 5.0-6.1, Chrome 10-25, Android 4.0-4.3
+    background-image:      -o-linear-gradient(left, @gradientStart, @gradientEnd);      // Opera 11.1 - 12
+    background-image:         linear-gradient(to bottom, @gradientStart, @gradientEnd);  // Opera 15+, Chrome 25+, IE 10+, Firefox 16+, Safari 6.1+, iOS 7+, Android 4.4+
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=1)",argb(@gradientStart),argb(@gradientEnd))); // IE9 and down
+}
+
+
+//  ===========================================================================
+//  --  APPEARANCE
+//      Use this to overwrite the default appearance properties
+//  ---------------------------------------------------------------------------
+.appearance(@all) {
+    -webkit-appearance: @all;
+       -moz-appearance: @all;
+            appearance: @all;
+}
+
+//  ===========================================================================
+//  --  BACKFACE VISIBILITY
+//  ---------------------------------------------------------------------------
+.backface-visibility(@all) {
+    -webkit-backface-visibility: @all;
+            backface-visibility: @all;
+}
+
+
+//  ===========================================================================
+//  $   FLEXBOX
+//      Oh boy. Here be dragons! These are mixins for complete flexbox support.
+//      Use these mixins instead of writing out flexbox code in your CSS to
+//      make sure we're as completely backward compatiable as possible.
+//
+//      These mixins support only the current browser versions plus the previous
+//      version. Older browsers (e.g. IE10, IE9) are not supported. If you need
+//      to provide this level of support, consult the following documents:
+//
+//      Flexbugs: A community-curated list of flexbox issues (mainly IE)
+//      https://github.com/philipwalton/flexbugs
+//
+//      A Guide to Flexbox -- CSS-Tricks.com
+//      https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+//      
+//      Flexplorer -- A free Flexbox generator
+//      http://bennettfeely.com/flexplorer/
+//
+//  ===========================================================================
+//  --  FLEXBOX CONTAINER
+//      Use this on the wrapping parent container on items you want to flex.
+//  ---------------------------------------------------------------------------
+.flexbox() {
+  display: -webkit-flex;
+  display: flex;
+}
+
+//  --  FLEX VALUES
+//      If not set, the default is "1 0 auto". This is shorthand for flex-grow,
+//      flex-shrink, and flex-basis combined. The second and third parameters
+//      are optional. Per Chris Coyier on CSS-Tricks.com, it is recommended
+//      that the shorthand is used over individual properties.
+//
+//      Note that in IE10, the default value is "0 0 auto".
+//  ---------------------------------------------------------------------------
+.flex(@values: 1 0 auto) {
+    -webkit-flex: @values;
+            flex: @values;
+}
+
+//  --  FLEX ORDER
+//      By default items are laid out per their source order. The order property
+//      can be used to change the order in which they appear in the container.
+//  ---------------------------------------------------------------------------
+.flex-order(@values) {   
+    -webkit-order: @values;  
+            order: @values;
+}
+
+//  --  JUSTIFY CONTENT
+//      The default value for this is "flex-start". This property allows you 
+//      to change how child items within a parent are positioned.
+//  ---------------------------------------------------------------------------
+.flex-justify(@values) {   
+    -webkit-justify-content: @values;  
+            justify-content: @values;
+}
+
+//  --  FLEX FLOW
+//      This is another shorthand property for flex-direction and flex-wrap.
+//      Default value is "row nowrap".
+//  ---------------------------------------------------------------------------
+.flex-flow(@values: row nowrap) {   
+    -webkit-flex-flow: @values;  
+            flex-flow: @values;
+}
