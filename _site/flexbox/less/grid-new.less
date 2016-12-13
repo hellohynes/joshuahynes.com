@@ -14,36 +14,42 @@
 @grid-cols: 12;
 
 //  ===========================================================================
-//  $   ROWS
+//  $   ROWS & COLUMNS
 //  ---------------------------------------------------------------------------
-.g-row {
+.g-row,
+.g-column {
     position: relative;
     .flexbox();
+
+    //  --  Gutters
+    //      When we want items spaced out
+    &._gutters {
+        margin: -(@su-2);
+
+        > [class^="g-col"] { margin: @su-2; }
+    }
+}
+
+.g-row {
     .flex(1 auto);
     .flex-flow();
 
-    //  Flow adjustments
-    &._start            { .flex-justify(flex-start); }
-    &._end              { .flex-justify(flex-end); }
-    &._reverse          { .flex-flow(row-reverse nowrap); }
-    &._wrap             { .flex-flow(row wrap); }
-    &._flow-col         { .flex-flow(column nowrap); }
+    &._wrap { .flex-flow(row wrap); }
 }
 
-.g-col {
-    position: relative;
-    .flexbox();
+.g-column {
     .flex(1 0 auto);
     .flex-flow(column nowrap);
+
+    &._wrap { .flex-flow(column wrap); }
 }
 
+
 //  ===========================================================================
-//  $   COLUMNS
+//  $   CHILD COLUMNS
 //  ---------------------------------------------------------------------------
 //  --  Generic auto-width column
-.-col {
-    display: inline-flex;
-    position: relative;
+.g-col {
     .flex(1 auto);
     max-width: 100%;
 
@@ -52,16 +58,20 @@
         margin-left: auto;
     }
 }
+[class^="g-col"] {
+    display: inline-flex;
+    position: relative;
+}
 
 //  --  Mixin to generate all of our different sizes.
 .grid-columns(@num, @count: 1) when (@count =< @num) {
-    .-col@{count} {
+    .g-col@{count} {
         .flex(none);
         flex-basis: (@count * 100% / @num);
         max-width: (@count * 100% / @num);
     }
-    .-col-push@{count} { margin-left: (@count * 100% / @num); }
-    .-col-pull@{count} { margin-left: -(@count * 100% / @num); }
+    .g-col-push@{count} { margin-left: (@count * 100% / @num); }
+    .g-col-pull@{count} { margin-left: -(@count * 100% / @num); }
 
     .grid-columns(@num, (@count + 1));
 }
@@ -76,21 +86,19 @@
 //  ---------------------------------------------------------------------------
 //  Horizontally and Vertically Centered Items
 .g-center {
+    display: inline-flex;
     .flex-justify(center);
     align-items: center;
 }
 
 //  Items which apply to rows or columns
 .g-row,
-.g-col {
-    &._just-end             { .flex-justify(flex-end); }
-    &._just-center          { .flex-justify(center); }
-    &._just-space-between   { .flex-justify(space-between); }
-    &._just-space-around    { .flex-justify(space-around); }
-    &._align-center         { align-items: center; }
-    &._align-right          { align-items: right; }
+.g-column,
+[class^="g-col"] {
+    &.jc-end               { .flex-justify(flex-end); }
+    &.jc-center            { .flex-justify(center); }
+    &.jc-sp-between        { .flex-justify(space-between); }
+    &.jc-sp-around         { .flex-justify(space-around); }
+    &.ai-center            { align-items: center; }
+    &.ai-right             { align-items: right; }
 }
-
-//  Items which apply only to rows
-
-//  Items which apply only to cols

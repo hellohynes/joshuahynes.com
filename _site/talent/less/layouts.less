@@ -1,0 +1,94 @@
+//
+//  STACK OVERFLOW
+//  VIEWS: TEMPLATES
+//  
+//  TABLE OF CONTENTS
+//  • APP WORKFLOW
+//
+//  ============================================================================
+//
+//  Problem:		We use mainly one layout in Talent, irregardless if that
+//					layout is the best solution for the problem. Some views
+//					try to fight this by adding overwriting CSS.
+//
+//	Solution:		We are starting to create standardized layouts that allow
+//					more flexibility for app needs.
+//
+//  ============================================================================
+//
+//	LAYOUT: 		Focused Workflow
+//					Used only in instances where we want to singularly focus the
+//					user creating something.
+//
+//  ----------------------------------------------------------------------------
+.l-app-workflow {
+	width: 100%;
+	height: 100vh;
+
+	.l-header,
+	.l-footer {
+		.flex(none);
+		width: 100%;
+		min-height: 2em;
+
+		> .g-row { height: 100%; }
+	}
+
+	.l-content { .flex(1 0 auto); }
+}
+
+//  ============================================================================
+//
+//	LAYOUT: 		Focused Workflow
+//					Used only in instances where we want to singularly focus the
+//					user creating something.
+//
+//  ----------------------------------------------------------------------------
+.l-app {
+	width: 100%;
+	height: 100%;
+
+	.l-header,
+	.l-footer {
+		.flex(none);
+		width: 100%;
+		min-height: 2em;
+
+		> .g-row { height: 100%; }
+	}
+
+	.l-content { .flex(1 0 auto); }
+}
+
+//  ============================================================================
+//
+//	LAYOUT: 		Full Width
+//					Used when you a single main column that's full width
+//
+//  ----------------------------------------------------------------------------
+.l-full-width {
+	&,
+	.l-header,
+	.l-content { width: 100%; }
+
+	.l-header > .g-row,
+	.l-content > div {
+		margin: 0 auto;
+		width: 1000px;
+		height: 100%;
+	}
+}
+
+//  ============================================================================
+//
+//	LAYOUT: 		Centered
+//					Simple layout; few objects centered on screen
+//
+//  ----------------------------------------------------------------------------
+.l-centered {
+	width: 100%;
+	height: 100%;
+
+	.l-header,
+	.l-content { .flex-justify(center); }
+}
