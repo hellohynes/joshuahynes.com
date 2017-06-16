@@ -1,0 +1,281 @@
+//
+//  STACKS
+//
+//  GRID: Flexbox
+//
+//  TABLE OF CONTENTS
+//  • VARIABLES
+//  • ROW
+//  • COLUMNS
+//
+//  ============================================================================
+//  $   VARIABLES
+//  ----------------------------------------------------------------------------
+@grid-cols: 12;
+
+//  ============================================================================
+//  $   MIXINS
+//      Let's generate our column sizes
+//  ----------------------------------------------------------------------------
+.grid-columns(@num, @count: 1) when (@count =< @num) {
+    > .-col@{count} {
+        .flex(0 0 auto);
+        flex-basis: (@count * 100% / @num);
+        max-width: (@count * 100% / @num);
+    }
+    .g-col-push@{count} { margin-left: (@count * 100% / @num); }
+    .g-col-pull@{count} { margin-left: -(@count * 100% / @num); }
+
+    .grid-columns(@num, (@count + 1));
+}
+
+
+//  ============================================================================
+//  $   ROWS & COLUMNS
+//  ----------------------------------------------------------------------------
+.g-row,
+.g-col {
+    //  By default now, all flexbox grids will use border-box box-sizing
+    *,
+    *:after,
+    *:before {
+        box-sizing: border-box;
+    }
+
+    .flexbox();
+    .flex();
+    position: relative;
+
+    //  Create a generic auto-width col
+    > .-col {
+        position: relative;
+        display: inline-flex;
+        .flex(1 auto);
+        max-width: 100%;
+    }
+
+    //  Now create fixed width cols
+    .grid-columns(@grid-cols);
+}
+
+//  Rows
+.g-row {
+    .flex-flow(row wrap);
+
+    //  --  Flow Direction
+    //      For changing the flow direction of a row
+    //  ------------------------------------------------------------------------
+    &._reversed {
+        flex-direction: row-reverse;
+    }
+}
+
+//  Columns
+.g-col {
+    .flex-flow(column wrap);
+
+    //  --  Flow Direction
+    //      For changing the flow direction of a row
+    //  ------------------------------------------------------------------------
+    &._reversed {
+        flex-direction: column-reverse;
+    }
+}
+
+
+//  ============================================================================
+//  $   VARIANTS & ADJUSTMENTS
+//      Sometimes you need to adjust how a row or column acts
+//  ----------------------------------------------------------------------------
+.g-row,
+.g-col {
+
+    //  --  Gutters
+    //      When we want items spaced out
+    //  ------------------------------------------------------------------------
+    &._gutters {
+        margin-left: -(@su-2);
+        margin-right: -(@su-2);
+
+        //  All columns
+        > [class^="-col"] {
+            margin: @su-2;
+        }
+    }
+
+    //  --  Wrap Directions
+    //      For changing the wrapping direction of a row or column
+    //  ------------------------------------------------------------------------
+    &._wrap {
+        flex-wrap: wrap;
+    }
+    &._wrap-none {
+        flex-wrap: none;
+    }
+
+    //  --  Alignments
+    //      For positioning items within a row or column
+    //  ------------------------------------------------------------------------
+    //  --  Flex-start
+    //      Start, Start
+    &._align-ss {
+        align-items: flex-start;
+        .flex-justify(flex-start);
+    }
+    //      Start, Middle
+    &._align-tm {
+        align-items: center;
+        .flex-justify(flex-start);
+    }
+    //      Start, End
+    &._align-te {
+        align-items: flex-end;
+        .flex-justify(flex-start);
+    }
+    //  --  Center
+    //      Center, Start
+    &._align-cs {
+        align-items: flex-start;
+        .flex-justify(center);
+    }
+    //      Center, Middle
+    &._align-cm {
+        align-items: center;
+        .flex-justify(center);
+    }
+    //      Center, End
+    &._align-ce {
+        align-items: flex-end;
+        .flex-justify(center);
+    }
+    //  --  Flex-end
+    //      End, Start
+    &._align-es {
+        align-items: flex-start;
+        .flex-justify(flex-end);
+    }
+    //      End, Middle
+    &._align-em {
+        align-items: center;
+        .flex-justify(flex-end);
+    }
+    //      End, End
+    &._align-ee {
+        align-items: flex-end;
+        .flex-justify(flex-end);
+    }
+    //  --  Space-between
+    //      Space-between, Start
+    &._align-sbs {
+        align-items: flex-start;
+        .flex-justify(space-between);
+    }
+    //      Space-between, Middle
+    &._align-sbm {
+        align-items: center;
+        .flex-justify(space-between);
+    }
+    //      Space-between, End
+    &._align-sbe {
+        align-items: flex-end;
+        .flex-justify(space-between);
+    }
+    //  --  Space-around
+    //      Space-around, Start
+    &._align-sbs {
+        align-items: flex-start;
+        .flex-justify(space-around);
+    }
+    //      Space-around, Middle
+    &._align-sbm {
+        align-items: center;
+        .flex-justify(space-around);
+    }
+    //      Space-around, End
+    &._align-sbe {
+        align-items: flex-end;
+        .flex-justify(space-around);
+    }
+}
+
+
+//  ============================================================================
+//  $   CSS GRID
+//      This is supported by all modern browsers except IE11 and Edge.
+//      IE11 and Edge support the old spec prefixed. Microsoft is working
+//      on shipping the new spec soon. Dated Jun 2017
+//
+//      Official Status:
+//      https://developer.microsoft.com/en-us/microsoft-edge/platform/status/gridupdate/
+//  ============================================================================
+//      Fall forward. If a browser supports CSS Grids, then use the following
+//      CSS. Otherwise they'll ignore it and we can use flexbox instead. This
+//      mainly means IE11 and Edge won't be supported for Grids.
+//  ----------------------------------------------------------------------------
+@supports (grid-auto-rows: 1px) {
+    .g-container {
+        display: grid;
+        grid-template-columns: minmax(@mainbar-width, 1fr) @sidebar-width;
+        grid-template-areas: "main sidebar";
+        grid-gap: @su-32;
+
+        margin: 0 auto;
+        padding: 1.5vmin;
+        height: 100%;
+        //max-width: @site-width + 100px;
+
+        //  Specific class names that assign template areas
+        .g-main {
+            grid-column: main;
+        }
+        .g-sidebar {
+            grid-column: sidebar;
+        }
+
+        //  Generic grid item. We need to make the inner portion use flexbox
+        > .-item {
+            .flexbox();
+            .flex-flow(column nowrap);
+            .flex-justify(flex-start);
+        }
+
+        //  --  Grid layouts
+        //      Let's create some different layouts
+        //  --------------------------------------------------------------------
+        //  --  Reversed layout
+        //      When we want to flip the default layout, putting the sidebar
+        //      on the left, instead of the right. The Profile settings
+        //      section is an example of this.
+        &._reversed {
+            grid-template-columns: @sidebar-width 1fr;
+            grid-template-areas: "sidebar main"
+        }
+
+        //  --  Gutters
+        //      Change the spacing in-between our grid items
+        &._gutter-2 {
+            grid-gap: @su-2;
+        }
+        &._gutter-4 {
+            grid-gap: @su-4;
+        }
+        &._gutter-8 {
+            grid-gap: @su-8;
+        }
+        &._gutter-12 {
+            grid-gap: @su-12;
+        }
+        &._gutter-16 {
+            grid-gap: @su-16;
+        }
+        &._gutter-24 {
+            grid-gap: @su-24;
+        }
+        &._gutter-32 {
+            grid-gap: @su-32;
+        }
+        &._gutter-48 {
+            grid-gap: @su-48;
+        }
+    }
+}

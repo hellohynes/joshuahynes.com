@@ -46,6 +46,8 @@
 @su-32: 32px;   // 2rem
 @su-40: 40px;   // 2.5rem
 @su-48: 48px;   // 3rem
+@su-56: 56px;   // 3.5rem
+@su-64: 64px;   // 4rem
 
 
 //  ===========================================================================
@@ -97,7 +99,8 @@
 //  Please see "/base/_type" for the reasons this is kept here vs. there.
 //  ----------------------------------------------------------------------------
 // Font Family (ff-)
-@ff-sans: 	"Roboto", Arial, "Helvetica Neue", Helvetica, sans-serif;
+@ff-roboto: "Roboto", @ff-sans;
+@ff-sans: 	Arial, "Helvetica Neue", Helvetica, sans-serif;
 @ff-mono: 	"Roboto Mono", Consolas, Menlo, "Courier New", monospace;
 
 // Font Sizes (fs-)
@@ -130,6 +133,11 @@
 @lh-10: (@lh-unit + 10) / @lh-unit; // 1.625
 @lh-12: (@lh-unit + 12) / @lh-unit; // 1.75
 @lh-2x: (@lh-unit / @lh-unit) * 2;  // 2
+
+//	Type Colors
+//	Items that used on type throughout the product
+@link-color:			@blue-500;
+@link_hover-color:		@blue-600;
 
 
 //  ============================================================================

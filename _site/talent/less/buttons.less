@@ -16,7 +16,8 @@
 //  ===========================================================================
 //  $   BASE STYLE
 //  ---------------------------------------------------------------------------
-.btn {
+.btn,
+.btn-secondary {
     box-sizing: border-box;
 
     display: inline-block;
@@ -24,7 +25,7 @@
     padding: 0.65em 1em;
     vertical-align: middle;
 
-    font-weight: 400;
+    font-weight: 600;
     line-height: 1;
     text-align: center;
     text-decoration: none;
@@ -47,7 +48,7 @@
         cursor: default;
         pointer-events: none;
         box-shadow: none;
-        opacity: 1;
+        opacity: 0.5;
 
         &:hover {
             cursor: default;
@@ -70,4 +71,12 @@
     &:focus { background-color: @blue-600; }
 
     &[disabled] { background-color: desaturate(lighten(@blue-500,35%),70%); }
+}
+
+.btn-secondary {
+    color: @black-600;
+    background-color: @bgc-lighter;
+
+    &:hover,
+    &:focus { background-color: @bgc-light; }
 }

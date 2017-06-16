@@ -49,17 +49,31 @@
                     Big search area
                 </section> -->
                 <section class="g-column g-col sot-cs-results js-candidate-list">
-                    <!-- <header class="-search">
-                        Search Area
+                    <header class="-search">
+                        <form>
+                            <div class="input-group g-row">
+                                <div class="g-col g-column">
+                                    <label for="cs-keyword" class="f-label">Keyword</label>
+                                    <input type="text" id="cs-keyword" class="f-input" placeholder="e.g. javascript, mobile, ruby on rails"/>
+                                </div>
+                                <div class="g-col g-column">
+                                    <label for="cs-location" class="f-label">Location</label>
+                                    <input type="text" id="cs-location" class="f-input" placeholder="e.g. New York, British Columbia, United Kingdom"/>
+                                </div>
+                                <div class="g-col">
+                                    <a class="btn">Search</a>
+                                </div>
+                            </div>
+                        </form>
                     </header>
-                    <aside class="-meta"><h1 class="-subtitle">397 Candidates</h1></aside> -->
+                    <aside class="-meta"><h1 class="-subtitle">397 Candidates</h1></aside>
                     <div class="sot-list-results g-column">
                         <div class="-item g-row js-candidate-item">
                             <div class="g-col -checkbox"><input type="checkbox" name="" id="" /></div>
                             <div class="g-col3 -name">Gabriele Baldassarre</div>
                             <div class="g-col -position">
                                 Business Data Scientist &amp; Innovation Specialist
-                                <span class="fs-xsm">Seat Pagine Gialle</span>
+                                <span class="-org">Seat Pagine Gialle</span>
                             </div>
                             <div class="g-col2 -location">Milan, Italy</div>
                         </div>
@@ -68,7 +82,7 @@
                             <div class="g-col3 -name">J. Baerga</div>
                             <div class="g-col -position">
                                 Director of Product Management
-                                <span class="fs-sm">Market Traders Institute</span>
+                                <span class="-org">Market Traders Institute</span>
                             </div>
                             <div class="g-col2 -location">Orlando, FL</div>
                         </div>
@@ -77,7 +91,7 @@
                             <div class="g-col3 -name">Albert Lum</div>
                             <div class="g-col -position">
                                 User Service Rep
-                                <span class="fs-sm">George Brown College Library Learning Common</span>
+                                <span class="-org">George Brown College Library Learning Common</span>
                             </div>
                             <div class="g-col2 -location">Toronto, ON, Canada</div>
                         </div>
@@ -86,7 +100,7 @@
                             <div class="g-col3 -name">Paul Sheldrake</div>
                             <div class="g-col -position">
                                 Senior web developer (remote)
-                                <span class="fs-sm">Fluxus (UK)</span>
+                                <span class="-org">Fluxus (UK)</span>
                             </div>
                             <div class="g-col2 -location">Surrey, BC, Canada</div>
                         </div>
@@ -95,22 +109,25 @@
                             <div class="g-col3 -name">Jason Roy</div>
                             <div class="g-col -position">
                                 Director, Product Developement
-                                <span class="fs-sm">CompareNetworks</span>
+                                <span class="-org">CompareNetworks</span>
                             </div>
                             <div class="g-col2 -location">Lake Grove, NY</div>
                         </div>
                     </div>
                 </section>
-                <div class="g-col sot-cs-preview js-candidate-profile">
+                <div class="g-col g-column sot-cs-preview js-candidate-profile">
                     <div>
-                        Preview Area<br/>
-                        <a class="btn js-message-candidate">Message Candidate</a>
+                        Profile<br/>
+                        <a class="btn-secondary js-message-like"><i class="material-icons">favorite</i> Like</a>
+                        <a class="btn-secondary js-message-share"><i class="material-icons">send</i> Share</a>
+                        <a class="btn js-message-candidate"><i class="material-icons">message</i> Message</a>
                     </div>
                 </div>
                 <div class="g-col sot-message js-message-pane">
                     <div>
                         Message Area<br/>
                         <a class="btn js-message-candidate-preview">Preview &amp; Send Message</a>
+                        <a class="btn-clear js-message-cancel">Cancel Message</a>
                     </div>
                 </div>
                 <div class="g-col sot-preview js-message-preview">
