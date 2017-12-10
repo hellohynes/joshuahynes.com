@@ -5,37 +5,67 @@
 //
 //  TABLE OF CONTENTS
 //  • VARIABLES
-//  • ROW
-//  • COLUMNS
+//  • ROW & COLUMNS
+//  • VARIANTS & ADJUSTMENTS
 //
 //  ============================================================================
 //  $   VARIABLES
 //  ----------------------------------------------------------------------------
-@grid-cols: 12;
+@grid-cols: 16;
+
 
 //  ============================================================================
 //  $   MIXINS
-//      Let's generate our column sizes
+//  ----------------------------------------------------------------------------
+//  --  Generate column sizes
 //  ----------------------------------------------------------------------------
 .grid-columns(@num, @count: 1) when (@count =< @num) {
-    > .-col@{count} {
+    > .-cell-@{count} {
         .flex(0 0 auto);
         flex-basis: (@count * 100% / @num);
         max-width: (@count * 100% / @num);
     }
-    .g-col-push@{count} { margin-left: (@count * 100% / @num); }
-    .g-col-pull@{count} { margin-left: -(@count * 100% / @num); }
 
     .grid-columns(@num, (@count + 1));
 }
 
+//  --  Generate gutter spacing
+//  ----------------------------------------------------------------------------
+//  This mixin helps us generate correct flex-basis and max-width values for
+//  fixed column sizes.
+//  ----------------------------------------------------------------------------
+.grid-column-spacing(@spacing, @num: @grid-cols, @count: 1) when (@count =< @num) {
+    @cell-width: @count * 100% / @num;
+
+    > .-cell-@{count} {
+        flex-basis: calc(~"@{cell-width} - @{spacing}");
+        max-width: calc(~"@{cell-width} - @{spacing}");
+    }
+    .grid-column-spacing(@spacing, @num, (@count + 1));
+}
+
+//  Create all out of gutters
+//  ----------------------------------------------------------------------------
+.grid-spacing(@spacing) {
+    margin: -(@spacing);
+
+    //  Generic fluid cell
+    > .-cell {
+        margin: @spacing;
+    }
+    //  Fixed width cells
+    .grid-column-spacing(@spacing);
+}
+
 
 //  ============================================================================
-//  $   ROWS & COLUMNS
+//  $   GRID: BASE ELEMENTS
 //  ----------------------------------------------------------------------------
-.g-row,
-.g-col {
+//      To help simplify our CSS, we create a generic box container. By default
+//      this is a row container, but we can modify the box to a column.
+.g-box {
     //  By default now, all flexbox grids will use border-box box-sizing
+    &,
     *,
     *:after,
     *:before {
@@ -44,13 +74,13 @@
 
     .flexbox();
     .flex();
+    .flex-flow();
     position: relative;
 
     //  Create a generic auto-width col
-    > .-col {
+    > .-cell {
+        .flex(1 0 auto);
         position: relative;
-        display: inline-flex;
-        .flex(1 auto);
         max-width: 100%;
     }
 
@@ -58,28 +88,18 @@
     .grid-columns(@grid-cols);
 }
 
-//  Rows
-.g-row {
-    .flex-flow(row wrap);
-
-    //  --  Flow Direction
-    //      For changing the flow direction of a row
-    //  ------------------------------------------------------------------------
-    &._reversed {
-        flex-direction: row-reverse;
-    }
-}
-
-//  Columns
-.g-col {
-    .flex-flow(column wrap);
-
-    //  --  Flow Direction
-    //      For changing the flow direction of a row
-    //  ------------------------------------------------------------------------
-    &._reversed {
-        flex-direction: column-reverse;
-    }
+//  ============================================================================
+//  $   GRID: SPACING
+//      Insert spaces or gutters in between grid cells
+//  ----------------------------------------------------------------------------
+.g-box {
+    &._sp-2  { .grid-spacing(@su-2); }     //  2px
+    &._sp-4  { .grid-spacing(@su-4); }     //  4px
+    &._sp-8  { .grid-spacing(@su-8); }     //  8px
+    &._sp-12 { .grid-spacing(@su-12); }    //  12px
+    &._sp-16 { .grid-spacing(@su-16); }    //  16px
+    &._sp-24 { .grid-spacing(@su-24); }    //  24px
+    &._sp-32 { .grid-spacing(@su-32); }    //  32px
 }
 
 
@@ -87,114 +107,41 @@
 //  $   VARIANTS & ADJUSTMENTS
 //      Sometimes you need to adjust how a row or column acts
 //  ----------------------------------------------------------------------------
-.g-row,
-.g-col {
-
-    //  --  Gutters
-    //      When we want items spaced out
-    //  ------------------------------------------------------------------------
-    &._gutters {
-        margin-left: -(@su-2);
-        margin-right: -(@su-2);
-
-        //  All columns
-        > [class^="-col"] {
-            margin: @su-2;
-        }
-    }
-
+.g-box {
     //  --  Wrap Directions
     //      For changing the wrapping direction of a row or column
     //  ------------------------------------------------------------------------
-    &._wrap {
-        flex-wrap: wrap;
-    }
-    &._wrap-none {
-        flex-wrap: none;
-    }
+    &._reversed         { flex-direction: row-reverse;}
+    &._col              { .flex-flow(column nowrap); }
+    &._col._reversed    { flex-direction: column-reverse;}
+    &._wrap             { flex-wrap: wrap; }
+    &._wrap-none        { flex-wrap: nowrap; }
 
     //  --  Alignments
     //      For positioning items within a row or column
     //  ------------------------------------------------------------------------
-    //  --  Flex-start
-    //      Start, Start
-    &._align-ss {
-        align-items: flex-start;
-        .flex-justify(flex-start);
-    }
-    //      Start, Middle
-    &._align-tm {
-        align-items: center;
-        .flex-justify(flex-start);
-    }
-    //      Start, End
-    &._align-te {
-        align-items: flex-end;
-        .flex-justify(flex-start);
-    }
-    //  --  Center
-    //      Center, Start
-    &._align-cs {
-        align-items: flex-start;
-        .flex-justify(center);
-    }
-    //      Center, Middle
-    &._align-cm {
-        align-items: center;
-        .flex-justify(center);
-    }
-    //      Center, End
-    &._align-ce {
-        align-items: flex-end;
-        .flex-justify(center);
-    }
-    //  --  Flex-end
-    //      End, Start
-    &._align-es {
-        align-items: flex-start;
-        .flex-justify(flex-end);
-    }
-    //      End, Middle
-    &._align-em {
-        align-items: center;
-        .flex-justify(flex-end);
-    }
-    //      End, End
-    &._align-ee {
-        align-items: flex-end;
-        .flex-justify(flex-end);
-    }
-    //  --  Space-between
-    //      Space-between, Start
-    &._align-sbs {
-        align-items: flex-start;
-        .flex-justify(space-between);
-    }
-    //      Space-between, Middle
-    &._align-sbm {
-        align-items: center;
-        .flex-justify(space-between);
-    }
-    //      Space-between, End
-    &._align-sbe {
-        align-items: flex-end;
-        .flex-justify(space-between);
-    }
-    //  --  Space-around
-    //      Space-around, Start
-    &._align-sbs {
-        align-items: flex-start;
-        .flex-justify(space-around);
-    }
-    //      Space-around, Middle
-    &._align-sbm {
-        align-items: center;
-        .flex-justify(space-around);
-    }
-    //      Space-around, End
-    &._align-sbe {
-        align-items: flex-end;
-        .flex-justify(space-around);
+    &._jc-start         { .justify-content(flex-start); }
+    &._jc-center        { .justify-content(center); }
+    &._jc-end           { .justify-content(flex-end); }
+    &._jc-sp-around     { .justify-content(space-around); }
+    &._jc-sp-between    { .justify-content(space-between); }
+    &._ai-start         { .align-items(flex-start); }
+    &._ai-center        { .align-items(center); }
+    &._ai-end           { .align-items(flex-end); }
+
+    //  $$  CELLS
+    //      Items which apply only to child cells, not rows or columns
+    //  ========================================================================
+    > .-cell {
+        //  --  Widths
+        //  --------------------------------------------------------------------
+        &._fl-none       { .flex(0 auto); }
+
+        //  --  Ordering
+        //      For reordering cells
+        //  --------------------------------------------------------------------
+        &._first         { .flex-order(-1); }
+        &._last          { .flex-order(1); }
     }
 }
 
