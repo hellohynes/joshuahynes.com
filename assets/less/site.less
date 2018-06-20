@@ -1,0 +1,451 @@
+//
+//  JOSHUA HYNES
+//  PORTFOLIO
+//
+//  ============================================================================
+//  $  VARIABLES
+//  ============================================================================
+@ff-mono: "IBM Plex Mono", monospace;
+@ff-sans: "IBM Plex Sans", sans-serif;
+@ff-serif: "IBM Plex Sans", sans-serif;
+
+@fs-display3:   5.16rem;
+@fs-display2:   4.3rem;
+@fs-display1:   3.583rem;
+@fs-headline2:  2.488rem;
+@fs-headline1:  2.074rem;
+@fs-subheading: 2.074rem;
+@fs-body3:      1.728rem;
+@fs-body2:      1.44rem;
+@fs-body1:      1rem;
+@fs-caption:    0.833rem;
+@fs-fine:       0.694rem;
+
+@lh-xs:         1;
+@lh-sm:         1.1875;
+@lh-md:         1.375;
+@lh-lg:         1.5625;
+@lh-xl:         1.75;
+@lh-xxl:        2;
+
+@fc-dark:       #020311;
+@fc-medium:     #3C3D45;
+@fc-light:      #73747C;
+@purple:        #0027B0;
+@white:         #FFF;
+@teal:          #33EFCB;
+
+@te-easeOut:    cubic-bezier(0.39, 0.575, 0.565, 1);
+
+@br-sm:         0.1875rem;
+@br-md:         0.375rem;
+@br-lg:         0.5625rem;
+@br-xl:         0.75rem;
+
+
+//  ============================================================================
+//  $  TYPE SIZES
+//  ============================================================================
+.fs-display3    { font-size: @fs-display3 !important; }
+.fs-display2    { font-size: @fs-display2 !important; }
+.fs-display1    { font-size: @fs-display1 !important; }
+.fs-headline2   { font-size: @fs-headline2 !important; }
+.fs-headline1   { font-size: @fs-headline1 !important; }
+.fs-subheading  { font-size: @fs-subheading !important; }
+.fs-body3       { font-size: @fs-body3 !important; }
+.fs-body2       { font-size: @fs-body2 !important; }
+.fs-body1       { font-size: @fs-body1 !important; }
+.fs-caption     { font-size: @fs-caption !important; }
+.fs-fine        { font-size: @fs-fine !important; }
+
+.ff-mono        { font-family: @ff-mono !important; }
+.ff-sans        { font-family: @ff-sans !important; }
+//.ff-serif        { font-family: @ff-serif !important; }
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.25em;
+    line-height: 1.05;
+}
+
+.fc-dark        { color: @fc-dark !important; }
+.fc-medium      { color: @fc-medium !important; }
+.fc-ligjt       { color: @fc-light !important; }
+.fc-purple      { color: @purple; }
+
+
+//  ============================================================================
+//  $  BASE STYLING
+//  ============================================================================
+html,
+body {
+    font-family: @ff-sans;
+    font-size: 16px;
+    line-height: 1.333333333;
+}
+
+body {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: vertical;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    width: 100%;
+    height: 100%;
+
+    *,
+    *:before,
+    *:after {
+        -webkit-box-sizing: inherit;
+                box-sizing: inherit;
+    }
+}
+
+pre,
+code {
+    font-family: @ff-mono;
+}
+
+
+//  ============================================================================
+//  $  HEADER
+//  ============================================================================
+@jh-nav--padding:       100vw / 6;
+
+.jh-header {
+    @media screen and (max-width: 640px) {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+                justify-content: space-between;
+        padding: 3rem 2rem 5rem;
+    }
+    @media screen and (min-width: 641px) {
+        position: fixed;
+        height: 100%;
+        padding-bottom: calc(~"100vw - 320px");
+        padding-left: @jh-nav--padding;
+    }
+
+}
+
+
+//  ============================================================================
+//  $  LOGO
+//  ============================================================================
+.jh-logo {
+    @media screen and (max-width: 640px) {
+        height: 1.5rem;
+        margin-left: 5rem;
+        -webkit-transform: rotate(90deg);
+                transform: rotate(90deg);
+    }
+    @media screen and (min-width: 641px) {
+        position: absolute;
+        top: 6.25rem;
+        left: 2.625rem;
+        width: 1.5rem;
+    }
+}
+
+//  ============================================================================
+//  $  TOP NAVIGATION
+//  ============================================================================
+.jh-nav {
+    @media screen and (max-width: 640px) {
+    }
+    @media screen and (min-width: 641px) {
+        position: absolute;
+        top: 19.5rem;
+        left: 2.625rem;
+        width: 1.5rem;
+        -webkit-transform: rotate(-90deg);
+                transform: rotate(-90deg);
+    }
+}
+
+.jh-nav--menu {
+    padding: 0;
+    list-style: none;
+
+    @media screen and (min-width: 641px) {
+            -webkit-box-direction: reverse;
+            -webkit-box-orient: horizontal;
+            -ms-flex-direction: row-reverse;
+                flex-direction: row-reverse;
+    }
+}
+
+.jh-nav--item {
+    padding: 0;
+    list-style: none;
+}
+
+
+.jh-nav--link {
+    padding: 0.375rem;
+    padding-left: 0.565rem;
+    border-radius: 0.1875rem;
+    background-color: transparent;
+    color: #242928;
+    font-family: @ff-mono;
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1;
+    -webkit-transition: all 100ms @te-easeOut;
+    transition: all 100ms @te-easeOut;
+    letter-spacing: 3px;
+
+    &.is-active {
+        background-color: @purple;
+        color: @white;
+        font-weight: 700;
+
+        &:hover {
+            background-color: darken(spin(@purple,5),5%);
+            color: @white;
+        }
+    }
+
+    &:hover {
+        background-color: fade(#242928,5%);
+        color: @fc-dark;
+    }
+}
+
+
+//  ============================================================================
+//  $  PAGE TABLE OF CONTENTS
+//  ============================================================================
+.jh-toc {
+    position: absolute;
+    width: 100%;
+    max-width: 17rem;
+    margin-top: 4rem;
+    margin-left: -10.625rem;
+    border-radius: @br-sm;
+    background-color: #FAFAFA;
+    -webkit-box-shadow: 0 0.25rem 0.75rem 0 fade(#3B4045,10%);
+            box-shadow: 0 0.25rem 0.75rem 0 fade(#3B4045,10%);
+}
+
+.jh-toc--header,
+.jh-toc--link {
+    padding: 0.7rem 1rem;
+    color: @fc-dark;
+    font-family: @ff-mono;
+    line-height: @lh-sm;
+}
+
+.jh-toc--header {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.jh-toc--link {
+    display: block;
+    width: 100%;
+    -webkit-transition: all 100ms @te-easeOut;
+    transition: all 100ms @te-easeOut;
+
+    &.is-active {
+        background-color: @white;
+        -webkit-box-shadow: 4px 0 0 0 @teal;
+                box-shadow: 4px 0 0 0 @teal;
+
+        &:hover {
+            background-color: @teal;
+            -webkit-box-shadow: 4px 0 0 0 spin(saturate(@teal,10%), 5);
+                    box-shadow: 4px 0 0 0 spin(saturate(@teal,10%), 5);
+        }
+    }
+    &:hover {
+        background-color: fade(@teal,10%);
+        color: darken(@fc-dark,5%);
+    }
+
+    .jh-toc--menu .jh-toc--item:last-of-type & {
+        padding-bottom: 1rem;
+    }
+}
+
+//  ============================================================================
+//  $  WORK PAGES LAYOUT ELEMENTS
+//  ============================================================================
+.jh-work--container {
+    @media screen and (max-width: 640px) {
+        padding: 0 2rem 2rem;
+    }
+    @media screen and (min-width: 641px) {
+        padding: 10rem @jh-nav--padding 6rem;
+    }
+}
+
+.jh-work--preview {
+    width: 100%;
+    min-width: calc(~"100% + 2rem");
+    min-height: 31rem;
+    max-width: 65rem;
+    max-height: 37.5rem;
+    margin-bottom: 4rem;
+    border-radius: @br-md;
+    background-color: @purple;
+    -webkit-box-shadow: 0 0 0.75rem 0 fade(#3B4045,10%);
+            box-shadow: 0 0 0.75rem 0 fade(#3B4045,10%);
+}
+
+.jh-work--preview__small {
+    min-width: auto;
+    min-height: 13.625rem;
+    max-width: 32rem;
+    max-height: 14rem;
+    background-color: @white;
+}
+
+.jh-work--overview {
+    margin-top: 4rem;
+    margin-bottom: 6rem;
+}
+
+
+//  ============================================================================
+//  $  PAGE SPECIFIC STYLES
+//  ============================================================================
+.work--so-teams {
+    @color-dark:    #AEAEB4;
+    @color-light:   #DBDBDC;
+
+    background-color: mix(@color-dark, @color-light);
+    background-image: linear-gradient(128deg, @color-light, @color-dark);
+
+    .jh-work--preview__small {
+        max-width: calc(~"50% + 2rem");
+        margin-top: -28.33333333%;
+        margin-left: -3rem;
+    }
+}
+
+
+//  ============================================================================
+//  $  OLD HOMEPAGE STUFF
+//  ============================================================================
+.jh-site-wrapper {
+    position: relative;
+    max-width: 92rem;
+    margin: 0 auto;
+}
+
+
+.jh-menu--nav {
+    @media screen and (min-width: 641px) {
+        -webkit-box-direction: normal;
+        -webkit-box-orient: vertical;
+            -ms-flex-flow: column wrap;
+                flex-flow: column wrap;
+    }
+}
+.jh-menu--item {
+    padding: 4px;
+    color: #54595F;
+    font-size: 1rem;
+
+    &.is-active {
+        color: #1F2123;
+    }
+}
+
+
+
+
+//  ============================================================================
+//  $  TYPE STYLES
+//  ============================================================================
+.jh-work--title {
+    margin-bottom: 0;
+    font-family: @ff-mono;
+    font-size: @fs-headline2;
+    font-weight: 700;
+}
+
+//  ============================================================================
+//  $  TABLE OF CONTENTS
+//  ============================================================================
+/*.jh-toc--item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    -webkit-box-flex: 1;
+        -ms-flex: 1 0 50%;
+            flex: 1 0 50%;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    background-color: #7AA3FF;
+    color: #FFF;
+}
+
+.jh-toc__primary {
+    -webkit-box-flex: 1;
+        -ms-flex: 1 0 100%;
+            flex: 1 0 100%;
+    background-color: #EFF0F1;
+}*/
+
+.work--label {
+    padding: 8px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.work__product {
+    background-color: #7BA2FF;
+}
+
+
+//  ============================================================================
+//  $  CSS GRIDS
+//  ============================================================================
+.jh-toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 400px 200px 280px 200px;
+    grid-column-gap: 60px;
+    grid-row-gap: 60px;
+}
+
+.jh-work--so__teams {
+    grid-column-start: 1;
+    grid-column-end: span 2;
+}
+
+.jh-work--so__stacks {
+    grid-column-start: 4;
+    grid-row-start: 2;
+    grid-row-end: span 2;
+}
+
+.jh-work--so__brand {
+    grid-column-start: 4;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+.jh-work--so__se {
+    grid-column-start: 4;
+    grid-row-start: 2;
+}

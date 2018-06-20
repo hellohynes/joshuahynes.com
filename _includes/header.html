@@ -1,0 +1,18 @@
+<header class="grid jh-topbar">
+    <nav class="w100 grid jh-menu--nav" role="navigation">
+        <div class="grid ai-center jh-menu--logo">
+            {% for icon in site.data.icons %}
+                {% include_relative {{ icon.logo | prepend: "/assets/img/" | append: ".svg" }} %}
+            {% endfor %}
+        </div>
+        <div class="grid--cell jh-menu--list">
+            <ul class="mln4 list-reset grid">
+                {% for item in site.data.nav %}
+                <li class="grid--cell mr8">
+                    <a class="jh-menu--item" href="{{ item.url | relative_url }}" title="{{ item.title }}">{{ item.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+</header>

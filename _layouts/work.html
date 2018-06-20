@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    {% include head.html %}
+
+    <body class="test {{ page.class }}">
+        <header class="jh-header">
+            <div class="jh-logo grid grid__center">
+                <a href="/" class="grid--cell">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="154"><g fill="none" fill-rule="evenodd"><path d="M-6-4h24v162H-6z"/><path fill="#0C0D0E" d="M7.5666848 28.5634622L.423033 33.9998653v2.3535956h11.602248v-2.5193256H4.6496073l7.3756737-5.618706v-2.1710625H.423033v2.5190954h7.1436518zM3.9139504 44.3381923l2.354056-1.277732L.423033 39.3257817v2.9005045l3.4909174 2.1119061zm1.1665548.7057334L.423033 47.8118462v2.9833694l7.0276408-4.4583661h4.5746072V43.784378H7.4009548l-2.3204496 1.2595477zm4.5911802-25.4706232v.0048337H2.6937636v-6.2201676H.423033v8.7512324h11.602248v-8.8340974H9.7545504v6.2981989h-.082865zM5.0805052 4.4552774C4.5667423 6.4608401 4.3181474 6.95803 3.5555594 6.95803h-.0329158c-.5637121 0-1.011183-.5137629-1.011183-1.4915697 0-.9780369.4308979-1.9892198 1.1435368-3.0167456L1.7325298 1.1236448C.7876389 2.3005577.257303 3.7424084.257303 5.4330842c0 2.3701686 1.3923618 4.0608443 3.4971323 4.0608443h.0333762c2.3036464 0 2.9499933-1.5083728 3.5468513-3.8451652.4971899-1.9392707.8286498-2.3372528 1.4749967-2.3372528h.033146c.679723 0 1.0940479.630004 1.0940479 1.6741028 0 1.3258397-.5471391 2.4196574-1.4089349 3.4642165l1.8066868 1.5081426C11.57758 8.5656106 12.191011 6.7920698 12.191011 5.0353323c0-2.5027526-1.2929239-4.2594902-3.5968005-4.2594902h-.033146c-2.0219055 0-2.8673585 1.3256095-3.4805593 3.6794353zm2.2375846 13.9461761v-4.2974699H5.0473592v4.2974699h2.2707306zM5.0142132 56.320008v4.706961H.423033v2.5524716h11.602248V61.026969H7.3678088v-4.706961h4.6574722v-2.5524716H.423033v2.5524716h4.5911802zM.340168 82.27308954l11.685113 4.74194848v-2.37177987l-1.5592427-.63552837-.0025319.00644506-3.2945735-1.34402394v.00092072l-.5034048-.20624173-.5252719-.21452822.0002302-.00069054-2.734084-1.1202885 3.7625305-1.54128862v1.81106017l2.2539274.9195711V78.6765192l2.6024207-1.0606717v-2.6687127L.340168 79.91972411v2.35336543zM5.0805052 121.009015c-.5137629 2.0055627-.7623578 2.5027525-1.5249458 2.5027525h-.0329158c-.5637121 0-1.011183-.5137628-1.011183-1.4915696 0-.9780369.4308979-1.9892199 1.1435368-3.0167456l-1.9224676-1.3260699C.7876389 118.8542953.257303 120.296146.257303 121.9868217c0 2.3701686 1.3923618 4.0608444 3.4971323 4.0608444h.0333762c2.3036464 0 2.9499933-1.5083728 3.5468513-3.8451652.4971899-1.9392708.8286498-2.3372528 1.4749967-2.3372528h.033146c.679723 0 1.0940479.630004 1.0940479 1.6741027 0 1.3258397-.5471391 2.4196574-1.4089349 3.4642166l1.8066868 1.5081426c1.2429747-1.3923619 1.8564057-3.1659026 1.8564057-4.9226402 0-2.5025224-1.2929239-4.2594901-3.5968005-4.2594901h-.033146c-2.0219055 0-2.8673585 1.3256095-3.4805593 3.6794353zm1.1769129 10.9462336c1.9887595 0 3.6131433 1.4252777 3.6131433 3.4805594 0 2.0550515-1.6575298 3.5137053-3.6465195 3.5137053h-.033146c-1.9887595 0-3.6131433-1.4252777-3.6131433-3.4805593 0-2.0550515 1.6575298-3.5137054 3.6462893-3.5137054h.0333762zM.224157 135.435808c0 3.5799973 2.7016285 6.1821878 5.9998849 6.1821878h.0333762c3.2982564 0 5.9667389-2.5690445 5.9667389-6.1490418 0-3.5799974-2.7016285-6.1821879-6.0001151-6.1821879h-.033146c-3.2982564 0-5.9667389 2.5690446-5.9667389 6.1490419zm7.6739877 12.5008727c1.3424127 0 1.9226977.5968581 1.9226977 1.5580918 0 .8120768-.4311281 1.4586539-1.1603399 2.1213435l1.7901137 1.608041c.9446608-.795734 1.7403948-1.9889897 1.7403948-3.7954463 0-2.4532637-1.3592158-4.1107935-4.1768553-4.1107935H.423033v2.6187635h7.4751117zm-.8286498-55.79299097c1.8398327 0 2.7844935.94466078 2.7844935 2.5025224 0 1.5580918-.978037 2.50275257-2.8673585 2.50275257H.423033v2.5524716h6.6298889c3.4142673 0 5.1546621-1.90589457 5.1546621-5.021848 0-3.11595343-1.7238218-5.08860031-5.2375271-5.08860031H.423033v2.55270174h6.6464619zM5.0142132 106.4675921v3.5302783h2.3535956v-3.5302783h4.6574722v-2.5524716H.423033v2.5524716h4.5911802zm7.0110678 7.2594326v-2.5524716H.4232631v2.5524716H12.025281z"/></g></svg>
+                </a>
+            </div>
+            <nav class="jh-nav" role="navigation">
+                <ul class="grid gs24 gsx jh-nav--menu">
+                    <li class="grid--cell jh-nav--item">
+                        <a class="jh-nav--link is-active" href="/work" title="Work">Work</a>
+                    </li>
+                    <li class="grid--cell jh-nav--item">
+                        <a class="jh-nav--link" href="/work" title="About">About</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="ps-relative jh-work--container">
+            <header class="jh-work--header wmx5">
+                <h1 class="ff-mono fw-bold fs-display2 fc-dark lh-xs">{{ page.title }}</h1>
+                <h2 class="ff-mono fw-normal fs-body3 fc-light lh-md">{{ page.intro }}</h2>
+                <div class="jh-work--overview grid grid__allcells4">
+                    <div class="grid--cell">
+                        <h4 class="ff-mono tt-uppercase fc-purple fw-bold fs-fine">Role</h4>
+                        <p class="fs-caption fc-medium">{{ page.role }}</p>
+                    </div>
+                    <div class="grid--cell">
+                        <h4 class="ff-mono tt-uppercase fc-purple fw-bold fs-fine">Timeframe</h4>
+                        <p class="fs-caption fc-medium">{{ page.time }}</p>
+                    </div>
+                    <div class="grid--cell">
+                        <h4 class="ff-mono tt-uppercase fc-purple fw-bold fs-fine">Skills</h4>
+                        <div class="grid fd-column fs-caption fc-medium">
+                            {% assign skills = page.skills | split: ", " %}
+                            {% for item in skills %}
+                                <span class="grid--cell">{{ item }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <aside class="grid fd-column jh-toc">
+                <header class="grid--cell jh-toc--header">Table of Contents</header>
+                <ol class="list-reset grid fd-column jh-toc--menu">
+                    <li class="grid--cell jh-toc--item">
+                        <a class="jh-toc--link is-active" href="">
+                            <div class="grid gs16 gsx">
+                                <div class="grid--cell o40">01</div>
+                                <div class="grid--cell">Intro</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="grid--cell jh-toc--item">
+                        <a class="jh-toc--link" href="">
+                            <div class="grid gs16 gsx">
+                                <div class="grid--cell o40">02</div>
+                                <div class="grid--cell">Problem</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="grid--cell jh-toc--item">
+                        <a class="jh-toc--link" href="">
+                            <div class="grid gs16 gsx">
+                                <div class="grid--cell o40">03</div>
+                                <div class="grid--cell">Numbers</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="grid--cell jh-toc--item">
+                        <a class="jh-toc--link" href="">
+                            <div class="grid gs16 gsx">
+                                <div class="grid--cell o40">04</div>
+                                <div class="grid--cell">Research</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="grid--cell jh-toc--item">
+                        <a class="jh-toc--link" href="">
+                            <div class="grid gs16 gsx">
+                                <div class="grid--cell o40">05</div>
+                                <div class="grid--cell">Build</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="grid--cell jh-toc--item">
+                        <a class="jh-toc--link" href="">
+                            <div class="grid gs16 gsx">
+                                <div class="grid--cell o40">06</div>
+                                <div class="grid--cell">Future</div>
+                            </div>
+                        </a>
+                    </li>
+                </ol>
+            </aside>
+            <div class="jh-work--preview grid grid__center"><span class="fc-white fs-body2 tt-uppercase ff-mono o20">Screenshot</span></div>
+            <div class="jh-work--preview jh-work--preview__small grid grid__center"><span class="fc-light fs-body2 tt-uppercase ff-mono o20">Screenshot</span></div>
+
+
+            {{ content }}
+        </main>
+        {% include footer.html %}
+    </body>
+</html>

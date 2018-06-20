@@ -1,0 +1,17 @@
+- title: Work
+  url: /
+  sublinks:
+    - title: Stacks
+      url: work/stacks
+    - title: Stack Overflow
+      url: work/stack-overflow
+    - title: Stack Overflow for Teams
+      url: work/teams
+    - title: Stack Exchange
+      url: work/stack-exchange
+
+- title: About
+  url: /about
+
+- title: Writing
+  url: /writing
