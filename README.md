@@ -1,4 +1,4 @@
-hellohynes.github.io
+hynes.github.io
 ====================
 
 Playground for joshuahynes.com
