@@ -7,22 +7,10 @@ module.exports = function(grunt) {
         // Shell commands for use in Grunt tasks
         shell: {
             jekyllBuild: {
-                command: 'jekyll build',
-                options: {
-                    stderr: false,
-                    // execOptions: {
-                    //     cwd: 'docs'
-                    // }
-                }
+                command: 'bundle exec jekyll build'
             },
             jekyllServe: {
-                command: 'jekyll serve',
-                options: {
-                    stderr: false,
-                    // execOptions: {
-                    //     cwd: 'docs'
-                    // }
-                }
+                command: 'bundle exec jekyll serve'
             }
         },
         // Less compilation
@@ -31,7 +19,7 @@ module.exports = function(grunt) {
                 files: {
                     'assets/css/site.css': 'assets/less/site.less'
                 }
-            },
+            }
         },
         // Minify our compiled CSS
         cssmin: {
@@ -43,13 +31,9 @@ module.exports = function(grunt) {
         },
         // Watch for files to change and run tasks when they do
         watch: {
-            postcss: {
-                files: ['assets/less/*.less'],
-                tasks: ['postcss:autoprefixing','postcss:sorting'],
-            },
             less: {
-                files: ['assets/less/*.less'],
-                tasks: ['less']
+                files: ['assets/less/**/*.less'],
+                tasks: ['less:production']
             },
             css: {
                 files: ['assets/css/site.css'],
@@ -59,10 +43,7 @@ module.exports = function(grunt) {
         // Run tasks in parallel
         concurrent: {
             serve: [
-                'postcss:autoprefixing',
-                'postcss:sorting',
-                'watch:postcss',
-                'less',
+                'less:production',
                 'watch:less',
                 'cssmin',
                 'watch:css',
@@ -72,156 +53,34 @@ module.exports = function(grunt) {
                 logConcurrentOutput: true
             }
         },
-        postcss: {
-            // Add sorting directly to Less files
-            sorting: {
-                options: {
-                    syntax: require('postcss-less'),
-                    processors: [
-                        require('postcss-sorting')({
-                            'properties-order': [
-                                'content',
-                                'box-sizing',
-                                'display',
-                                'visibility',
-                                'position',
-                                'float',
-                                'clear',
-                                'box-direction',
-                                'box-orient',
-                                'flex-direction',
-                                'box-ordinal-group',
-                                'flex-order',
-                                'order',
-                                'box-flex',
-                                'flex',
-                                'flex-grow',
-                                'flex-wrap',
-                                'flex-shrink',
-                                'flex-flow',
-                                'flex-preferred-size',
-                                'flex-basis',
-                                'box-pack',
-                                'flex-pack',
-                                'justify-content',
-                                'flex-line-pack',
-                                'align-content',
-                                'box-align',
-                                'flex-align',
-                                'align-items',
-                                'flex-item-align',
-                                'align-self',
-                                'top',
-                                'right',
-                                'bottom',
-                                'left',
-                                'width',
-                                'height',
-                                'min-width',
-                                'min-height',
-                                'max-width',
-                                'max-height',
-                                'overflow',
-                                'overflow-x',
-                                'overflow-y',
-                                'margin',
-                                'margin-top',
-                                'margin-right',
-                                'margin-bottom',
-                                'margin-left',
-                                'padding',
-                                'padding-top',
-                                'padding-right',
-                                'padding-bottom',
-                                'padding-left',
-                                'z-index',
-                                'clip-path',
-                                'opacity',
-                                'border-collapse',
-                                'border-spacing',
-                                'border',
-                                'border-color',
-                                'border-top-color',
-                                'border-right-color',
-                                'border-bottom-color',
-                                'border-left-color',
-                                'border-style',
-                                'border-top-style',
-                                'border-right-style',
-                                'border-bottom-style',
-                                'border-left-style',
-                                'border-width',
-                                'border-top-width',
-                                'border-right-width',
-                                'border-bottom-width',
-                                'border-left-width',
-                                'border-top',
-                                'border-right',
-                                'border-bottom',
-                                'border-left',
-                                'border-radius',
-                                'border-top-left-radius',
-                                'border-top-right-radius',
-                                'border-bottom-left-radius',
-                                'border-bottom-right-radius',
-                                'outline',
-                                'background',
-                                'background-color',
-                                'background-repeat',
-                                'background-size',
-                                'box-shadow',
-                                'color',
-                                'font',
-                                'font-family',
-                                'font-size',
-                                'font-weight',
-                                'font-style',
-                                'text-align',
-                                'text-transform',
-                                'text-decoration',
-                                'text-overflow',
-                                'line-height',
-                                'list-style',
-                                'list-style-type',
-                                'list-style-image',
-                                'list-style-position',
-                                'vertical-align',
-                                'white-space',
-                                'word-wrap',
-                                'backface-visibility',
-                                'animation',
-                                'transform',
-                                'transform-origin',
-                                'transition',
-                                'transition-delay',
-                                'transition-duration',
-                                'transition-property',
-                                'transition-timing-function',
-                                'will-change',
-                                'touch-action',
-                                'pointer-events',
-                                'touch-callout',
-                                'user-select',
-                                'cursor',
-                            ],
-                            'unspecified-properties-position': 'bottom',
-                        }),
-                    ]
-                },
-                src: 'assets/less/*.less',
+        // Clean the icons directory to prepare for copying from the node dependency
+        clean: {
+            icons: ['assets/icons/']
+        },
+        // Copy files out of node_modules so Jekyll can use them
+        copy: {
+            svgs: {
+                expand: true,
+                cwd: 'node_modules/@stackoverflow/stacks-icons/build/lib',
+                src: '**',
+                dest: 'assets/icons/',
+                filter: 'isFile',
             },
-            autoprefixing: {
-                options: {
-                    syntax: require('postcss-less'),
-                    processors: [
-                        require('autoprefixer')({
-                            browsers: 'last 2 versions'
-                        }),
-                    ]
-                },
-                src: 'assets/less/*.less',
-            }
-        }
+            stacks: {
+                expand: true,
+                cwd: 'node_modules/@stackoverflow/stacks/lib/src',
+                src: '**',
+                dest: 'assets/less/stacks/',
+                filter: 'isFile',
+            },
+            data: {
+                expand: true,
+                cwd: 'node_modules/@stackoverflow/stacks-icons/build',
+                src: 'icons.yml',
+                dest: '_data/',
+                filter: 'isFile',
+            },
+        },
     });
 
     // Load plugins
@@ -230,10 +89,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-postcss');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     // Default task
     grunt.registerTask('default', ['concurrent:serve']);
-    grunt.registerTask('build', ['less', 'cssmin']);
-    grunt.registerTask('process-css', ['postcss']);
+    grunt.registerTask('build', ['less:production', 'less:partials', 'clean:partials', 'cssmin']);
 };
