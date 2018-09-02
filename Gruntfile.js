@@ -73,6 +73,13 @@ module.exports = function(grunt) {
                 dest: 'assets/less/stacks/',
                 filter: 'isFile',
             },
+            scrollspy: {
+                expand: true,
+                cwd: 'node_modules/simple-scrollspy/dist',
+                src: 'simple-scrollspy.js',
+                dest: 'assets/js/third-party/',
+                filter: 'isFile',
+            },
             data: {
                 expand: true,
                 cwd: 'node_modules/@stackoverflow/stacks-icons/build',
@@ -94,5 +101,5 @@ module.exports = function(grunt) {
 
     // Default task
     grunt.registerTask('default', ['concurrent:serve']);
-    grunt.registerTask('build', ['less:production', 'less:partials', 'clean:partials', 'cssmin']);
+    grunt.registerTask('build', ['less:production', 'clean:icons', 'cssmin', 'copy:svgs', 'copy:stacks', 'copy:scrollspy']);
 };

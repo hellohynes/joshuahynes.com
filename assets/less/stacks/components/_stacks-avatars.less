@@ -1,0 +1,110 @@
+//
+//  STACK OVERFLOW
+//  AVATARS
+//
+//  This CSS comes from Stacks, our CSS & Pattern library for rapidly building
+//  Stack Overflow. For documentation of all these classes and how to contribute,
+//  visit https://stackoverflow.design/
+//
+//  TABLE OF CONTENTS
+//  • AVATARS
+//  • TEAM AVATARS
+//
+
+//  ============================================================================
+//  $   TEAM AVATARS
+//  ----------------------------------------------------------------------------
+
+.s-avatar {
+    display: inline-block; // Make sure the avatar has structure regardless of the element eg. span vs. div
+    position: relative;
+    width: @su16;
+    height: @su16;
+    border-radius: @br-sm;
+    background-color: @black-400;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    vertical-align: bottom; // Make our avatars play more nicely with text next to it.
+
+    .s-avatar--letter {
+        display: block; // Make sure we're treating the letter as a block-level element
+        color: @white;
+        font-size: @fs-fine;
+        font-weight: bold;
+        line-height: 1.4545455;
+        text-align: center;
+        text-transform: uppercase; // Force uppercase in avatars when team name is lowercase
+
+        // We don't need text selection on our letter
+        -webkit-user-select: none;
+           -moz-user-select: none;
+            -ms-user-select: none;
+                user-select: none;
+    }
+
+    .s-avatar--badge {
+        position: absolute;
+        right: -4px;
+        bottom: -4px;
+    }
+
+    &.s-avatar__md {
+        width: @su32;
+        height: @su32;
+        border-radius: @br-md;
+
+        .s-avatar--letter {
+            font-size: 1.69em; // 22px
+        }
+
+        .s-avatar--badge {
+            -webkit-transform: scale(1.3);
+                    transform: scale(1.3);
+        }
+    }
+
+    &.s-avatar__lg {
+        width: @su64;
+        height: @su64;
+        border-radius: @br-lg;
+
+        .s-avatar--letter {
+            font-size: 3.38em; // 33px
+        }
+
+        .s-avatar--badge {
+            -webkit-transform: scale(2.4);
+                    transform: scale(2.4);
+        }
+    }
+
+    &.s-avatar__xl {
+        width: @su64 + @su32;
+        height: @su64 + @su32;
+        border-radius: @br-lg + @br-sm;
+
+        .s-avatar--letter {
+            font-size: 5.07em; // 66px
+        }
+
+        .s-avatar--badge {
+            -webkit-transform: scale(3);
+                    transform: scale(3);
+        }
+    }
+
+    &.s-avatar__xxl {
+        width: @su64 + @su64;
+        height: @su64 + @su64;
+        border-radius: @br-lg + @br-lg;
+
+        .s-avatar--letter {
+            font-size: 6.77em; // 88px
+        }
+
+        .s-avatar--badge {
+            -webkit-transform: scale(3);
+                    transform: scale(3);
+        }
+    }
+}

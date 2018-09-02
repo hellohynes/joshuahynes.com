@@ -3,6 +3,11 @@
 //  PORTFOLIO
 //
 //  ============================================================================
+//  $  IMPORT STACKS
+//  ============================================================================
+@import "stacks/stacks";
+
+//  ============================================================================
 //  $  VARIABLES
 //  ============================================================================
 @ff-mono: "IBM Plex Mono", monospace;
@@ -43,36 +48,6 @@
 @br-xl:         0.75rem;
 
 @z-nav-fixed:   1050;
-
-
-//  ============================================================================
-//  $  TYPE SIZES
-//  ============================================================================
-.fs-display3    { font-size: @fs-display3 !important; }
-.fs-display2    { font-size: @fs-display2 !important; }
-.fs-display1    { font-size: @fs-display1 !important; }
-.fs-headline2   { font-size: @fs-headline2 !important; }
-.fs-headline1   { font-size: @fs-headline1 !important; }
-.fs-subheading  { font-size: @fs-subheading !important; }
-.fs-body3       { font-size: @fs-body3 !important; }
-.fs-body2       { font-size: @fs-body2 !important; }
-.fs-body1       { font-size: @fs-body1 !important; }
-.fs-caption     { font-size: @fs-caption !important; }
-.fs-fine        { font-size: @fs-fine !important; }
-
-.ff-mono        { font-family: @ff-mono !important; }
-.ff-sans        { font-family: @ff-sans !important; }
-//.ff-serif        { font-family: @ff-serif !important; }
-
-h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 0.25em;
-    line-height: 1.05;
-}
-
-.fc-dark        { color: @fc-dark !important; }
-.fc-medium      { color: @fc-medium !important; }
-.fc-ligjt       { color: @fc-light !important; }
-.fc-purple      { color: @purple; }
 
 
 //  ============================================================================
@@ -226,7 +201,7 @@ code {
 //  $  PAGE TABLE OF CONTENTS
 //  ============================================================================
 .jh-toc {
-    position: absolute;
+    position: fixed;
     top: 42rem;
     left: 3rem;
     width: 100%;
