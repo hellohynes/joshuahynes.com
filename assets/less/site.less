@@ -51,6 +51,17 @@
 
 
 //  ============================================================================
+//  $  TYPE SIZES
+//  ============================================================================
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.25em;
+    line-height: 1.05;
+}
+
+.fc-purple      { color: @purple; }
+
+
+//  ============================================================================
 //  $  BASE STYLING
 //  ============================================================================
 html,
@@ -61,23 +72,16 @@ body {
 }
 
 body {
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-    display: -webkit-box;
-    display: -ms-flexbox;
+    box-sizing: border-box;
     display: flex;
-    -webkit-box-direction: normal;
-    -webkit-box-orient: vertical;
-        -ms-flex-direction: column;
-            flex-direction: column;
+    flex-direction: column;
     width: 100%;
     height: 100%;
 
     *,
     *:before,
     *:after {
-        -webkit-box-sizing: inherit;
-                box-sizing: inherit;
+        box-sizing: inherit;
     }
 }
 
@@ -94,12 +98,8 @@ code {
 
 .jh-header {
     @media screen and (max-width: 640px) {
-        display: -webkit-box;
-        display: -ms-flexbox;
         display: flex;
-        -webkit-box-pack: justify;
-            -ms-flex-pack: justify;
-                justify-content: space-between;
+        justify-content: space-between;
         padding: 3rem 2rem 5rem;
     }
     @media screen and (min-width: 641px) {
@@ -119,8 +119,7 @@ code {
     @media screen and (max-width: 640px) {
         height: 1.5rem;
         margin-left: 5rem;
-        -webkit-transform: rotate(90deg);
-                transform: rotate(90deg);
+        transform: rotate(90deg);
     }
     @media screen and (min-width: 641px) {
         position: absolute;
@@ -141,8 +140,7 @@ code {
         top: 19.5rem;
         left: 2.625rem;
         width: 1.5rem;
-        -webkit-transform: rotate(-90deg);
-                transform: rotate(-90deg);
+        transform: rotate(-90deg);
     }
 }
 
@@ -151,9 +149,6 @@ code {
     list-style: none;
 
     @media screen and (min-width: 641px) {
-            -webkit-box-direction: reverse;
-            -webkit-box-orient: horizontal;
-            -ms-flex-direction: row-reverse;
                 flex-direction: row-reverse;
     }
 }
@@ -175,7 +170,6 @@ code {
     font-weight: 400;
     text-transform: uppercase;
     line-height: 1;
-    -webkit-transition: all 100ms @te-easeOut;
     transition: all 100ms @te-easeOut;
     letter-spacing: 3px;
 
@@ -201,16 +195,15 @@ code {
 //  $  PAGE TABLE OF CONTENTS
 //  ============================================================================
 .jh-toc {
-    position: fixed;
+    position: absolute;
     top: 42rem;
-    left: 3rem;
+    left: 6rem;
     width: 100%;
     max-width: 17rem;
     z-index: @z-nav-fixed;
     border-radius: @br-sm;
     background-color: #FAFAFA;
-    -webkit-box-shadow: 0 0.25rem 0.75rem 0 fade(#3B4045,10%);
-            box-shadow: 0 0.25rem 0.75rem 0 fade(#3B4045,10%);
+    box-shadow: 0 0.25rem 0.75rem 0 fade(#3B4045,10%);
 }
 
 .jh-toc--header,
@@ -232,18 +225,15 @@ code {
 .jh-toc--link {
     display: block;
     width: 100%;
-    -webkit-transition: all 100ms @te-easeOut;
     transition: all 100ms @te-easeOut;
 
     &.is-active {
         background-color: @white;
-        -webkit-box-shadow: 4px 0 0 0 @teal;
-                box-shadow: 4px 0 0 0 @teal;
+        box-shadow: 4px 0 0 0 @teal;
 
         &:hover {
             background-color: @teal;
-            -webkit-box-shadow: 4px 0 0 0 spin(saturate(@teal,10%), 5);
-                    box-shadow: 4px 0 0 0 spin(saturate(@teal,10%), 5);
+            box-shadow: 4px 0 0 0 spin(saturate(@teal,10%), 5);
         }
     }
     &:hover {
@@ -277,8 +267,7 @@ code {
     margin-bottom: 4rem;
     border-radius: @br-md;
     background-color: @purple;
-    -webkit-box-shadow: 0 0 0.75rem 0 fade(#3B4045,10%);
-            box-shadow: 0 0 0.75rem 0 fade(#3B4045,10%);
+    box-shadow: 0 0 0.75rem 0 fade(#3B4045,10%);
 }
 
 .jh-work--preview__small {
@@ -352,10 +341,7 @@ code {
 
 .jh-menu--nav {
     @media screen and (min-width: 641px) {
-        -webkit-box-direction: normal;
-        -webkit-box-orient: vertical;
-            -ms-flex-flow: column wrap;
-                flex-flow: column wrap;
+        flex-flow: column wrap;
     }
 }
 .jh-menu--item {

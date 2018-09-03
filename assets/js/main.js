@@ -19,12 +19,35 @@ function renderMenu() {
             return $.trim(val).length === 1 ? '0' + val : val;
         });
 
+        if (num === 1) {
+            $(".js-toc--link").addClass("is-active");
+        }
+
         $(this).attr("id","link-"+num++);
     });
 };
 
+function stickyMenu() {
+    $(window).scroll(function() {
+        var menu = $(".js-page--toc");
+        var menuPos = menu.position().top;
+        var scroll = $(window).scrollTop();
+        var distance = menuPos - scroll;
+
+        if (distance < 50) {
+            menu.addClass("ps-fixed").css("top", "48px");
+        }
+        else {
+            menu.removeClass("ps-fixed").css("top");
+        }
+
+        console.log("pos:" + scroll + ", distance:" + distance);
+    })
+}
+
 $(document).ready(function() {
     renderMenu();
+    stickyMenu();
 });
 
 window.onload = function () {
