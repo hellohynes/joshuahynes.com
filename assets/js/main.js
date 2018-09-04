@@ -36,16 +36,14 @@ function stickyMenu() {
     $(window).scroll(function() {
         var menuPos = menu.offset().top;
         var scroll = $(window).scrollTop();
-        var distance = menuPos - scroll;
+        var distance = menuStart - 48;
 
-        if (distance < 48) {
+        if (scroll >= distance) {
             menu.addClass("ps-fixed").css("top", "48px");
         }
-        if (scroll > 49) {
-            menu.removeClass("ps-fixed").css("top", menuPos);
+        else {
+            menu.removeClass("ps-fixed").css("top", menuStart);
         }
-
-        console.log("pos:" + scroll + ", distance:" + distance);
     })
 }
 
