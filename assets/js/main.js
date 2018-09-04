@@ -28,17 +28,21 @@ function renderMenu() {
 };
 
 function stickyMenu() {
+    var menu = $(".js-page--toc");
+    var menuStart = menu.data("position");
+
+    menu.css("top", menuStart);
+
     $(window).scroll(function() {
-        var menu = $(".js-page--toc");
-        var menuPos = menu.position().top;
+        var menuPos = menu.offset().top;
         var scroll = $(window).scrollTop();
         var distance = menuPos - scroll;
 
-        if (distance < 50) {
+        if (distance < 48) {
             menu.addClass("ps-fixed").css("top", "48px");
         }
-        else {
-            menu.removeClass("ps-fixed").css("top");
+        if (scroll > 49) {
+            menu.removeClass("ps-fixed").css("top", menuPos);
         }
 
         console.log("pos:" + scroll + ", distance:" + distance);
