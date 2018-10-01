@@ -66,6 +66,9 @@ h1, h2, h3, h4, h5, h6 {
 //  ============================================================================
 html,
 body {
+    width: 100%;
+    min-width: auto;
+    height: auto;
     font-family: @ff-sans;
     font-size: 16px;
     line-height: 1.333333333;
@@ -75,8 +78,7 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
+    max-width: 75rem;
 
     *,
     *:before,
@@ -94,19 +96,17 @@ code {
 //  ============================================================================
 //  $  HEADER
 //  ============================================================================
-@jh-nav--padding:       100vw / 6;
-
 .jh-header {
-    @media screen and (max-width: 640px) {
+    @media screen and (max-width: 728px) {
         display: flex;
         justify-content: space-between;
-        padding: 3rem 2rem 5rem;
+        padding: 3rem 1rem 4rem;
     }
-    @media screen and (min-width: 641px) {
+    @media screen and (min-width: 729px) {
         position: fixed;
         height: 100%;
         padding-bottom: calc(~"100vw - 320px");
-        padding-left: @jh-nav--padding;
+        padding-left: 15%;
     }
 
 }
@@ -116,12 +116,12 @@ code {
 //  $  LOGO
 //  ============================================================================
 .jh-logo {
-    @media screen and (max-width: 640px) {
+    @media screen and (max-width: 728px) {
         height: 1.5rem;
         margin-left: 5rem;
         transform: rotate(90deg);
     }
-    @media screen and (min-width: 641px) {
+    @media screen and (min-width: 729px) {
         position: absolute;
         top: 6.25rem;
         left: 2.625rem;
@@ -133,9 +133,10 @@ code {
 //  $  TOP NAVIGATION
 //  ============================================================================
 .jh-nav {
-    @media screen and (max-width: 640px) {
+    @media screen and (max-width: 728px) {
+        margin-right: 0.5rem;
     }
-    @media screen and (min-width: 641px) {
+    @media screen and (min-width: 729px) {
         position: absolute;
         top: 19.5rem;
         left: 2.625rem;
@@ -148,8 +149,8 @@ code {
     padding: 0;
     list-style: none;
 
-    @media screen and (min-width: 641px) {
-                flex-direction: row-reverse;
+    @media screen and (min-width: 729px) {
+        flex-direction: row-reverse;
     }
 }
 
@@ -195,14 +196,30 @@ code {
 //  $  PAGE TABLE OF CONTENTS
 //  ============================================================================
 .jh-toc {
-    position: absolute;
-    left: 6rem;
     width: 100%;
-    max-width: 17rem;
-    z-index: @z-nav-fixed;
-    border-radius: @br-sm;
     background-color: #FAFAFA;
-    box-shadow: 0 0.25rem 0.75rem 0 fade(#3B4045,10%);
+    border-radius: @br-sm;
+    transition: all 100ms @te-smooth;
+
+    @media screen and (max-width: 640px) {
+        display: block;
+        max-width: 100vw;
+
+        &.ps-fixed {
+            margin-left: -32px;
+            border-radius: initial;
+        }
+    }
+    @media screen and (min-width: 641px) and (max-width: 728px) {
+
+    }
+    @media screen and (min-width: 729px) {
+        position: absolute;
+        left: 6rem;
+        max-width: 17rem;
+        z-index: @z-nav-fixed;
+        box-shadow: 0 0.25rem 0.75rem 0 fade(#3B4045,10%);
+    }
 }
 
 .jh-toc--header,
@@ -248,12 +265,16 @@ code {
 //  ============================================================================
 //  $  WORK PAGES LAYOUT ELEMENTS
 //  ============================================================================
-.jh-work--container {
+.jh-work--container-wrapper {
     @media screen and (max-width: 640px) {
         padding: 0 2rem 2rem;
     }
-    @media screen and (min-width: 641px) {
-        padding: 10rem @jh-nav--padding 6rem;
+    @media screen and (min-width: 641px) and (max-width: 728px) {
+        padding: 5.5rem 5% 2rem 5%;
+    }
+    @media screen and (min-width: 729px) {
+        margin-left: 15%;
+        padding: 10rem 0 6rem;
     }
 }
 
@@ -279,14 +300,23 @@ code {
 
 .jh-work--overview {
     margin-top: 4rem;
-    margin-bottom: 6rem;
+
+    @media screen and (max-width: 640px) {
+        margin-bottom: 4rem;
+    }
+    @media screen and (min-width: 641px) {
+        margin-bottom: 6rem;
+    }
 }
 
 .jh-section {
     margin-top: 4rem;
     margin-bottom: 4rem;
-    padding-right: 4rem;
-    padding-left: 8rem;
+
+    @media screen and (min-width: 729px) {
+        padding-right: 4rem;
+        padding-left: 8rem;
+    }
 }
 
 .jh-section--title {
@@ -318,14 +348,20 @@ code {
     @color-light:   #DBDBDC;
 
     background-color: mix(@color-dark, @color-light);
-    background-image: linear-gradient(128deg, @color-light, @color-dark);
+    background-attachment: scroll;
 
-    .jh-work--preview__small {
-        max-width: calc(~"50% + 2rem");
-        margin-top: -28.33333333%;
-        margin-left: -3rem;
+    @media screen and (min-width: 641px) {
+        background-image: -webkit-linear-gradient(38deg, @color-light, @color-dark);
+        background-image: -o-linear-gradient(38deg, @color-light, @color-dark);
+        background-image: linear-gradient(128deg, @color-light, @color-dark);
     }
-}
+
+        .jh-work--preview__small {
+            max-width: calc(~"50% + 2rem");
+            margin-top: -28.33333333%;
+            margin-left: -3rem;
+        }
+    }
 
 
 //  ============================================================================

@@ -9788,6 +9788,9 @@ h6 {
 }
 html,
 body {
+  width: 100%;
+  min-width: auto;
+  height: auto;
   font-family: "IBM Plex Sans", sans-serif;
   font-size: 16px;
   line-height: 1.33333333;
@@ -9796,8 +9799,7 @@ body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
+  max-width: 75rem;
 }
 body *,
 body *:before,
@@ -9808,29 +9810,29 @@ pre,
 code {
   font-family: "IBM Plex Mono", monospace;
 }
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 728px) {
   .jh-header {
     display: flex;
     justify-content: space-between;
-    padding: 3rem 2rem 5rem;
+    padding: 3rem 1rem 4rem;
   }
 }
-@media screen and (min-width: 641px) {
+@media screen and (min-width: 729px) {
   .jh-header {
     position: fixed;
     height: 100%;
     padding-bottom: calc(100vw - 320px);
-    padding-left: 16.66666667vw;
+    padding-left: 15%;
   }
 }
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 728px) {
   .jh-logo {
     height: 1.5rem;
     margin-left: 5rem;
     transform: rotate(90deg);
   }
 }
-@media screen and (min-width: 641px) {
+@media screen and (min-width: 729px) {
   .jh-logo {
     position: absolute;
     top: 6.25rem;
@@ -9838,7 +9840,12 @@ code {
     width: 1.5rem;
   }
 }
-@media screen and (min-width: 641px) {
+@media screen and (max-width: 728px) {
+  .jh-nav {
+    margin-right: 0.5rem;
+  }
+}
+@media screen and (min-width: 729px) {
   .jh-nav {
     position: absolute;
     top: 19.5rem;
@@ -9851,7 +9858,7 @@ code {
   padding: 0;
   list-style: none;
 }
-@media screen and (min-width: 641px) {
+@media screen and (min-width: 729px) {
   .jh-nav--menu {
     flex-direction: row-reverse;
   }
@@ -9888,14 +9895,29 @@ code {
   color: #020311;
 }
 .jh-toc {
-  position: absolute;
-  left: 6rem;
   width: 100%;
-  max-width: 17rem;
-  z-index: 1050;
-  border-radius: 0.1875rem;
   background-color: #FAFAFA;
-  box-shadow: 0 0.25rem 0.75rem 0 rgba(59, 64, 69, 0.1);
+  border-radius: 0.1875rem;
+  transition: all 100ms cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+@media screen and (max-width: 640px) {
+  .jh-toc {
+    display: block;
+    max-width: 100vw;
+  }
+  .jh-toc.ps-fixed {
+    margin-left: -32px;
+    border-radius: initial;
+  }
+}
+@media screen and (min-width: 729px) {
+  .jh-toc {
+    position: absolute;
+    left: 6rem;
+    max-width: 17rem;
+    z-index: 1050;
+    box-shadow: 0 0.25rem 0.75rem 0 rgba(59, 64, 69, 0.1);
+  }
 }
 .jh-toc--header,
 .jh-toc--link {
@@ -9932,13 +9954,19 @@ code {
   padding-bottom: 1rem;
 }
 @media screen and (max-width: 640px) {
-  .jh-work--container {
+  .jh-work--container-wrapper {
     padding: 0 2rem 2rem;
   }
 }
-@media screen and (min-width: 641px) {
-  .jh-work--container {
-    padding: 10rem 16.66666667vw 6rem;
+@media screen and (min-width: 641px) and (max-width: 728px) {
+  .jh-work--container-wrapper {
+    padding: 5.5rem 5% 2rem 5%;
+  }
+}
+@media screen and (min-width: 729px) {
+  .jh-work--container-wrapper {
+    margin-left: 15%;
+    padding: 10rem 0 6rem;
   }
 }
 .jh-work--preview {
@@ -9961,13 +9989,26 @@ code {
 }
 .jh-work--overview {
   margin-top: 4rem;
-  margin-bottom: 6rem;
+}
+@media screen and (max-width: 640px) {
+  .jh-work--overview {
+    margin-bottom: 4rem;
+  }
+}
+@media screen and (min-width: 641px) {
+  .jh-work--overview {
+    margin-bottom: 6rem;
+  }
 }
 .jh-section {
   margin-top: 4rem;
   margin-bottom: 4rem;
-  padding-right: 4rem;
-  padding-left: 8rem;
+}
+@media screen and (min-width: 729px) {
+  .jh-section {
+    padding-right: 4rem;
+    padding-left: 8rem;
+  }
 }
 .jh-section--title {
   color: #0027B0;
@@ -9988,7 +10029,14 @@ code {
 }
 .work--so-teams {
   background-color: #c5c5c8;
-  background-image: linear-gradient(128deg, #DBDBDC, #AEAEB4);
+  background-attachment: scroll;
+}
+@media screen and (min-width: 641px) {
+  .work--so-teams {
+    background-image: -webkit-linear-gradient(38deg, #DBDBDC, #AEAEB4);
+    background-image: -o-linear-gradient(38deg, #DBDBDC, #AEAEB4);
+    background-image: linear-gradient(128deg, #DBDBDC, #AEAEB4);
+  }
 }
 .work--so-teams .jh-work--preview__small {
   max-width: calc(50% + 2rem);

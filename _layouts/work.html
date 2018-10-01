@@ -21,42 +21,44 @@
             </nav>
         </header>
 
-        <aside class="grid fd-column jh-toc js-page--toc" data-position="672">
-            <header class="grid--cell jh-toc--header">Table of Contents</header>
-            <ol class="list-reset grid fd-column jh-toc--menu js-toc--menu">
-            </ol>
-        </aside>
-
         <main class="ps-relative jh-work--container js-scrollspy">
-            <header class="jh-work--header wmx5">
-                <h1 class="ff-mono fw-bold fs-display2 fc-dark lh-xs">{{ page.title }}</h1>
-                <h2 class="ff-mono fw-normal fs-body3 fc-light lh-md">{{ page.intro }}</h2>
-                <div class="jh-work--overview grid grid__allcells4">
-                    <div class="grid--cell">
-                        <h4 class="ff-mono tt-uppercase fc-purple fw-bold fs-fine">Role</h4>
-                        <p class="fs-caption fc-medium">{{ page.role }}</p>
-                    </div>
-                    <div class="grid--cell">
-                        <h4 class="ff-mono tt-uppercase fc-purple fw-bold fs-fine">Timeframe</h4>
-                        <p class="fs-caption fc-medium">{{ page.time }}</p>
-                    </div>
-                    <div class="grid--cell">
-                        <h4 class="ff-mono tt-uppercase fc-purple fw-bold fs-fine">Skills</h4>
-                        <div class="grid fd-column fs-caption fc-medium">
-                            {% assign skills = page.skills | split: ", " %}
-                            {% for item in skills %}
-                                <span class="grid--cell">{{ item }}</span>
-                            {% endfor %}
+            <div class="jh-work--container-wrapper">
+                <header class="jh-work--header wmx5">
+                    <h1 class="ff-mono fw-bold fs-display2 fc-dark lh-xs">{{ page.title }}</h1>
+                    <h2 class="ff-mono fw-normal fs-body3 fc-light lh-md">{{ page.intro }}</h2>
+                    <div class="jh-work--overview grid grid__allcells4 fw-wrap">
+                        <div class="grid--cell">
+                            <h4 class="ff-mono tt-uppercase fc-purple fw-bold fs-fine">Role</h4>
+                            <p class="fs-caption fc-medium">{{ page.role }}</p>
+                        </div>
+                        <div class="grid--cell">
+                            <h4 class="ff-mono tt-uppercase fc-purple fw-bold fs-fine">Timeframe</h4>
+                            <p class="fs-caption fc-medium">{{ page.time }}</p>
+                        </div>
+                        <div class="grid--cell">
+                            <h4 class="ff-mono tt-uppercase fc-purple fw-bold fs-fine">Skills</h4>
+                            <div class="grid fd-column fs-caption fc-medium">
+                                {% assign skills = page.skills | split: ", " %}
+                                {% for item in skills %}
+                                    <span class="grid--cell">{{ item }}</span>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </header>
+                </header>
 
-            <div class="jh-work--preview grid grid__center"><span class="fc-white fs-body2 tt-uppercase ff-mono o20">Screenshot</span></div>
-            <div class="jh-work--preview jh-work--preview__small grid grid__center"><span class="fc-light fs-body2 tt-uppercase ff-mono o20">Screenshot</span></div>
+                <aside class="grid fd-column jh-toc js-page--toc" data-position="672">
+                    <header class="grid--cell jh-toc--header">Table of Contents</header>
+                    <ol class="list-reset grid fd-column jh-toc--menu js-toc--menu">
+                    </ol>
+                </aside>
+
+                <!-- <div class="jh-work--preview grid grid__center"></div>
+                <div class="jh-work--preview jh-work--preview__small grid grid__center"></div> -->
 
 
-            {{ content }}
+                {{ content }}
+            </div>
         </main>
         {% include footer.html %}
     </body>
