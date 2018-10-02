@@ -9792,8 +9792,19 @@ body {
   min-width: auto;
   height: auto;
   font-family: "IBM Plex Sans", sans-serif;
-  font-size: 16px;
   line-height: 1.33333333;
+}
+@media screen and (max-width: 640px) {
+  html,
+  body {
+    font-size: 18px;
+  }
+}
+@media screen and (min-width: 641px) {
+  html,
+  body {
+    font-size: 16px;
+  }
 }
 body {
   box-sizing: border-box;
@@ -9906,7 +9917,7 @@ code {
     max-width: 100vw;
   }
   .jh-toc.ps-fixed {
-    margin-left: -32px;
+    margin-left: -2rem;
     border-radius: initial;
   }
 }
@@ -9918,6 +9929,9 @@ code {
     z-index: 1050;
     box-shadow: 0 0.25rem 0.75rem 0 rgba(59, 64, 69, 0.1);
   }
+  .jh-toc .iconHamburger {
+    display: none;
+  }
 }
 .jh-toc--header,
 .jh-toc--link {
@@ -9927,8 +9941,6 @@ code {
   line-height: 1.1875;
 }
 .jh-toc--header {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -9952,6 +9964,14 @@ code {
 }
 .jh-toc--menu .jh-toc--item:last-of-type .jh-toc--link {
   padding-bottom: 1rem;
+}
+.jh-toc--menu {
+  display: none;
+}
+@media screen and (min-width: 729px) {
+  .jh-toc--menu {
+    display: initial;
+  }
 }
 @media screen and (max-width: 640px) {
   .jh-work--container-wrapper {
@@ -9994,10 +10014,16 @@ code {
   .jh-work--overview {
     margin-bottom: 4rem;
   }
+  .jh-work--overview > .grid--cell {
+    max-width: 50%;
+  }
 }
 @media screen and (min-width: 641px) {
   .jh-work--overview {
     margin-bottom: 6rem;
+  }
+  .jh-work--overview > .grid--cell {
+    max-width: 33.333%;
   }
 }
 .jh-section {

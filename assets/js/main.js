@@ -39,7 +39,7 @@ function stickyMenu() {
         var distance = menuStart - 48;
 
         if (scroll >= distance) {
-            menu.addClass("ps-fixed").css("top", "86px");
+            menu.addClass("ps-fixed").css("top", "0");
         }
         else {
             menu.removeClass("ps-fixed").css("top", menuStart);

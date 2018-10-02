@@ -26,7 +26,7 @@
                 <header class="jh-work--header wmx5">
                     <h1 class="ff-mono fw-bold fs-display2 fc-dark lh-xs">{{ page.title }}</h1>
                     <h2 class="ff-mono fw-normal fs-body3 fc-light lh-md">{{ page.intro }}</h2>
-                    <div class="jh-work--overview grid grid__allcells4 fw-wrap">
+                    <div class="jh-work--overview grid grid__fl1 gs8 fw-wrap">
                         <div class="grid--cell">
                             <h4 class="ff-mono tt-uppercase fc-purple fw-bold fs-fine">Role</h4>
                             <p class="fs-caption fc-medium">{{ page.role }}</p>
@@ -48,7 +48,10 @@
                 </header>
 
                 <aside class="grid fd-column jh-toc js-page--toc" data-position="672">
-                    <header class="grid--cell jh-toc--header">Table of Contents</header>
+                    <header class="grid jc-space-between ai-center jh-toc--header">
+                        <div class="grid--cell">Table of Contents</div>
+                        <div class="grid--cell"><a href="#" class="grid grid__center s-btn s-btn__muted p4 fc-dark js-toc-button"><svg aria-hidden="true" class="svg-icon iconHamburger m0" width="18" height="18" viewBox="0 0 18 18"><path d="M2 8h14v2H2V8zm0-5h14v2H2V3zm0 10h14v2H2v-2z"/></svg></a></div>
+                    </header>
                     <ol class="list-reset grid fd-column jh-toc--menu js-toc--menu">
                     </ol>
                 </aside>
