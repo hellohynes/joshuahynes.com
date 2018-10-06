@@ -1,0 +1,24 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% if page.title %}{{ page.title | escape }} - {% endif %}{{ site.title | escape }}</title>
+    <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+
+    <!-- Favicons -->
+    <link rel="shortcut icon" href="{{ "/assets/img/favicons/favicon.ico" | relative_url }}" />
+    <link rel="apple-touch-icon image_src" href="{{ "/assets/img/favicons/apple-touch-icon.png" | relative_url }}" />
+
+    <!-- Social -->
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="http://www.joshuahynes.com/"/>
+    <meta property="og:image" itemprop="image primaryImageOfPage" content="{{ "/assets/img/favicons/apple-touch-icon@2x.png" | relative_url }}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:domain" content="joshuahynes.com" />
+    <meta name="twitter:title" property="og:title" itemprop="title name" content="Joshua Hynes" />
+    <meta name="twitter:description" property="og:description" itemprop="description" content="The personal website and portfolio of Joshua Hynes" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,700|IBM+Plex+Sans:400,400i,700,700i">
+    <link rel="stylesheet" type="text/css" href="{{ "/assets/css/site.min.css" | relative_url }}?{{site.time | date: '%s%N'}}">
+</head>

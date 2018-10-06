@@ -1,0 +1,117 @@
+- work: "Stack Overflow for Teams"
+  url: /work/teams
+  labels:
+    - label: "Experience Design"
+      tag: experience-design
+    - label: "User Research"
+      tag: user-research
+    - label: "Visual Design"
+      tag: visual-design
+    - label: "Frontend"
+      tag: frontend
+  bgc: BEFF7A
+  class: so__teams
+  type: primary
+
+- work: "Stacks"
+  url: /work/stacks
+  labels:
+    - label: "Experience Design"
+      tag: experience-design
+    - label: "Visual Design"
+      tag: visual-design
+    - label: "Frontend"
+      tag: frontend
+    - label: "Design System"
+      tag: design-system
+  bgc: FF7AB6
+  class: so__stacks
+  type: secondary
+
+- work: "Stack Overflow Profiles"
+  url: /work/stack-overflow-profiles
+  labels:
+    - label: "Experience Design"
+      tag: experience-design
+    - label: "User Research"
+      tag: user-research
+    - label: "Visual Design"
+      tag: visual-design
+    - label: "Frontend"
+      tag: frontend
+  bgc: 7ADCFF
+  class: so__profiles
+  type: secondary
+
+- work: "Stack Overflow Talent"
+  url: /work/stack-overflow-talent
+  labels:
+    - label: "Experience Design"
+      tag: experience-design
+    - label: "User Research"
+      tag: user-research
+    - label: "Visual Design"
+      tag: visual-design
+    - label: "Frontend"
+      tag: frontend
+  bgc: FFD17A
+  class: so__talent
+  type: secondary
+
+- work: "Stack Overflow"
+  url: /work/stack-overflow
+  labels:
+    - label: Branding
+      tag: branding
+  bgc: FFA37A
+  class: so
+  type: secondary
+
+- work: "Stack Exchange"
+  url: /work/stack-exchange
+  labels:
+    - label: Branding
+      tag: branding
+    - label: Illustration
+      tag: illustration
+    - label: "Experience Design"
+      tag: experience-design
+    - label: "Visual Design"
+      tag: visual-design
+    - label: "Frontend"
+      tag: frontend
+  bgc: 7AFFBD
+  class: se
+  type: secondary
+
+- work: "Origin.al"
+  url: /work/original
+  labels:
+    - label: Branding
+      tag: branding
+    - label: "Experience Design"
+      tag: experience-design
+    - label: "Visual Design"
+      tag: visual-design
+    - label: "Frontend"
+      tag: frontend
+  bgc: 837AFF
+  class: original
+  type: secondary
+
+- work: "Hatchback"
+  url: /work/hatchback
+  labels:
+    - label: Branding
+      tag: branding
+    - label: Illustration
+      tag: illustration
+    - label: "Experience Design"
+      tag: experience-design
+    - label: "Visual Design"
+      tag: visual-design
+    - label: "Frontend"
+      tag: frontend
+  bgc: B8FF7A
+  class: hatchback
+  type: secondary

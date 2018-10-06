@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en-us" class="h100">
+    {% include head.html %}
+
+    <body class="ps-relative overflowx-hidden">
+        <header class="grid--cell nav--home">
+            <a href="/" class="mx-auto my0 grid gs12 ai-center h100">
+                <span class="grid--cell">←</span>
+                <span class="grid--cell">Back to home</span>
+            </a>
+        </header>
+
+        <div class="grid gs32 content">
+            <div class="grid fd-column ai-end pl48 pr16 py12 content--nav">
+                <svg aria-hidden="true" class="svg-icon logo" width="144" height="144" viewBox="0 0 144 144">
+                    <path d="M72.0010286 0C44.0583429 0 19.8864 15.9474857 7.95445714 39.2137714H67.8533143l-4.5272572 24.8790857h35.1478286l4.1780573-24.9279428 5.733257.0653143L92.1193714 141.0948C122.081657 132.381257 144 104.7744 144 71.9979429 144 32.2354286 111.764057 0 72.0010286 0zm-9.5436 68.9009143l-2.6727429 15.9937714C57.9132 96.3596571 51.9845143 101.650629 43.0241143 101.650629c-2.4264 0-9.0858857-1.510458-12.1191429-2.9880004l-1.4256-7.0462286c2.7226286 1.7547429 6.5175429 4.6033714 13.8270857 4.3961143C49.1194286 95.8494857 53.4831429 92.8728 54.9756 83.5189714L61.542 44.388H5.5044C1.97331429 52.8953143 0 62.2126286 0 71.9979429 0 111.766114 32.2400571 144 72.0010286 144c4.7576571 0 9.3944571-.488571 13.896-1.368514l11.6588571-73.7305717H62.4574286z" fill-rule="evenodd"/>
+                </svg>
+                <div style="height: 268px"></div>
+                <div class="toc--container js-toc-list">
+                    <div class="toc--header">Table of Contents</div>
+                    <ol class="toc--list" role="navigation">
+                        <li class="toc--item toc__active"><a href="#part01" class="toc--link">Identifying the problems</a></li>
+                        <li class="toc--item"><a href="#part02" class="toc--link">Implementing a solution</a></li>
+                        <li class="toc--item"><a href="#part03" class="toc--link">Broadening the solution</a></li>
+                        <li class="toc--item"><a href="#part04" class="toc--link">Re-assessing the solution</a></li>
+                        <li class="toc--item"><a href="#part05" class="toc--link">Building anew</a></li>
+                    </ol>
+                </div>
+            </div>
+            <section class="grid--cell content--main js-scrollspy">
+                <header class="grid--cell content--header ps-relative">
+                    <h1 class="ps-relative fs-display4 ff-mono lh-xxs mt0 fc-dark z-banner">Building a system</h1>
+                    <h2 class="ps-relative fs-subheading ff-mono fw-400 fc-light fs-italic z-banner">Spearheading a design system</h2>
+                    <h4 class="mt48 fs-fine fc-medium tt-uppercase ff-mono o60">Case Study • 2014 – Present</h4>
+                </header>
+
+                <main class="grid fd-column gs64 gsy">
+                    <section class="grid--cell" id="intro">
+                        <p class="fs-body3 lh-l">While design systems roles are a newer phenomena, the idea isn’t new. Offline or online, brand systems have been commonplace for decades. As brands transition to digital and have greater control over their brand experience, it’s important teams stay in sync, build quickly, and create holistic experiences across all product touchpoints.</p>
+                        <p class="fs-body3 lh-l">Stack Overflow, a website that helps almost 50 million developers a month, had this need as well—though it became only more pronounced as our team expanded into multiple product teams working across an increasingly unified experience. Four years ago I started this project to help address these needs.</p>
+                    </section>
+                    <section class="grid--cell" id="part01">
+                        <span class="fs-caption tt-uppercase ff-mono fw-700 lh-1 o60">Part 01</span>
+                        <h2 class="fs-headline2">Identifying the problems</h2>
+                        <p class="fs-body3 lh-l">When I first started at Stack Overflow, I joined the team at a relatively early stage in 2013. I was the second design team member and about the 80th overall team member to join. The product team was still relatively small, and yet I quickly noticed ineffencies in how we built things.</p>
+                        <p class="fs-body3 lh-l"><strong>Styles meant different things throughout the product.</strong> Many elements had different style variations depending on where it was used. Similar items could even have <em>different</em> meanings depending on the context. This made it not only difficult for users to understand what was happening, but it was harder for our team members to know what to use when. Determining which style to use was a combination of preference, what styles you'd seen recenctly, guesswork, and you arguing for your suggestion.</p>
+                        <p class="fs-body3 lh-l"><strong>Product teams rebuilt the same element multiple times.</strong> Literally. Instead of sharing one unified table style, we created multiple versions that were mostly the same. Not only did this mean more items to track and add to our CSS bloat, but it meant we were wasting time rebuilding the same thing.</p>
+                        <p class="fs-body3 lh-l"><strong>We didn’t know what had been built.</strong> With little documentation outlining UI elements and rules around when, where, and why to use them; product teams were left to create what they needed when they needed them—even if that conflicted with an area they didn't know about.</p>
+                        <p class="fs-body3 lh-l"><strong>Elements experienced “design drift”.</strong> Without a easily accessible reference, elements would be slightly modified as they were copied throughout the product. Over time the same element would have increased variations throughout the product.</p>
+                        <p class="fs-body3 lh-l"><strong>Not everyone agreed that these problems were pressing problems.</strong> As I pushed to fix these things, I found that many didn't see these as possible problems. These weren't direct pains, in comparison to other problems we were working through. These were long-term, indirect problems.</p>
+                    </section>
+                    <section class="grid--cell" id="part02">
+                        <span class="fs-caption tt-uppercase ff-mono fw-700 lh-1 o60">Part 02</span>
+                        <h2 class="fs-headline2">Finding a solution… or two</h2>
+                        <p class="fs-body3 lh-l">Indentifying the solution wasn't the hard part. We needed a documented resource which was used as a common reference by the product team for building. The hard part was getting started. Investigating how others had started similar projects, I discovered that in many cases people who started these types of projects rebuild everything. They tear everything down and rebuild it back up using the new system.</p>
+                        <p class="fs-body3 lh-l">Simply put that approach was a non-starter. I was already managing a product suite comprised of 4 major products. There wasn't time for me to stop this needed work for something that was a long-term payoff. Through this process I found that the hard part wasn't identifying the solution, but gaining internal buy-in from not only my peers, but management and executive stakeholders.</p>
+                    </section>
+                    <section class="grid--cell" id="part03">
+                        <span class="fs-caption tt-uppercase ff-mono fw-700 lh-1 o60">Part 03</span>
+                        <h2 class="fs-headline2">Reaching out</h2>
+                        <p class="fs-body3 lh-l">By the summer of 2014 a number of peers agreed we needed a design system. In September I partnered with two developers and a designer to start our first attempt. We worked on it when we had the time in-between our main projects. Codenamed "Jam", we built a documentation website focused exclusively for the Stack Overflow Talent product. While it didn't include all of Stack Overflow, proving that this could work on one project would provide us proof internally that more time and resources should be given toward this.</p>
+                        <p>(Image / Screenshot)</p>
+                        <p class="fs-body3 lh-l">Over the next year I was the most active member on Jam. I created most, if not all, of the documentation, implemented most of the design elements into the product, and helped maintain the repo. Unfortunately because it was a minor side project for only a couple people, it took longer, people's interest waned, and our success was blunted because it didn't encompass most things. When things were documented, it worked great. But there were many, many areas of the product which either hadn't been documented yet or were brand new elements that we needed.</p>
+                    </section>
+                    <section class="grid--cell" id="part04">
+                        <span class="fs-caption tt-uppercase ff-mono fw-700 lh-1 o60">Part 04</span>
+                        <h2 class="fs-headline2">Re-assessing the solution</h2>
+                        <p class="fs-body3 lh-l">The year 2015 brought By the summer of 2015 the design team had grown to about eight people. At this point everyone could see that we needed some sort of design system in place with some many people and teams working in different areas of Stack Overflow. That same summer, I worked with our marketing team to help rebrand Stack Overflow as we transitioned away from our previous name Stack Exchange back to Stack Overflow. Throughout that process, I realized that some of my frustrations with Jam stemmed from the lack of clarity our brand had. Given an aggressive timeline, we couldn't spend as much time on it as we would have liked. Yet we used the project to revisit our brand overall and fill in the many holes and re-align odd areas.</p>
+                        <p class="fs-body3 lh-l">Throughout that summer and fall, a
+                    </section>
+                    <section class="grid--cell" id="part05">
+                        <span class="fs-caption tt-uppercase ff-mono fw-700 lh-1 o60">Part 05</span>
+                        <h2 class="fs-headline2">Building anew</h2>
+                        <p class="fs-body3 lh-l">TBD</p>
+                    </section>
+                </main>
+            </section>
+        </div>
+        <footer class="grid--cell">Footer</footer>
+        {% include footer.html %}
+    </body>
+</html>

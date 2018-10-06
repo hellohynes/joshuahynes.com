@@ -1,0 +1,481 @@
+//
+//  JOSHUA HYNES
+//  PORTFOLIO
+//
+//  ============================================================================
+//  $  IMPORT STACKS
+//  ============================================================================
+@import "stacks/stacks";
+
+//  ============================================================================
+//  $  VARIABLES
+//  ============================================================================
+@ff-mono: "IBM Plex Mono", monospace;
+@ff-sans: "IBM Plex Sans", sans-serif;
+@ff-serif: "IBM Plex Sans", sans-serif;
+
+@fs-display3:   5.16rem;
+@fs-display2:   4.3rem;
+@fs-display1:   3.583rem;
+@fs-headline2:  2.488rem;
+@fs-headline1:  2.074rem;
+@fs-subheading: 2.074rem;
+@fs-body3:      1.728rem;
+@fs-body2:      1.44rem;
+@fs-body1:      1rem;
+@fs-caption:    0.833rem;
+@fs-fine:       0.694rem;
+
+@lh-xs:         1;
+@lh-sm:         1.1875;
+@lh-md:         1.375;
+@lh-lg:         1.5625;
+@lh-xl:         1.75;
+@lh-xxl:        2;
+
+@fc-dark:       #020311;
+@fc-medium:     #3C3D45;
+@fc-light:      #73747C;
+@purple:        #0027B0;
+@white:         #FFF;
+@teal:          #33EFCB;
+
+@te-easeOut:    cubic-bezier(0.39, 0.575, 0.565, 1);
+
+@br-sm:         0.1875rem;
+@br-md:         0.375rem;
+@br-lg:         0.5625rem;
+@br-xl:         0.75rem;
+
+@z-nav-fixed:   1050;
+
+
+//  ============================================================================
+//  $  TYPE SIZES
+//  ============================================================================
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.25em;
+    line-height: 1.05;
+}
+
+.fc-purple      { color: @purple; }
+
+
+//  ============================================================================
+//  $  BASE STYLING
+//  ============================================================================
+html,
+body {
+    width: 100%;
+    min-width: auto;
+    height: auto;
+    font-family: @ff-sans;
+    line-height: 1.333333333;
+
+    @media screen and (max-width: 640px) {
+        font-size: 18px;
+    }
+    @media screen and (min-width: 641px) {
+        font-size: 16px;
+    }
+}
+
+body {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    max-width: 75rem;
+
+    *,
+    *:before,
+    *:after {
+        box-sizing: inherit;
+    }
+}
+
+pre,
+code {
+    font-family: @ff-mono;
+}
+
+
+//  ============================================================================
+//  $  HEADER
+//  ============================================================================
+.jh-header {
+    @media screen and (max-width: 728px) {
+        display: flex;
+        justify-content: space-between;
+        padding: 3rem 5%;
+    }
+    @media screen and (min-width: 729px) {
+        position: fixed;
+        height: 100%;
+        padding-bottom: calc(~"100vw - 320px");
+        padding-left: 15%;
+    }
+
+}
+
+
+//  ============================================================================
+//  $  LOGO
+//  ============================================================================
+.jh-logo {
+    @media screen and (max-width: 728px) {
+        height: 1.5rem;
+        margin-left: 5rem;
+        transform: rotate(90deg);
+    }
+    @media screen and (min-width: 729px) {
+        position: absolute;
+        top: 6.25rem;
+        left: 2.625rem;
+        width: 1.5rem;
+    }
+}
+
+//  ============================================================================
+//  $  TOP NAVIGATION
+//  ============================================================================
+.jh-nav {
+    @media screen and (max-width: 728px) {
+        margin-right: 0.5rem;
+    }
+    @media screen and (min-width: 729px) {
+        position: absolute;
+        top: 19.5rem;
+        left: 2.625rem;
+        width: 1.5rem;
+        transform: rotate(-90deg);
+    }
+}
+
+.jh-nav--menu {
+    padding: 0;
+    list-style: none;
+
+    @media screen and (min-width: 729px) {
+        flex-direction: row-reverse;
+    }
+}
+
+.jh-nav--item {
+    padding: 0;
+    list-style: none;
+}
+
+
+.jh-nav--link {
+    padding: 0.375rem;
+    padding-left: 0.565rem;
+    border-radius: 0.1875rem;
+    background-color: transparent;
+    color: #242928;
+    font-family: @ff-mono;
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1;
+    transition: all 100ms @te-easeOut;
+    letter-spacing: 3px;
+
+    &.is-active {
+        background-color: @purple;
+        color: @white;
+        font-weight: 700;
+
+        &:hover {
+            background-color: darken(spin(@purple,5),5%);
+            color: @white;
+        }
+    }
+
+    &:hover {
+        background-color: fade(#242928,5%);
+        color: @fc-dark;
+    }
+}
+
+
+//  ============================================================================
+//  $  PAGE TABLE OF CONTENTS
+//  ============================================================================
+.jh-toc {
+    width: 100%;
+    background-color: #FAFAFA;
+    border-radius: @br-sm;
+    transition: all 100ms @te-smooth;
+
+    @media screen and (max-width: 1100px) {
+        &:not(.ps-fixed) {
+            margin: 0 -(@su16);
+        }
+
+        .jh-toc--menu {
+            display: none;
+        }
+    }
+
+    @media screen and (min-width: 1101px) {
+        position: absolute;
+        left: 6rem;
+        max-width: 17rem;
+        z-index: @z-nav-fixed;
+        box-shadow: 0 0.25rem 0.75rem 0 fade(#3B4045,10%);
+
+        &.ps-fixed {
+            margin-left: -2rem;
+            border-radius: initial;
+        }
+
+        .iconHamburger {
+            display: none;
+        }
+    }
+}
+
+.jh-toc--header,
+.jh-toc--link {
+    padding: 0.7rem 1rem;
+    color: @fc-dark;
+    font-family: @ff-mono;
+    line-height: @lh-sm;
+}
+
+.jh-toc--header {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.jh-toc--link {
+    display: block;
+    width: 100%;
+    transition: all 100ms @te-easeOut;
+
+    &.is-active {
+        background-color: @white;
+        box-shadow: 4px 0 0 0 @teal;
+
+        &:hover {
+            background-color: @teal;
+            box-shadow: 4px 0 0 0 spin(saturate(@teal,10%), 5);
+        }
+    }
+    &:hover {
+        background-color: fade(@teal,10%);
+        color: darken(@fc-dark,5%);
+    }
+
+    .jh-toc--menu .jh-toc--item:last-of-type & {
+        padding-bottom: 1rem;
+    }
+}
+
+.jh-toc--menu {
+    display: none;
+
+    @media screen and (min-width: 729px) {
+        display: initial;
+    }
+}
+
+
+//  ============================================================================
+//  $  WORK PAGES LAYOUT ELEMENTS
+//  ============================================================================
+.jh-work--container-wrapper {
+    @media screen and (max-width: 640px) {
+        padding: 0 2rem 2rem;
+    }
+    @media screen and (min-width: 641px) and (max-width: 728px) {
+        padding: 2rem 5%;
+    }
+    @media screen and (min-width: 729px) {
+        margin-left: 15%;
+        margin-right: 10%;
+        padding-top: 8rem;
+        padding-bottom: 6rem;
+    }
+}
+
+.jh-work--preview {
+    width: 100%;
+    min-width: calc(~"100% + 2rem");
+    min-height: 31rem;
+    max-width: 65rem;
+    max-height: 37.5rem;
+    margin-bottom: 4rem;
+    border-radius: @br-md;
+    background-color: @purple;
+    box-shadow: 0 0 0.75rem 0 fade(#3B4045,10%);
+}
+
+.jh-work--preview__small {
+    min-width: auto;
+    min-height: 13.625rem;
+    max-width: 32rem;
+    max-height: 14rem;
+    background-color: @white;
+}
+
+.jh-work--overview {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+
+    @media screen and (max-width: 640px) {
+        > .grid--cell {
+            max-width: 50%;
+        }
+    }
+    @media screen and (min-width: 641px) {
+        > .grid--cell {
+            max-width: 33.333%;
+        }
+    }
+}
+
+.jh-section {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+
+    @media screen and (min-width: 641px) and (max-width: 1100px) {
+    }
+    @media screen and (min-width: 1101px) {
+        padding-right: 8rem;
+        padding-left: 14rem;
+    }
+}
+
+.jh-section--title {
+    color: @purple;
+    font-family: @ff-mono;
+    font-size: @fs-caption;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.jh-section--headline {
+    color: @fc-dark;
+    font-family: @ff-serif;
+    font-size: @fs-headline2;
+    font-weight: 700;
+}
+
+.jh-section--copy {
+    font-size: @fs-body2;
+    line-height: @lh-lg;
+}
+
+
+//  ============================================================================
+//  $  PAGE SPECIFIC STYLES
+//  ============================================================================
+.work--so-teams {
+    @color-dark:    #AEAEB4;
+    @color-light:   #DBDBDC;
+
+    background-color: mix(@color-dark, @color-light);
+    background-attachment: scroll;
+
+    @media screen and (min-width: 641px) {
+        background-image: -webkit-linear-gradient(38deg, @color-light, @color-dark);
+        background-image: -o-linear-gradient(38deg, @color-light, @color-dark);
+        background-image: linear-gradient(128deg, @color-light, @color-dark);
+    }
+
+        .jh-work--preview__small {
+            max-width: calc(~"50% + 2rem");
+            margin-top: -28.33333333%;
+            margin-left: -3rem;
+        }
+    }
+
+
+//  ============================================================================
+//  $  OLD HOMEPAGE STUFF
+//  ============================================================================
+.jh-site-wrapper {
+    position: relative;
+    max-width: 92rem;
+    margin: 0 auto;
+}
+
+
+.jh-menu--nav {
+    @media screen and (min-width: 641px) {
+        flex-flow: column wrap;
+    }
+}
+.jh-menu--item {
+    padding: 4px;
+    color: #54595F;
+    font-size: 1rem;
+
+    &.is-active {
+        color: #1F2123;
+    }
+}
+
+
+
+
+//  ============================================================================
+//  $  TYPE STYLES
+//  ============================================================================
+.jh-work--title {
+    margin-bottom: 0;
+    font-family: @ff-mono;
+    font-size: @fs-headline2;
+    font-weight: 700;
+}
+
+//  ============================================================================
+//  $  TABLE OF CONTENTS
+//  ============================================================================
+.work--label {
+    padding: 8px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.work__product {
+    background-color: #7BA2FF;
+}
+
+
+//  ============================================================================
+//  $  CSS GRIDS
+//  ============================================================================
+.jh-toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 400px 200px 280px 200px;
+    grid-column-gap: 60px;
+    grid-row-gap: 60px;
+}
+
+.jh-work--so__teams {
+    grid-column-start: 1;
+    grid-column-end: span 2;
+}
+
+.jh-work--so__stacks {
+    grid-column-start: 4;
+    grid-row-start: 2;
+    grid-row-end: span 2;
+}
+
+.jh-work--so__brand {
+    grid-column-start: 4;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+.jh-work--so__se {
+    grid-column-start: 4;
+    grid-row-start: 2;
+}

@@ -1,21 +1,18 @@
-<!doctype html>
-<html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+---
+layout: home
+---
 
-        <link rel="stylesheet/less" type="text/css" href="less/main.less">
-
-        <script type="text/javascript" src="js/vendor/modernizr-2.8.3.min.js"></script>
-        <!-- LESS: Start LESS watch -->
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>
-        <script>less.watch();</script>
-    </head>
-    <body>
-
-        Test
-    </body>
-</html>
+<div class="jh-toc-grid">
+    Test
+    {% for item in site.data.toc %}
+        <div class="jh-toc--item jh-toc__{{ item.type }} jh-work--{{ item.class }}" style="background-color: #{{ item.bgc }};">
+            <h3 class="jh-work--title">{{ item.work }}</h3>
+            <a href="{{ item.url | relative_url }}">Link</a>
+            <div class="ps-absolute l0 b0 grid fd-column">
+                {% for label in item.labels %}
+                <span class="grid--cell work--label work__{{ label.tag }}">{{ label.label }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
