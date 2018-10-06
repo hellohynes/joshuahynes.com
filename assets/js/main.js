@@ -36,20 +36,47 @@ function stickyMenu() {
     $(window).scroll(function() {
         var menuPos = menu.offset().top;
         var scroll = $(window).scrollTop();
-        var distance = menuStart - 48;
+        var distance = menuStart - 90;
 
         if (scroll >= distance) {
-            menu.addClass("ps-fixed").css("top", "0");
+            menu.addClass("ps-fixed").css({
+                "top": "0",
+                "left": "0",
+                "border-radius": "0"
+            });
         }
         else {
-            menu.removeClass("ps-fixed").css("top", menuStart);
+            menu.removeClass("ps-fixed").css({
+                "top": "",
+                "left": "",
+                "border-radius": ""
+            });
         }
     })
+}
+
+function showHideMenu() {
+    var tocBtn = $(".js-toc-button");
+    var tocMenu = $(".js-toc--menu");
+    var tocLink = $(".js-toc--link");
+    var content = $(".js-content-container");
+
+    tocBtn.click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        tocMenu.toggleClass("d-block");
+    });
+
+    tocLink.click(function(e) {
+        tocMenu.toggleClass("d-block");
+    });
 }
 
 $(document).ready(function() {
     renderMenu();
     stickyMenu();
+    showHideMenu();
 });
 
 window.onload = function () {
