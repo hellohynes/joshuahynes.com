@@ -34,13 +34,22 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-# Sublime #
-######################
-*.sublime-workspace
+*_rsa
+*_rsa.pub
 
 # Jekyll Site #
 ###############
 # This is compiled by Github on its servers, so no need to include it.
 _site/
 .asset-cache
+.jekyll-metadata
+.jekyll-cache
+
+# NPM #
+###############
+node_modules
+
+# Environment normalization #
+###############
+/docs/.bundle
+/docs/vendor/bundle

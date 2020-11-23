@@ -1,0 +1,16 @@
+<section>
+    <a class="logo" href="{{ site.url }}">{% include logo.html %}</a>
+    <nav class="d-flex d-fd-column js-navigation-menu" role="navigation">
+        {% if nav.sections %}
+            {% for section in nav.sections %}
+                {% assign slug = page.url | replace: '/',' ' | trunactewords: 2 | remove:'...' %}
+                {% assign url = section.url | replace: '/',' ' | trunactewords: 2 | remove:'...' %}
+                <ul class="js-navigation-header" id="nav" role="navigation">
+                    <li class="">
+                        <a href="{{ section.url }}" class="js-navigation-top-link">{{ section.title }}</a>
+                    </li>
+                </ul>
+            {% endfor %}
+        {% endif %}
+    </nav>
+</section>

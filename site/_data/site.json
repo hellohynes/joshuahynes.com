@@ -1,0 +1,12 @@
+{
+  "title": "Joshua Hynes",
+  "description": "The personal website and portfolio of Joshua Hynes.",
+  "localurl": "http://localhost:4000/",
+  "url": "https://joshuahynes.com",
+  "paths": {
+    "css": "assets/css",
+    "img": "assets/images",
+    "ico": "assets/images/favicons",
+    "js": "assets/js"
+  }
+}
