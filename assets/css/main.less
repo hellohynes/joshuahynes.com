@@ -14,5 +14,131 @@
 
 
 //  ====================================================================
-//  $   CUSTOM STUFF THAT SHOULD BE IN DIALTONE
+//  $   THEME
 //  --------------------------------------------------------------------
+@font-family--custom:           'IBM Plex Mono', @ff-mono;
+
+:root {
+    --black: #2A2C2F;
+    --black-hover: #131416;
+}
+
+//  ====================================================================
+//  $   WRAPPER
+//  --------------------------------------------------------------------
+.jh-homepage {
+    --nav-size: 4.8rem;
+
+    display: grid;
+    grid-template-areas:
+        "nav"
+        "main";
+    grid-template-rows: var(--nav-size) auto;
+    grid-template-columns: auto;
+    gap: @spacing48;
+    padding: @spacing64;
+
+    @media screen and (min-width: 64rem) {
+        grid-template-areas:
+            "nav main";
+        grid-template-rows: auto;
+        grid-template-columns: var(--nav-size) minmax(48rem, 90rem);
+    }
+}
+
+.jh-nav {
+    display: flex;
+    grid-area: nav;
+
+    @media screen and (max-width: 63.99rem) {
+        > nav {
+            margin-left: auto;
+        }
+    }
+    @media screen and (min-width: 64rem) {
+        text-orientation: sideways;
+        writing-mode: vertical-rl;
+
+        .d-stack16();
+    }
+}
+.jh-content {
+    grid-area: main;
+}
+
+
+//  ====================================================================
+//  $   LOGO
+//  --------------------------------------------------------------------
+.jh-logo {
+    color: var(--black);
+
+    svg {
+        fill: currentColor;
+    }
+
+    &:hover {
+        color: var(--black-hover);
+    }
+
+    @media screen and (max-width: 63.99rem) {
+        width: 24rem;
+    }
+}
+.jh-glyph {
+    min-width: @spacing48;
+}
+
+.jh-wordmark {
+    @media screen and (max-width: 63.99rem) {
+        position: relative;
+        top: -0.3rem;
+        left: calc(@spacing48 + 3.2rem);
+        transform: rotate(-90deg);
+    }
+}
+
+
+//  ====================================================================
+//  $   NAVIGATION
+//  --------------------------------------------------------------------
+.jh-navigation {
+    @media screen and (max-width: 63.99rem) {
+        align-items: center;
+        .d-flow4();
+    }
+    @media screen and (min-width: 64rem) {
+        text-orientation: sideways;
+        writing-mode: vertical-rl;
+        .d-stack4();
+    }
+}
+
+.jh-navigation__link {
+    background-color: var(--white);
+    color: var(--black);
+    letter-spacing: 0.1rem;
+    transition: all 100ms @transition--cubic-inOut;
+
+    &:hover {
+        background-color: #E7E8EB;
+        transition: all 100ms @transition--cubic-inOut;
+    }
+
+    &.is-selected {
+        background-color: var(--black);
+        color: var(--white);
+        font-weight: @fw-bold;
+
+        &:hover {
+            background-color: var(--black-hover);
+        }
+    }
+
+    @media screen and (max-width: 63.99rem) {
+        padding: @spacing4 @spacing8;
+    }
+    @media screen and (min-width: 64rem) {
+        padding: @spacing8 @spacing4;
+    }
+}

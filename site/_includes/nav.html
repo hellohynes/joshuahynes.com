@@ -1,16 +1,14 @@
-<section>
-    <a class="logo" href="{{ site.url }}">{% include logo.html %}</a>
-    <nav class="d-flex d-fd-column js-navigation-menu" role="navigation">
-        {% if nav.sections %}
-            {% for section in nav.sections %}
-                {% assign slug = page.url | replace: '/',' ' | trunactewords: 2 | remove:'...' %}
-                {% assign url = section.url | replace: '/',' ' | trunactewords: 2 | remove:'...' %}
-                <ul class="js-navigation-header" id="nav" role="navigation">
-                    <li class="">
-                        <a href="{{ section.url }}" class="js-navigation-top-link">{{ section.title }}</a>
-                    </li>
-                </ul>
-            {% endfor %}
-        {% endif %}
+<a class="jh-logo d-d-flex d-ai-center d-stack8" href="{{ site.url }}">{% include logo.html %}</a>
+{% if sitemap.sections %}
+    <nav class="d-d-flex d-ai-center d-stack8 js-navigation-menu" role="navigation">
+        <ul class="d-list-reset d-d-flex jh-navigation js-navigation-header" id="nav" role="navigation">
+        {% for section in sitemap.sections %}
+            {% assign slug = page.url %}
+            {% assign url = section.url %}
+            <li class="jh-navigation__item">
+                <a href="{{ section.url }}" class="jh-navigation__link d-fs12 d-lh8 d-tt-uppercase d-td-none d-border-radius--sm js-navigation-link{% if slug == url %} is-selected{% endif %}">{{ section.title }}</a>
+            </li>
+        {% endfor %}
+        </ul>
     </nav>
-</section>
+{% endif %}

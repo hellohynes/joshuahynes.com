@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="d-height100v">
     {% include head.html %}
-    <body>
-      {% include nav.html %}
-      {{ content }}
+    <body class="d-m0 d-height100">
+        <div class="jh-homepage">
+            <section class="jh-nav">
+                {% include nav.html %}
+            </section>
+            <main class="jh-content">
+                {{ content }}
+            </main>
+        </div>
     </body>
 </html>
