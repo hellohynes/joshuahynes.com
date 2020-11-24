@@ -17,8 +17,32 @@
 //  $   THEME
 //  --------------------------------------------------------------------
 @font-family--custom:           'IBM Plex Mono', @ff-mono;
+@primary-color:                 #00796B;
+@primary-color--hover:          darken(@primary-color, 10%);
 
+//  --  RE-DECLARE CSS VARIABLES WITH NEW COLORS
+//  ----------------------------------------------------------------------------
+@theme-vars: {
+    primary-color:              @primary-color;
+    primary-color--h:           @primary-color--h;
+    primary-color--s:           @primary-color--s;
+    primary-color--l:           @primary-color--l;
+
+    primary-color--hover:       @primary-color--hover;
+    primary-color--hover--h:    @primary-color--hover--h;
+    primary-color--hover--s:    @primary-color--hover--s;
+    primary-color--hover--l:    @primary-color--l;
+}
+
+//  ============================================================================
+//  $   OUTPUT VARIABLES
+//  ============================================================================
 :root {
+    //  Theme Styles
+    each(@theme-vars, {
+        --@{key}: @value;
+    });
+
     --black: #2A2C2F;
     --black-hover: #131416;
 }
