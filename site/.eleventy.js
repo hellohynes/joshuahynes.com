@@ -6,10 +6,12 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy('assets/fonts');
     eleventyConfig.addPassthroughCopy('assets/images');
     eleventyConfig.addPassthroughCopy('assets/js');
+    eleventyConfig.addPassthroughCopy('assets/pdf');
 
     return {
         dir: {
-            css: "assets/css"
+            css: "assets/css",
+            pdf: "assets/pdf"
         }
     }
 }
