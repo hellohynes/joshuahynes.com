@@ -53,3 +53,6 @@ node_modules
 ###############
 /docs/.bundle
 /docs/vendor/bundle
+
+# Git Items #
+.git-credentials
