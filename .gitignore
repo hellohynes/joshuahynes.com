@@ -1,3 +1,13 @@
+# Dependency directories
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
 # Logs
 logs
 *.log
@@ -5,13 +15,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-backup
-*.local
 
 # Editor directories and files
 .vscode/*
@@ -23,3 +26,12 @@ backup
 *.njsproj
 *.sln
 *.sw?
+
+# Package manager specific files
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+.env.*
+!.env.example
