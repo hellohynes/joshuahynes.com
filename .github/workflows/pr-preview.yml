@@ -1,0 +1,68 @@
+name: PR Preview
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy-preview:
+    name: Deploy Preview
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: https://${{ github.repository_owner }}.github.io/joshuahynes.com/${{ github.event.pull_request.number }}/
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          # Remove pnpm cache here since we'll handle it after pnpm is installed
+
+      - name: Enable Corepack and install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@8.14.0 --activate
+          pnpm --version  # Verify pnpm is installed
+          echo "$(which pnpm)"  # Debug: Show pnpm location
+
+      - name: Get pnpm store path
+        id: pnpm-cache
+        run: |
+          echo "store_path=$(pnpm store path)" >> $GITHUB_OUTPUT
+          echo "PNPM_HOME=$(pnpm store path)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.store_path }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install Dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Override Vite Base Path
+        run: |
+          sed -i.bak "s|base: .*|base: '/${{ github.event.pull_request.number }}/',|" vite.config.ts
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          destination_dir: ${{ github.event.pull_request.number }}
+          keep_files: true
