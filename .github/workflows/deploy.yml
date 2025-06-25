@@ -18,11 +18,26 @@ jobs:
         node-version: '20'
         cache: 'pnpm'
         
-    - name: Install pnpm
+    - name: Setup pnpm
       uses: pnpm/action-setup@v3
       with:
         version: 8.14.0
-        
+        run_install: false
+
+    - name: Setup pnpm cache
+      uses: actions/cache@v4
+      id: pnpm-cache
+      with:
+        path: |
+          ~/.local/share/pnpm/store
+          ~/Library/pnpm/store/v3
+          %LOCALAPPDATA%\pnpm\store\v3
+          ~/.pnpm-store/v3
+          /opt/hostedtoolcache/pnpm
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+          
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
       
