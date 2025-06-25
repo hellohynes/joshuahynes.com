@@ -5,65 +5,22 @@ on:
     branches: [main]
     types: [opened, synchronize, reopened]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'pnpm'
-        
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v3
-      with:
-        version: 8.14.0
-        run_install: false
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
-    - name: Setup pnpm cache
-      uses: actions/cache@v4
-      id: pnpm-cache
-      with:
-        path: |
-          ~/.local/share/pnpm/store
-          ~/Library/pnpm/store/v3
-          %LOCALAPPDATA%\pnpm\store\v3
-          ~/.pnpm-store/v3
-          /opt/hostedtoolcache/pnpm
-        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pnpm-store-
-          
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
-      
-    - name: Build
-      run: pnpm run build
-      
-    - name: Upload Artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: 'dist'
-        
-  deploy:
-    needs: build
-    if: github.event_name == 'pull_request'
-    
-    permissions:
-      pages: write
-      id-token: write
-      
+jobs:
+  deploy-preview:
+    name: Deploy Preview
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-      
-    runs-on: ubuntu-latest
     
     steps:
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        uses: ./.github/workflows/deploy.yml
+        with:
+          base_path: "/${{ github.event.pull_request.number }}/"
+          destination_dir: "${{ github.event.pull_request.number }}"

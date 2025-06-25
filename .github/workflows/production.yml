@@ -1,0 +1,26 @@
+name: Production Deployment
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: https://${{ github.repository_owner }}.github.io/joshuahynes.com/
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: ./.github/workflows/deploy.yml
+        with:
+          base_path: "/"
+          destination_dir: ""
