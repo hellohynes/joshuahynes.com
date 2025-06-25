@@ -16,7 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      # The URL will be set by the GitHub Pages deployment
+      url: https://${{ github.repository_owner }}.github.io/joshuahynes.com/${{ github.event.pull_request.number }}/
     
     steps:
       - name: Deploy to GitHub Pages
@@ -24,3 +25,8 @@ jobs:
         with:
           base_path: "/${{ github.event.pull_request.number }}/"
           destination_dir: "${{ github.event.pull_request.number }}"
+          
+      - name: Get the deployment URL
+        id: deployment
+        run: |
+          echo "page_url=https://${{ github.repository_owner }}.github.io/joshuahynes.com/${{ github.event.pull_request.number }}/" >> $GITHUB_OUTPUT

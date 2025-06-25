@@ -24,3 +24,8 @@ jobs:
         with:
           base_path: "/"
           destination_dir: ""
+          
+      - name: Get the deployment URL
+        id: deployment
+        run: |
+          echo "page_url=https://${{ github.repository_owner }}.github.io/joshuahynes.com/" >> $GITHUB_OUTPUT
