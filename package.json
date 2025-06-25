@@ -1,42 +1,29 @@
 {
-  "name": "hynes",
-  "description": "The personal website of Joshua Hynes",
-  "version": "0.1.0",
-  "author": "Joshua Hynes",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hellohynes/hynes.github.io.git"
-  },
+  "name": "joshuahynes.com",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "build": "gulp",
-    "start": "gulp watch",
-    "debug": "DEBUG=Elventy* npx @11ty/eleventy --serve --input=docs"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
-  "license": "agpl-3.0",
-  "browserslist": [
-    "last 1 version",
-    "maintained node versions"
-  ],
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
   "devDependencies": {
-    "@11ty/eleventy": "^0.11.1",
-    "@dialpad/dialtone": "^5.12.0",
-    "browser-sync": "^2.26.13",
-    "child_process": "^1.0.2",
-    "cssnano": "^4.1.10",
-    "del": "^6.0.0",
-    "fs-extra": "^9.0.1",
-    "gulp": "^4.0.2",
-    "gulp-git": "^2.10.1",
-    "gulp-header": "^2.0.9",
-    "gulp-less": "^4.0.1",
-    "gulp-postcss": "^9.0.0",
-    "gulp-rename": "^2.0.0",
-    "lazypipe": "^1.0.2",
-    "postcss-cli": "^8.3.0",
-    "postcss-preset-env": "^6.7.0",
-    "postcss-sorting": "^6.0.0",
-    "precss": "^4.0.0",
-    "run-sequence": "^2.2.1"
-  },
-  "dependencies": {}
+    "@eslint/js": "^9.29.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.5.2",
+    "eslint": "^9.29.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.2.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.34.1",
+    "vite": "^7.0.0"
+  }
 }
