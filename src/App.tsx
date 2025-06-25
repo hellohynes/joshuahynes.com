@@ -1,4 +1,4 @@
-import React from 'react'
+// App.tsx
 
 function App() {
   return (
