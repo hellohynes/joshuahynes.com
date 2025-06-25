@@ -16,17 +16,48 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      # The URL will be set by the GitHub Pages deployment
       url: https://${{ github.repository_owner }}.github.io/joshuahynes.com/${{ github.event.pull_request.number }}/
     
     steps:
-      - name: Deploy to GitHub Pages
-        uses: ./.github/workflows/deploy.yml
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          base_path: "/${{ github.event.pull_request.number }}/"
-          destination_dir: "${{ github.event.pull_request.number }}"
-          
-      - name: Get the deployment URL
-        id: deployment
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8.14.0
+          run_install: true
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Override Vite Base Path
         run: |
-          echo "page_url=https://${{ github.repository_owner }}.github.io/joshuahynes.com/${{ github.event.pull_request.number }}/" >> $GITHUB_OUTPUT
+          sed -i.bak "s|base: .*|base: '/${{ github.event.pull_request.number }}/',|" vite.config.ts
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          destination_dir: ${{ github.event.pull_request.number }}
+          keep_files: true
