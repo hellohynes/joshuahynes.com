@@ -49,8 +49,25 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Install Dependencies
+      - name: Check for pnpm-lock.yaml
+        id: check_lockfile
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "lockfile_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "lockfile_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install Dependencies (with lockfile)
+        if: steps.check_lockfile.outputs.lockfile_exists == 'true'
         run: pnpm install --frozen-lockfile
+        
+      - name: Install Dependencies (without lockfile)
+        if: steps.check_lockfile.outputs.lockfile_exists != 'true'
+        run: |
+          pnpm install
+          # Generate lockfile for future runs
+          pnpm install --no-frozen-lockfile
 
       - name: Override Vite Base Path
         run: |
