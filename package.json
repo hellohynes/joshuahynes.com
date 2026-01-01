@@ -20,7 +20,7 @@
   "devDependencies": {
     "@11ty/eleventy": "^0.11.1",
     "@dialpad/dialtone": "^5.12.0",
-    "browser-sync": "^2.26.13",
+    "browser-sync": "^2.29.3",
     "child_process": "^1.0.2",
     "cssnano": "^4.1.10",
     "del": "^6.0.0",
