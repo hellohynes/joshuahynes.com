@@ -56,6 +56,9 @@ jobs:
         run: |
           sed -i.bak "s|base: .*|base: '/',|" vite.config.ts
 
+      - name: Check content has no placeholders
+        run: node scripts/check-content.mjs
+
       - name: Build
         run: pnpm build
 
