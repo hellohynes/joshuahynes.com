@@ -51,10 +51,10 @@ export const content: Content = {
     'without me in the room.',
   ],
   scope: [
-    { value: '00', label: 'TODO: people' },
-    { value: '0', label: 'TODO: managers' },
-    { value: '0', label: 'TODO: disciplines' },
-    { value: '$0M', label: 'TODO: business area' },
+    { value: '30', label: 'People led, at peak' },
+    { value: '4', label: 'Managers' },
+    { value: '4', label: 'Disciplines' },
+    { value: '$400M+', label: 'ARR' },
   ],
   caseStudies: [
     {
