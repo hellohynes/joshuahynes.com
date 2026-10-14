@@ -54,7 +54,7 @@ export const content: Content = {
     { value: '30', label: 'People led, at peak' },
     { value: '4', label: 'Managers' },
     { value: '4', label: 'Disciplines' },
-    { value: '$400M+', label: 'ARR' },
+    { value: '$400M+', label: 'Company ARR' },
   ],
   caseStudies: [
     {
