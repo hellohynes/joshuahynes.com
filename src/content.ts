@@ -1,7 +1,7 @@
 // All page copy lives here. Every placeholder starts with "TODO:";
 // scripts/check-content.mjs fails the production build while any remain.
 
-export type GlyphName = 'baseball' | 'basketball' | 'football' | 'record'
+export type GlyphName = 'baseball' | 'basketball' | 'football'
 export type ThesisPart = string | { glyph: GlyphName } | { script: string }
 export type FigureName = 'spray' | 'court' | 'field'
 
@@ -47,7 +47,7 @@ export const content: Content = {
     { script: 'one team,' },
     { glyph: 'basketball' },
     'with a quality bar the whole org holds',
-    { glyph: 'record' },
+    { glyph: 'football' },
     'without me in the room.',
   ],
   scope: [
