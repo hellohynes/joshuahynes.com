@@ -127,7 +127,7 @@ const PLATE = [...lengthwise(TOP - 0.27, -0.5, 0.5), ...lengthwise(TOP + 0.27, -
 PLATE.push(PLATE[0])
 const LACES = lengthwise(TOP, -0.42, 0.42)
 
-export const FOOTBALL_TILT = (30 * Math.PI) / 180
+export const FOOTBALL_TILT = (45 * Math.PI) / 180
 
 /** The football's outline (its profile, tilted), as a path. The same silhouette whatever the spin. */
 export const FOOTBALL_BODY = (() => {
