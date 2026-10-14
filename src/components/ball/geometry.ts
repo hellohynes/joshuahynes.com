@@ -63,22 +63,21 @@ export interface BallPaths {
 
 const NO_EXTRAS = { stitches: '', rails: '', bands: '', plate: '' }
 
-// Baseball seam: the exact "tennis ball curve", which stays on the unit sphere. With a + b = 1 and
-// c^2 = 4ab the point is x = a cos t - b cos 3t, y = a sin t + b sin 3t, z = c cos 2t. A larger b pushes
-// the seam further toward the poles. The z axis is the axis of the two panels; it is drawn as "up".
-const SEAM_B = 0.14
-const SEAM_A = 1 - SEAM_B
-const SEAM_C = Math.sqrt(4 * SEAM_A * SEAM_B)
-const seamPoint = (t: number): V3 => [
-  SEAM_A * Math.cos(t) - SEAM_B * Math.cos(3 * t),
-  SEAM_C * Math.cos(2 * t),
-  SEAM_A * Math.sin(t) + SEAM_B * Math.sin(3 * t),
-]
+// The exact "tennis ball curve", which stays on the unit sphere. With a + b = 1 and c^2 = 4ab the point is
+// x = a cos t - b cos 3t, y = c cos 2t, z = a sin t + b sin 3t (y is the axis of the two panels, drawn as "up").
+// A larger b pushes the seam further toward the poles.
+const tennisCurve = (b: number) => {
+  const a = 1 - b
+  const c = Math.sqrt(4 * a * b)
+  return (t: number): V3 => [a * Math.cos(t) - b * Math.cos(3 * t), c * Math.cos(2 * t), a * Math.sin(t) + b * Math.sin(3 * t)]
+}
+// Baseball seam: gentle lobes.
+const seamPoint = tennisCurve(0.14)
 const BASEBALL = along(180, seamPoint)
 
-// A baseball tumbles: it spins about its own axis while that axis nods and rolls slowly, so the seams
+// A baseball or basketball tumbles: it spins about its own axis while that axis nods and rolls slowly, so the seams
 // never trace the same path twice. (Any mix of rotations is still a true orientation of the ball.)
-const baseballView = (spin: number, tilt: number) => (p: V3): V3 =>
+const tumbleView = (spin: number, tilt: number) => (p: V3): V3 =>
   rotZ(rotX(rotY(p, spin), tilt + 0.32 * Math.sin(spin * 0.41)), -0.25 + 0.5 * Math.sin(spin * 0.27 + 1))
 
 // Real stitching: 108 double stitches across a seam ribbon. Each interval of the seam gets two threads that
@@ -98,22 +97,15 @@ const RAIL_B = rail(-1)
 const thread = (a: V3, b: V3) =>
   a[2] > 0.28 && b[2] > 0.28 ? `M${a[0].toFixed(3)} ${(-a[1]).toFixed(3)}L${b[0].toFixed(3)} ${(-b[1]).toFixed(3)}` : ''
 
-// Basketball: the equator, the meridian, and a pair of curved side seams.
-const SIDE_NORMALS: V3[] = [unit([-0.72, 0, 0.69]), unit([0.72, 0, 0.69])]
-const smallCircle = (normal: V3, offset: number, u: number): V3 => {
-  const a = unit(cross(normal, [0, 1, 0]))
-  const b = cross(normal, a)
-  const r = Math.sqrt(1 - offset * offset)
-  return [
-    normal[0] * offset + r * (a[0] * Math.cos(u) + b[0] * Math.sin(u)),
-    normal[1] * offset + r * (a[1] * Math.cos(u) + b[1] * Math.sin(u)),
-    normal[2] * offset + r * (a[2] * Math.cos(u) + b[2] * Math.sin(u)),
-  ]
-}
+// Basketball: two great circles at right angles that cross at the poles (the "cross"), and one closed
+// seam that winds round the ball between them, crossing each great circle exactly twice. That makes
+// eight panels. The winding seam is a tennis-ball curve with deeper lobes (reaching about 65 degrees
+// toward the poles), with its highs on one great circle and its lows on the other.
+const BASKETBALL_SEAM = tennisCurve(0.29)
 const BASKETBALL = [
-  along(120, (u): V3 => [Math.cos(u), 0, Math.sin(u)]),
-  along(120, (u): V3 => [0, Math.cos(u), Math.sin(u)]),
-  ...SIDE_NORMALS.map((n) => along(120, (u) => smallCircle(n, 0.42, u))),
+  along(120, (u): V3 => [Math.cos(u), Math.sin(u), 0]),
+  along(120, (u): V3 => [0, Math.sin(u), Math.cos(u)]),
+  along(180, BASKETBALL_SEAM),
 ]
 
 // Football: a surface of revolution about its long (x) axis. Its profile is a circular arc, so the tips come
@@ -170,7 +162,7 @@ export function ballPaths(kind: BallKind, spin: number, tilt = 0.3): BallPaths {
   }
 
   if (kind === 'baseball') {
-    const view = baseballView(spin, tilt)
+    const view = tumbleView(spin, tilt)
     const a = RAIL_A.map(view)
     const b = RAIL_B.map(view)
     let stitches = ''
@@ -187,6 +179,6 @@ export function ballPaths(kind: BallKind, spin: number, tilt = 0.3): BallPaths {
       plate: '',
     }
   }
-  const view = (p: V3) => rotZ(rotX(rotY(p, spin), tilt), -0.25)
+  const view = tumbleView(spin, tilt)
   return { seams: BASKETBALL.map((curve) => toPath(curve.map(view))).join(''), detail: '', ...NO_EXTRAS }
 }

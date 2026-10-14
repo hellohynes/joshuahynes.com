@@ -3,7 +3,7 @@ import type { BallKind } from './geometry'
 
 export const PALETTE: Record<BallKind, { base: string; light: string; dark: string; seam: string; detail: string }> = {
   baseball: { base: '#f1e9d8', light: '#fffdf6', dark: '#b3a283', seam: '#b3a283', detail: '#bd3039' },
-  basketball: { base: '#e07a2f', light: '#f7a85f', dark: '#7d3410', seam: '#24120a', detail: '#24120a' },
+  basketball: { base: '#dd5a22', light: '#f48a4b', dark: '#6e2509', seam: '#2a1408', detail: '#2a1408' },
   football: { base: '#b5482a', light: '#e07d52', dark: '#5e2010', seam: '#3a1509', detail: '#f6f1e8' },
 }
 

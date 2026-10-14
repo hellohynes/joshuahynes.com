@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import type { ReactNode } from 'react'
+import type { PointerEvent, ReactNode } from 'react'
 import type { GlyphName } from '../content'
 import { SpinBall } from './ball/SpinBall'
 import { LOOKS } from './ball/looks'
+import type { Look } from './ball/looks'
 
 // Small 1px line drawings that sit inside a sentence, on the text baseline.
 const DRAWINGS: Record<GlyphName, ReactNode> = {
@@ -13,7 +14,8 @@ const DRAWINGS: Record<GlyphName, ReactNode> = {
       <path d="M6.2 4.6c3 2.4 3 12.4 0 14.8M17.8 4.6c-3 2.4-3 12.4 0 14.8" style={{ stroke: 'var(--sox-red)' }} />
     </>
   ),
-  basketball: <path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20M2 12h20M12 2v20M5 4.5c4 3.5 4 11.5 0 15M19 4.5c-4 3.5-4 11.5 0 15" />,
+  // The ball seen from a pole: the two great circles are a cross, and the winding seam is a lens through its ends.
+  basketball: <path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20M2 12h20M12 2v20M12 2C2.7 7 2.7 17 12 22M12 2C21.3 7 21.3 17 12 22" />,
   football: (
     <g transform="rotate(-30 12 12)">
       <ellipse cx="12" cy="12" rx="10.5" ry="6.4" />
@@ -23,32 +25,40 @@ const DRAWINGS: Record<GlyphName, ReactNode> = {
   ),
 }
 
-// Each glyph starts on a different look, so the first three hovers show three different styles.
-const FIRST_LOOK: Record<GlyphName, number> = { baseball: 0, basketball: 1, football: 3 }
+// A touch has no hover: the pointer "leaves" the moment the finger lifts, so a tap keeps the ball for a moment.
+const TAP_LINGER_MS = 1800
 
-// How long the ball keeps spinning after the pointer leaves (also lets a tap on touch screens register).
-const LINGER_MS = 700
+/** A random style, never the one just shown, so every hover looks different. */
+function pickLook(previous: Look | null): Look {
+  const choices = LOOKS.filter((l) => l !== previous)
+  return choices[Math.floor(Math.random() * choices.length)]
+}
 
-/** A line-drawn ball in the sentence. Hover (or tap) turns it into a spinning ball, in a new style each time. */
+/**
+ * A line-drawn ball in the sentence. Hovering it turns it into a spinning ball in a random style; leaving
+ * puts the line drawing back, and the next hover picks another style.
+ */
 export function InlineGlyph({ name }: { name: GlyphName }) {
-  const [open, setOpen] = useState(false)
-  const [shows, setShows] = useState(0)
+  const [look, setLook] = useState<Look | null>(null) // the style on show; null means the line drawing
+  const last = useRef<Look | null>(null)
   const timer = useRef(0)
 
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
-  const look = LOOKS[(FIRST_LOOK[name] + Math.max(shows - 1, 0)) % LOOKS.length]
+  const open = look !== null
 
   function enter() {
     window.clearTimeout(timer.current)
-    if (!open) {
-      setOpen(true)
-      setShows((n) => n + 1)
-    }
+    if (look) return
+    const next = pickLook(last.current)
+    last.current = next
+    setLook(next)
   }
 
-  function leave() {
-    timer.current = window.setTimeout(() => setOpen(false), LINGER_MS)
+  function leave(e: PointerEvent<HTMLSpanElement>) {
+    window.clearTimeout(timer.current)
+    if (e.pointerType === 'touch') timer.current = window.setTimeout(() => setLook(null), TAP_LINGER_MS)
+    else setLook(null)
   }
 
   return (
@@ -67,7 +77,7 @@ export function InlineGlyph({ name }: { name: GlyphName }) {
       >
         {DRAWINGS[name]}
       </svg>
-      {open && (
+      {look && (
         <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 z-10 size-[160%] -translate-x-1/2 -translate-y-1/2">
           <SpinBall kind={name} look={look} spinning />
         </span>

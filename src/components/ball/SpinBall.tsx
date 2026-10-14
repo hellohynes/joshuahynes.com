@@ -7,7 +7,7 @@ import { FOOTBALL, mix, PALETTE, SPHERE } from './palette'
 import { RenderedBall } from './RenderedBall'
 
 // Radians per second. The baseball turns more slowly: it tumbles, and reads better when it is unhurried.
-const SPIN_RATE: Record<BallKind, number> = { baseball: 2, basketball: 3.2, football: 2 }
+const SPIN_RATE: Record<BallKind, number> = { baseball: 2, basketball: 2.2, football: 2 }
 const REST_ANGLE = 0.7
 const RENDER_TILT = 0.62 // about 35 degrees above the ball
 
@@ -124,7 +124,7 @@ export function SpinBall({ kind, look, spinning }: SpinBallProps) {
         {football && (
           <>
             <path d={bands} fill="none" stroke={cartoon ? '#ffffff' : '#f3ebdb'} strokeWidth="0.17" clipPath={ref('clip')} />
-            <path d={plate} fill="none" stroke={cartoon ? 'var(--ink)' : p.seam} strokeOpacity={cartoon ? 1 : 0.65} strokeWidth={cartoon ? 0.035 : 0.014} strokeLinecap="round" strokeLinejoin="round" />
+            <path d={plate} fill="none" stroke={p.seam} strokeOpacity={cartoon ? 1 : 0.65} strokeWidth={cartoon ? 0.035 : 0.014} strokeLinecap="round" strokeLinejoin="round" />
           </>
         )}
 
@@ -132,7 +132,7 @@ export function SpinBall({ kind, look, spinning }: SpinBallProps) {
         <path
           d={seams}
           fill="none"
-          stroke={cartoon ? 'var(--ink)' : p.seam}
+          stroke={cartoon && baseball ? '#2b2118' : p.seam}
           strokeOpacity={shaded && baseball ? 0.7 : 1}
           strokeWidth={baseball && !painted && !cartoon ? 0.02 : seamWidth}
           strokeLinecap="round"

@@ -6,7 +6,7 @@ import { FOOTBALL, mix, PALETTE, SPHERE } from './palette'
 // material, not as noise.
 const BUMP: Record<BallKind, { grain: number; strength: number }> = {
   baseball: { grain: 22, strength: 0.22 },
-  basketball: { grain: 34, strength: 0.42 },
+  basketball: { grain: 34, strength: 0.34 },
   football: { grain: 38, strength: 0.38 },
 }
 
