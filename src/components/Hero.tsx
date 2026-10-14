@@ -12,7 +12,7 @@ export function Hero({ role, thesis, scope }: Pick<Content, 'role' | 'thesis' | 
       </p>
       <h1
         id="thesis"
-        className="mt-5 max-w-[22ch] font-serif text-[clamp(2.25rem,4.7vw,4.5rem)] font-[360] leading-[1.03] tracking-[-0.025em] sm:max-w-[30ch] text-balance"
+        className="mt-5 max-w-[22ch] font-serif text-[clamp(2.25rem,4.7vw,7rem)] font-[360] leading-[1.03] tracking-[-0.025em] sm:max-w-[30ch] text-balance"
       >
         {thesis.map((part, i) => {
           if (typeof part === 'string') return <span key={i}>{part} </span>
@@ -24,7 +24,7 @@ export function Hero({ role, thesis, scope }: Pick<Content, 'role' | 'thesis' | 
           )
         })}
       </h1>
-      <div className="mt-8 grid items-end gap-12 lg:grid-cols-[1fr_minmax(0,30rem)]">
+      <div className="mt-8 grid items-end gap-12 lg:grid-cols-[1fr_minmax(0,max(30rem,30vw))]">
         <ScopeStrip stats={scope} />
         <SprayChart />
       </div>

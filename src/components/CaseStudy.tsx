@@ -24,7 +24,7 @@ export function CaseStudy({ study }: { study: CaseStudyContent }) {
         <span>{study.date}</span>
         <span>{study.leadershipType}</span>
       </p>
-      <h3 id={study.id} className="mt-4 max-w-[24ch] font-serif text-[clamp(1.75rem,3.6vw,3rem)] font-[380] leading-[1.1] tracking-[-0.02em]">
+      <h3 id={study.id} className="mt-4 max-w-[24ch] font-serif text-[clamp(1.75rem,3.2vw,5rem)] font-[380] leading-[1.1] tracking-[-0.02em]">
         {study.title}
       </h3>
       <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-16">
@@ -32,7 +32,7 @@ export function CaseStudy({ study }: { study: CaseStudyContent }) {
           {ANSWERS.map(([label, key]) => (
             <div key={key} className="grid gap-1 sm:grid-cols-[6rem_1fr] sm:gap-6">
               <dt className="font-mono text-xs uppercase tracking-[0.08em] text-muted">{label}</dt>
-              <dd className="m-0 text-lg leading-snug">{study[key]}</dd>
+              <dd className="m-0 text-[clamp(1.125rem,1.1vw,1.75rem)] leading-snug">{study[key]}</dd>
             </div>
           ))}
         </dl>

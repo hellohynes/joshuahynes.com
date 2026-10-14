@@ -10,7 +10,7 @@ function App() {
   const { name, role, thesis, scope, caseStudies, lab, companies, reading, listening, contact } = content
 
   return (
-    <div id="top" className="mx-auto max-w-[88rem] px-4 sm:px-8">
+    <div id="top" className="px-4 sm:px-8 lg:px-12">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:bg-bg focus:p-2 focus:font-mono focus:text-xs"
@@ -34,10 +34,10 @@ function App() {
           <h2 id="lab-h" className={sectionLabel}>
             Lab
           </h2>
-          <p className="mt-6 max-w-[24ch] font-serif text-[clamp(1.75rem,3.6vw,3rem)] font-[380] leading-[1.1] tracking-[-0.02em]">
+          <p className="mt-6 max-w-[24ch] font-serif text-[clamp(1.75rem,3.2vw,5rem)] font-[380] leading-[1.1] tracking-[-0.02em]">
             {lab.title}
           </p>
-          <p className="mt-4 max-w-prose text-lg leading-snug">{lab.blurb}</p>
+          <p className="mt-4 max-w-prose text-[clamp(1.125rem,1.1vw,1.75rem)] leading-snug">{lab.blurb}</p>
           <a href={lab.href} className="mt-6 inline-block py-1 font-mono text-xs uppercase tracking-[0.08em] underline underline-offset-4 hover:text-accent">
             View
           </a>
@@ -55,7 +55,7 @@ function App() {
 
       <footer id="contact" className="scroll-mt-4 border-t border-rule py-16">
         <h2 className={sectionLabel}>Contact</h2>
-        <a href={contact.href} className="mt-6 inline-block py-1 font-serif text-[clamp(1.75rem,4vw,3.5rem)] tracking-[-0.02em] underline decoration-rule underline-offset-8 hover:decoration-accent">
+        <a href={contact.href} className="mt-6 inline-block py-1 font-serif text-[clamp(1.75rem,4vw,6rem)] tracking-[-0.02em] underline decoration-rule underline-offset-8 hover:decoration-accent">
           {contact.label}
         </a>
       </footer>

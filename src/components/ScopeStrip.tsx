@@ -7,7 +7,7 @@ export function ScopeStrip({ stats }: { stats: Stat[] }) {
       {stats.map((s) => (
         <div key={s.label} className="flex flex-col-reverse justify-end gap-2 border-t border-rule pt-3">
           <dt className="font-mono text-xs uppercase tracking-[0.08em] text-muted">{s.label}</dt>
-          <dd className="m-0 font-mono text-[clamp(2.25rem,5vw,3.75rem)] leading-none tracking-tight tabular-nums">{s.value}</dd>
+          <dd className="m-0 font-mono text-[clamp(2.25rem,4.2vw,5.5rem)] leading-none tracking-tight tabular-nums">{s.value}</dd>
         </div>
       ))}
     </dl>
