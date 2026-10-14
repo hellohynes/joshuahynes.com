@@ -25,13 +25,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: '.nvmrc'
           # Remove pnpm cache here since we'll handle it after pnpm is installed
 
       - name: Enable Corepack and install pnpm
         run: |
           corepack enable
-          corepack prepare pnpm@8.14.0 --activate
+          corepack prepare pnpm@10.34.6 --activate
           pnpm --version  # Verify pnpm is installed
           echo "$(which pnpm)"  # Debug: Show pnpm location
 
