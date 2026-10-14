@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0.8 0.8 46.4 46.4" width="48" height="48" fill="none">
+  <!-- The JH cut-outs are thickened by eroding the shape 1.6 units (a black stroke in the mask); the viewBox is cropped by the same amount so the circle keeps its size. -->
+  <mask id="jh" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="48">
+    <path d="M2.84259 12.6777C6.88457 5.13343 14.8366 0 24 0C37.2534 0 48 10.7466 48 23.988C48 34.7946 40.8636 43.922 31.0525 46.9325L36.5218 12.6777L34.6147 12.6537L33.2234 20.9655H21.5053L23.0165 12.6777H2.84259ZM21.2174 22.5727H32.9115L28.9775 47.4723C27.3703 47.8201 25.7031 48 24 48C10.7466 48 0 37.2534 0 24C0 20.5817 0.71964 17.3433 2.003 14.4168H20.9055L18.7106 27.4543C18.2189 30.5727 16.7676 31.5562 14.8246 31.6162C12.5572 31.6832 11.3092 30.8661 10.4121 30.2788C10.3459 30.2355 10.2816 30.1933 10.2189 30.1529L10.6987 32.5038C11.7061 32.9955 13.937 33.4993 14.7406 33.4993C17.7271 33.4993 19.7061 31.7361 20.3298 27.9101L21.2174 22.5727Z" fill="#fff" fill-rule="evenodd" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>
+  </mask>
+  <rect class="ink" width="48" height="48" fill="#0C0D0E" mask="url(#jh)"/>
+</svg>
