@@ -52,13 +52,51 @@ export interface BallPaths {
   seams: string
   /** stitches (baseball) or laces (football) */
   detail: string
+  /** baseball only: the dense double stitching, for the rendered look */
+  stitches: string
+  /** baseball only: the two edges of the raised seam ribbon */
+  rails: string
+  /** football only: the centre lines of the two white bands, and the outline of the lace plate */
+  bands: string
+  plate: string
 }
 
-// Baseball: a seam that weaves up and down the sphere twice (the classic two-lobe curve).
-const BASEBALL = along(180, (t): V3 => {
-  const lat = 0.82 * Math.sin(2 * t)
-  return [Math.cos(lat) * Math.cos(t), Math.sin(lat), Math.cos(lat) * Math.sin(t)]
-})
+const NO_EXTRAS = { stitches: '', rails: '', bands: '', plate: '' }
+
+// Baseball seam: the exact "tennis ball curve", which stays on the unit sphere. With a + b = 1 and
+// c^2 = 4ab the point is x = a cos t - b cos 3t, y = a sin t + b sin 3t, z = c cos 2t. A larger b pushes
+// the seam further toward the poles. The z axis is the axis of the two panels; it is drawn as "up".
+const SEAM_B = 0.14
+const SEAM_A = 1 - SEAM_B
+const SEAM_C = Math.sqrt(4 * SEAM_A * SEAM_B)
+const seamPoint = (t: number): V3 => [
+  SEAM_A * Math.cos(t) - SEAM_B * Math.cos(3 * t),
+  SEAM_C * Math.cos(2 * t),
+  SEAM_A * Math.sin(t) + SEAM_B * Math.sin(3 * t),
+]
+const BASEBALL = along(180, seamPoint)
+
+// A baseball tumbles: it spins about its own axis while that axis nods and rolls slowly, so the seams
+// never trace the same path twice. (Any mix of rotations is still a true orientation of the ball.)
+const baseballView = (spin: number, tilt: number) => (p: V3): V3 =>
+  rotZ(rotX(rotY(p, spin), tilt + 0.32 * Math.sin(spin * 0.41)), -0.25 + 0.5 * Math.sin(spin * 0.27 + 1))
+
+// Real stitching: 108 double stitches across a seam ribbon. Each interval of the seam gets two threads that
+// cross between the ribbon's rails.
+const STITCHES = 108
+const RIBBON_HALF = 0.06
+const SEAM = along(STITCHES, seamPoint)
+const rail = (side: 1 | -1) =>
+  SEAM.slice(0, STITCHES).map((p, i): V3 => {
+    const q = SEAM[i + 1]
+    const n = unit(cross([q[0] - p[0], q[1] - p[1], q[2] - p[2]], p))
+    return unit([p[0] + side * RIBBON_HALF * n[0], p[1] + side * RIBBON_HALF * n[1], p[2] + side * RIBBON_HALF * n[2]])
+  })
+const RAIL_A = rail(1)
+const RAIL_B = rail(-1)
+
+const thread = (a: V3, b: V3) =>
+  a[2] > 0.28 && b[2] > 0.28 ? `M${a[0].toFixed(3)} ${(-a[1]).toFixed(3)}L${b[0].toFixed(3)} ${(-b[1]).toFixed(3)}` : ''
 
 // Basketball: the equator, the meridian, and a pair of curved side seams.
 const SIDE_NORMALS: V3[] = [unit([-0.72, 0, 0.69]), unit([0.72, 0, 0.69])]
@@ -78,33 +116,77 @@ const BASKETBALL = [
   ...SIDE_NORMALS.map((n) => along(120, (u) => smallCircle(n, 0.42, u))),
 ]
 
-// Football: a prolate spheroid spun about its long (x) axis. Two bands near the tips and laces on top.
-const SEMI = { long: 1, short: 0.62 }
+// Football: a surface of revolution about its long (x) axis. Its profile is a circular arc, so the tips come
+// to a point like a real football (an ellipse would be blunt). Four seams run tip to tip, two white bands
+// circle it near the ends, and the laces sit along the top seam inside a stitched plate.
+const HALF_LENGTH = 1
+const HALF_WIDTH = 0.6
+const ARC_RADIUS = (HALF_LENGTH ** 2 + HALF_WIDTH ** 2) / (2 * HALF_WIDTH)
+const radiusAt = (x: number) => Math.max(0, Math.sqrt(ARC_RADIUS ** 2 - x * x) - (ARC_RADIUS - HALF_WIDTH))
 const spheroid = (x: number, phi: number): V3 => {
-  const r = SEMI.short * Math.sqrt(Math.max(0, 1 - (x / SEMI.long) ** 2))
+  const r = radiusAt(x)
   return [x, r * Math.cos(phi), r * Math.sin(phi)]
 }
-const BANDS = [-0.6, 0.6].map((x) => along(90, (u) => spheroid(x, u)))
-const LACES = Array.from({ length: 41 }, (_, i): V3 => spheroid(-0.42 + (0.84 * i) / 40, Math.PI / 2))
+const lengthwise = (phi: number, from = -1, to = 1) => Array.from({ length: 61 }, (_, i) => spheroid(from + ((to - from) * i) / 60, phi))
+const TOP = Math.PI / 2
+const MERIDIANS = [0, 1, 2, 3].map((k) => lengthwise(TOP + (k * Math.PI) / 2, -0.985, 0.985))
+const BANDS = [-0.62, 0.62].map((x) => along(90, (u) => spheroid(x, u)))
+const PLATE = [...lengthwise(TOP - 0.27, -0.5, 0.5), ...lengthwise(TOP + 0.27, -0.5, 0.5).reverse()]
+PLATE.push(PLATE[0])
+const LACES = lengthwise(TOP, -0.42, 0.42)
 
 export const FOOTBALL_TILT = (30 * Math.PI) / 180
+
+/** The football's outline (its profile, tilted), as a path. The same silhouette whatever the spin. */
+export const FOOTBALL_BODY = (() => {
+  const point = (x: number, y: number) => {
+    const X = x * Math.cos(FOOTBALL_TILT) - y * Math.sin(FOOTBALL_TILT)
+    const Y = x * Math.sin(FOOTBALL_TILT) + y * Math.cos(FOOTBALL_TILT)
+    return `${X.toFixed(3)} ${(-Y).toFixed(3)}`
+  }
+  const xs = Array.from({ length: 81 }, (_, i) => -1 + (2 * i) / 80)
+  return `M${[...xs.map((x) => point(x, radiusAt(x))), ...[...xs].reverse().map((x) => point(x, -radiusAt(x)))].join('L')}Z`
+})()
 
 export function ballPaths(kind: BallKind, spin: number, tilt = 0.3): BallPaths {
   if (kind === 'football') {
     const view = (p: V3) => rotZ(rotX(p, spin), FOOTBALL_TILT)
-    const laceRoot = LACES.map(view)
-    // Lace ticks run across the line of laces, on the surface of the spheroid.
+    // Lace rungs run across the line of laces, on the surface.
     let rungs = ''
-    for (let i = 3; i < LACES.length - 3; i += 5) {
-      const p = LACES[i]
-      const a = view(spheroid(p[0], Math.PI / 2 - 0.2))
-      const b = view(spheroid(p[0], Math.PI / 2 + 0.2))
+    for (let i = 3; i < LACES.length - 3; i += 6) {
+      const x = LACES[i][0]
+      const a = view(spheroid(x, TOP - 0.2))
+      const b = view(spheroid(x, TOP + 0.2))
       if (a[2] > 0 && b[2] > 0) rungs += `M${a[0].toFixed(3)} ${(-a[1]).toFixed(3)}L${b[0].toFixed(3)} ${(-b[1]).toFixed(3)}`
     }
-    return { seams: BANDS.map((band) => toPath(band.map(view))).join(''), detail: toPath(laceRoot) + rungs }
+    return {
+      seams: MERIDIANS.map((m) => toPath(m.map(view))).join(''),
+      detail: toPath(LACES.map(view)) + rungs,
+      stitches: '',
+      rails: '',
+      bands: BANDS.map((band) => toPath(band.map(view))).join(''),
+      plate: toPath(PLATE.map(view)),
+    }
   }
 
+  if (kind === 'baseball') {
+    const view = baseballView(spin, tilt)
+    const a = RAIL_A.map(view)
+    const b = RAIL_B.map(view)
+    let stitches = ''
+    for (let i = 0; i < STITCHES; i++) {
+      const j = (i + 1) % STITCHES
+      stitches += thread(a[i], b[j]) + thread(b[i], a[j])
+    }
+    return {
+      seams: toPath(BASEBALL.map(view)),
+      detail: ticks(BASEBALL, 5, 0.075, view),
+      stitches,
+      rails: toPath([...a, a[0]]) + toPath([...b, b[0]]),
+      bands: '',
+      plate: '',
+    }
+  }
   const view = (p: V3) => rotZ(rotX(rotY(p, spin), tilt), -0.25)
-  if (kind === 'baseball') return { seams: toPath(BASEBALL.map(view)), detail: ticks(BASEBALL, 5, 0.075, view) }
-  return { seams: BASKETBALL.map((curve) => toPath(curve.map(view))).join(''), detail: '' }
+  return { seams: BASKETBALL.map((curve) => toPath(curve.map(view))).join(''), detail: '', ...NO_EXTRAS }
 }

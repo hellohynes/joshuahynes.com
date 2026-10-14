@@ -6,7 +6,8 @@ import type { Look } from './looks'
 import { FOOTBALL, mix, PALETTE, SPHERE } from './palette'
 import { RenderedBall } from './RenderedBall'
 
-const SPIN_RATE = 3.2 // radians per second
+// Radians per second. The baseball turns more slowly: it tumbles, and reads better when it is unhurried.
+const SPIN_RATE: Record<BallKind, number> = { baseball: 2, basketball: 3.2, football: 2 }
 const REST_ANGLE = 0.7
 const RENDER_TILT = 0.62 // about 35 degrees above the ball
 
@@ -26,18 +27,18 @@ export function SpinBall({ kind, look, spinning }: SpinBallProps) {
     let frame = 0
     let last = performance.now()
     const tick = (now: number) => {
-      setAngle((a) => (a + ((now - last) / 1000) * SPIN_RATE) % (Math.PI * 2))
+      setAngle((a) => (a + ((now - last) / 1000) * SPIN_RATE[kind]) % (Math.PI * 2))
       last = now
       frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [spinning, reduced])
+  }, [spinning, reduced, kind])
 
   const p = PALETTE[kind]
   const body = kind === 'football' ? FOOTBALL : SPHERE
   // The rendered look views the ball from higher up (an isometric camera); the others from a shallow angle.
-  const { seams, detail } = ballPaths(kind, angle, look === 'realistic' ? RENDER_TILT : 0.3)
+  const { seams, detail, stitches, rails, bands, plate } = ballPaths(kind, angle, look === 'realistic' ? RENDER_TILT : 0.3)
   const id = (name: string) => `${uid}-${name}`
   const ref = (name: string) => `url(#${id(name)})`
   const painted = look === 'painted'
@@ -53,7 +54,7 @@ export function SpinBall({ kind, look, spinning }: SpinBallProps) {
   const glint = football ? { x: -0.2, y: -0.22, r: 0.26 } : { x: -0.36, y: -0.42, r: 0.36 }
   const groundY = football ? 0.82 : 1.28
   const detailColor = painted && baseball ? mix(p.detail, '#7a2a20', 0.25) : p.detail
-  if (realistic) return <RenderedBall kind={kind} seams={seams} detail={detail} />
+  if (realistic) return <RenderedBall kind={kind} seams={seams} detail={detail} stitches={stitches} rails={rails} bands={bands} plate={plate} />
 
   return (
     <svg viewBox="-1.4 -1.4 2.8 2.8" width="100%" height="100%" aria-hidden="true" style={{ overflow: 'visible' }}>
@@ -90,6 +91,19 @@ export function SpinBall({ kind, look, spinning }: SpinBallProps) {
 
       {shaded && <ellipse cx="0" cy={groundY} rx={football ? 0.6 : 0.72} ry="0.1" fill="#000" opacity="0.28" filter={ref('blur')} />}
 
+      {/* drop shadow below the ball: flat for the cartoon, hand-painted (roughened, a little offset) for the painting */}
+      {(painted || cartoon) && (
+        <ellipse
+          cx="0.1"
+          cy={football ? 0.78 : 1.14}
+          rx={football ? 0.6 : 0.78}
+          ry="0.13"
+          fill="#000"
+          opacity={cartoon ? 0.28 : 0.2}
+          filter={painted ? ref('rough') : undefined}
+        />
+      )}
+
       <g filter={painted ? ref('rough') : undefined}>
         {/* painted: an offset outline behind the body, like a print slightly out of register */}
         {painted && <path d={body} transform="translate(0.04 0.045)" fill="none" stroke="var(--ink)" strokeWidth="0.06" />}
@@ -105,6 +119,14 @@ export function SpinBall({ kind, look, spinning }: SpinBallProps) {
         {/* Overlays are clipped one by one (a clipped group would isolate them from the body they blend with). */}
         {painted && <path d={`${body}M-0.78 -0.78a1 1 0 1 0 2 0a1 1 0 1 0 -2 0`} fillRule="evenodd" fill={p.dark} opacity="0.34" clipPath={ref('clip')} />}
         {painted && <rect x="-1.2" y="-1.2" width="2.4" height="2.4" filter={ref('paper')} style={{ mixBlendMode: 'multiply' }} opacity="0.22" clipPath={ref('clip')} />}
+
+        {/* football: wide white bands near the tips, and the outline of the lace plate */}
+        {football && (
+          <>
+            <path d={bands} fill="none" stroke={cartoon ? '#ffffff' : '#f3ebdb'} strokeWidth="0.17" clipPath={ref('clip')} />
+            <path d={plate} fill="none" stroke={cartoon ? 'var(--ink)' : p.seam} strokeOpacity={cartoon ? 1 : 0.65} strokeWidth={cartoon ? 0.035 : 0.014} strokeLinecap="round" strokeLinejoin="round" />
+          </>
+        )}
 
         {/* seams: kept on the surface by the geometry, so they travel as the ball spins */}
         <path
