@@ -62,7 +62,7 @@ export const content: Content = {
     title: 'Sr Director of Product Design',
     dates: '2018 – Present',
     statements: [
-      { text: 'Leading the product design as we create the future of AI-powered business communications', item: 'dialpad' },
+      { text: 'Leading the product design as we create the future of AI‑powered business communications', item: 'dialpad' },
       {
         text: 'Rethinking the product design craft alongside Product and Engineering while keeping humans in the loop',
         item: 'terminal',
