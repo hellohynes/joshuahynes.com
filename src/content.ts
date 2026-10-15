@@ -22,9 +22,6 @@ export interface Role {
   dates: string
 }
 
-/** Your part in a piece of work, in the Director guide's terms. */
-export type Involvement = 'Hands-on' | 'Led a team' | 'Director'
-
 export interface Media {
   kind: 'image' | 'video'
   /** path under public/, e.g. /work/beacon.mp4 */
@@ -37,10 +34,16 @@ export interface Media {
 export interface WorkItem {
   id: string
   title: string
-  year: string
-  involvement: Involvement
+  /** your part in it, in a line: e.g. "Led a team of 12 designers" */
+  role: string
+  /** the time range, e.g. "2021 – 2023" */
+  period: string
+  problem: string
+  outcome: string
   /** width / height of the card, so the masonry columns have a varied rhythm */
   ratio: string
+  /** how the picture fills its frame: "cover" crops to fill, "contain" shows all of it. Defaults to cover */
+  fit?: 'cover' | 'contain'
   /** leave out until the file exists: the card shows a grey placeholder */
   media?: Media
 }
@@ -80,20 +83,116 @@ export const content: Content = {
     { company: 'Stack Overflow', title: 'Senior Product Designer', dates: '2013 – 2018' },
     { company: 'andCulture', title: 'Senior Experience Designer & Strategist', dates: '2006 – 2013' },
   ],
-  // Twelve slots. Replace `title`, `year` and `involvement`, and add `media`, as the pieces are chosen.
+  // Twelve slots. Fill in each piece's text here, and add `media` once its file is in public/work/.
   work: [
-    { id: 'work-01', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '4 / 3' },
-    { id: 'work-02', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '3 / 4' },
-    { id: 'work-03', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '1 / 1' },
-    { id: 'work-04', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '16 / 10' },
-    { id: 'work-05', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '4 / 5' },
-    { id: 'work-06', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '3 / 2' },
-    { id: 'work-07', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '1 / 1' },
-    { id: 'work-08', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '4 / 3' },
-    { id: 'work-09', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '3 / 4' },
-    { id: 'work-10', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '16 / 10' },
-    { id: 'work-11', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '5 / 4' },
-    { id: 'work-12', title: 'TODO: Title', year: 'TODO: Year', involvement: 'Director', ratio: '1 / 1' },
+    {
+      id: 'work-01',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '4 / 3',
+    },
+    {
+      id: 'work-02',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '3 / 4',
+    },
+    {
+      id: 'work-03',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '1 / 1',
+    },
+    {
+      id: 'work-04',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '16 / 10',
+    },
+    {
+      id: 'work-05',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '4 / 5',
+    },
+    {
+      id: 'work-06',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '3 / 2',
+    },
+    {
+      id: 'work-07',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '1 / 1',
+    },
+    {
+      id: 'work-08',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '4 / 3',
+    },
+    {
+      id: 'work-09',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '3 / 4',
+    },
+    {
+      id: 'work-10',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '16 / 10',
+    },
+    {
+      id: 'work-11',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '5 / 4',
+    },
+    {
+      id: 'work-12',
+      title: 'TODO: Project title',
+      role: 'TODO: Your role',
+      period: 'TODO: Time range',
+      problem: 'TODO: The problem, in a sentence or two.',
+      outcome: 'TODO: The outcome, with one specific result.',
+      ratio: '1 / 1',
+    },
   ],
   reading: ['TODO: Book or article, Author', 'TODO: Book or article, Author', 'TODO: Book or article, Author'],
   listening: ['TODO: Album, Artist', 'TODO: Album, Artist', 'TODO: Album, Artist'],

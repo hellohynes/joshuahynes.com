@@ -83,6 +83,7 @@
 
 @layer base {
   html {
+    scrollbar-gutter: stable; /* so opening a project (which locks scrolling) does not shift the page */
     background: var(--bg);
     color: var(--ink);
     font-family: var(--font-serif);
@@ -255,5 +256,87 @@
     to {
       stroke-dashoffset: 0;
     }
+  }
+}
+
+/* Work: the picture moves between its card and the full-page view ----------- */
+
+.work-detail-media {
+  view-transition-name: work-media;
+}
+
+/* The picture's two snapshots can differ in shape, so both fill the moving frame and crop, never stretch. */
+::view-transition-old(work-media),
+::view-transition-new(work-media) {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  overflow: clip;
+}
+
+::view-transition-group(work-media) {
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.55, 0, 0.15, 1);
+}
+
+/*
+ * The rest of the page. Opening: the grid stays exactly where it is while the picture grows out of its card,
+ * and the open view (its backdrop and drawer) comes in just before the picture lands. Closing: the open view
+ * drops away at once while the picture shrinks back into its card. The default cross-fade of the whole page
+ * would hide the growth, and its blend mode would wash out the overlap, so both are replaced.
+ */
+html[data-vt]::view-transition-old(root),
+html[data-vt]::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+html[data-vt='open']::view-transition-old(root) {
+  animation: none;
+}
+html[data-vt='open']::view-transition-new(root) {
+  animation: vt-fade-in 0.25s ease-out 0.45s both;
+}
+
+html[data-vt='close']::view-transition-old(root) {
+  z-index: 2;
+  animation: vt-fade-out 0.2s ease-in both;
+}
+html[data-vt='close']::view-transition-new(root) {
+  animation: none;
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* The drawer slides in once the picture has landed. */
+@media (prefers-reduced-motion: no-preference) {
+  .work-drawer {
+    animation: drawer-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s both;
+  }
+  @keyframes drawer-in {
+    from {
+      opacity: 0;
+      transform: translateX(2rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
   }
 }
