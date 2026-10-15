@@ -259,31 +259,31 @@
   }
 }
 
-/* Work: the picture moves between its card and the full-page view ----------- */
+/* Work: the card grows into the frame, and the frame shrinks back into the card ------------ */
 
-.work-detail-media {
-  view-transition-name: work-media;
+.work-frame {
+  view-transition-name: work-frame;
 }
 
-/* The picture's two snapshots can differ in shape, so both fill the moving frame and crop, never stretch. */
-::view-transition-old(work-media),
-::view-transition-new(work-media) {
+/* The two snapshots can differ in shape, so both fill the moving box and crop, never stretch. */
+::view-transition-old(work-frame),
+::view-transition-new(work-frame) {
   height: 100%;
   width: 100%;
   object-fit: cover;
   overflow: clip;
 }
 
-::view-transition-group(work-media) {
-  animation-duration: 0.7s;
-  animation-timing-function: cubic-bezier(0.55, 0, 0.15, 1);
+::view-transition-group(work-frame) {
+  animation-duration: 0.36s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
 /*
- * The rest of the page. Opening: the grid stays exactly where it is while the picture grows out of its card,
- * and the open view (its backdrop and drawer) comes in just before the picture lands. Closing: the open view
- * drops away at once while the picture shrinks back into its card. The default cross-fade of the whole page
- * would hide the growth, and its blend mode would wash out the overlap, so both are replaced.
+ * The page behind. Opening: it stays exactly where it is and the dimmed backdrop comes up over it while the
+ * card grows. Closing: the backdrop clears while the frame shrinks back into its card. The default
+ * cross-fade of the whole page would hide the growth, and its blend mode would wash out the overlap, so
+ * both are replaced.
  */
 html[data-vt]::view-transition-old(root),
 html[data-vt]::view-transition-new(root) {
@@ -294,12 +294,12 @@ html[data-vt='open']::view-transition-old(root) {
   animation: none;
 }
 html[data-vt='open']::view-transition-new(root) {
-  animation: vt-fade-in 0.25s ease-out 0.45s both;
+  animation: vt-fade-in 0.22s ease-out both;
 }
 
 html[data-vt='close']::view-transition-old(root) {
   z-index: 2;
-  animation: vt-fade-out 0.2s ease-in both;
+  animation: vt-fade-out 0.22s ease-in both;
 }
 html[data-vt='close']::view-transition-new(root) {
   animation: none;
@@ -313,23 +313,6 @@ html[data-vt='close']::view-transition-new(root) {
 @keyframes vt-fade-out {
   to {
     opacity: 0;
-  }
-}
-
-/* The drawer slides in once the picture has landed. */
-@media (prefers-reduced-motion: no-preference) {
-  .work-drawer {
-    animation: drawer-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s both;
-  }
-  @keyframes drawer-in {
-    from {
-      opacity: 0;
-      transform: translateX(2rem);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
   }
 }
 

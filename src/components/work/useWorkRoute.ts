@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom'
 import { useReducedMotion } from '../../figures/useFigureInput'
 
 const HASH = /^#\/work\/([\w-]+)$/
-const NAME = 'work-media' // the view-transition name the picture carries as it moves between card and page
+const NAME = 'work-frame' // the view-transition name the card carries as it grows into the frame, and back
 
 const readId = (ids: string[]) => {
   const id = HASH.exec(window.location.hash)?.[1]
@@ -13,8 +13,8 @@ const cardPicture = (id: string) => document.querySelector<HTMLElement>(`[data-w
 
 /**
  * Which piece of work is open. It lives in the URL (#/work/<id>) so a piece can be linked to and the Back
- * button closes it. Where the browser supports view transitions, the picture grows from its card to fill the
- * page on open, and shrinks back into the card on close.
+ * button closes it. Where the browser supports view transitions, the card grows into the frame on open and shrinks
+ * back into its card on close.
  */
 export function useWorkRoute(ids: string[]) {
   const reduced = useReducedMotion()
