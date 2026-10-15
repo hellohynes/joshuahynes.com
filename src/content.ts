@@ -37,18 +37,18 @@ export interface Content {
 export const content: Content = {
   name: 'Joshua Hynes',
   role: {
-    title: 'TODO: Company, Director of Design',
-    dates: 'TODO: 20XX – Present',
+    title: 'Dialpad, Senior Director of Product Design',
+    dates: '2018 – Present',
   },
   thesis: [
-    'TODO: I lead design across product areas so',
+    'I design products, teams, ',
     { glyph: 'baseball' },
-    'product and engineering ship as',
-    { script: 'one team,' },
-    { glyph: 'basketball' },
-    'with a quality bar the whole org holds',
+    '& practices',
+    { script: 'with AI,' },
     { glyph: 'football' },
-    'without me in the room.',
+    'that solve billion dollar problems',
+    { glyph: 'football' },
+    'and improve everyday issues.',
   ],
   scope: [
     { value: '30', label: 'People led, at peak' },
