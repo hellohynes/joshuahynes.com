@@ -1,13 +1,14 @@
-import { CaseStudy } from './components/CaseStudy'
 import { Header } from './components/Header'
-import { Hero } from './components/Hero'
+import { Intro } from './components/Intro'
 import { LinkList } from './components/LinkList'
+import { OffTheClock } from './components/OffTheClock'
+import { WorkGrid } from './components/WorkGrid'
 import { content } from './content'
 
 const sectionLabel = 'font-mono text-xs uppercase tracking-[0.08em] text-muted'
 
 function App() {
-  const { name, role, thesis, scope, caseStudies, lab, companies, reading, listening, contact } = content
+  const { name, current, earlier, work, reading, listening, contact } = content
 
   return (
     <div id="top" className="px-4 sm:px-8 lg:px-12">
@@ -19,33 +20,9 @@ function App() {
       </a>
       <Header name={name} />
       <main id="main">
-        <Hero role={role} thesis={thesis} scope={scope} />
-
-        <section id="work" aria-labelledby="work-h" className="scroll-mt-4 pb-16">
-          <h2 id="work-h" className={`${sectionLabel} pb-6`}>
-            Work
-          </h2>
-          {caseStudies.map((study) => (
-            <CaseStudy key={study.id} study={study} />
-          ))}
-        </section>
-
-        <section id="lab" aria-labelledby="lab-h" className="scroll-mt-4 border-t border-rule py-16">
-          <h2 id="lab-h" className={sectionLabel}>
-            Lab
-          </h2>
-          <p className="mt-6 max-w-[24ch] font-serif text-[clamp(1.75rem,3.2vw,5rem)] font-[380] leading-[1.1] tracking-[-0.02em]">
-            {lab.title}
-          </p>
-          <p className="mt-4 max-w-prose text-[clamp(1.125rem,1.1vw,1.75rem)] leading-snug">{lab.blurb}</p>
-          <a href={lab.href} className="mt-6 inline-block py-1 font-mono text-xs uppercase tracking-[0.08em] underline underline-offset-4 hover:text-accent">
-            View
-          </a>
-        </section>
-
-        <section aria-label="Companies" className="border-t border-rule py-16">
-          <LinkList title="Companies" items={companies} />
-        </section>
+        <Intro current={current} earlier={earlier} />
+        <WorkGrid work={work} />
+        <OffTheClock />
 
         <section id="reading" aria-label="Reading and listening" className="scroll-mt-4 grid gap-12 border-t border-rule py-16 md:grid-cols-2 md:gap-16">
           <LinkList title="Reading" items={reading} />
