@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import type { Content, InlineItem } from '../content'
-import { CommitLegend } from './intro/CommitLegend'
+import { ContributionGraph } from './intro/ContributionGraph'
 import { DialpadMark } from './intro/DialpadMark'
 import { Robot } from './intro/Robot'
 import { TerminalBrowser } from './intro/TerminalBrowser'
@@ -9,7 +9,7 @@ const ITEMS: Record<InlineItem, ReactNode> = {
   dialpad: <DialpadMark />,
   terminal: <TerminalBrowser />,
   robot: <Robot />,
-  commits: <CommitLegend />,
+  commits: <ContributionGraph />,
 }
 
 const mono = 'font-mono text-xs uppercase tracking-[0.08em] text-muted'

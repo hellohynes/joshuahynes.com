@@ -20,6 +20,12 @@
   --pats-navy: #002244;
   --celtics-green: #007a33;
   --celtics-gold: #8a6a24;
+  /* GitHub's contribution greens, so the drawing in the intro reads as the real graph. */
+  --gh-0: #ebedf0;
+  --gh-1: #aceebb;
+  --gh-2: #4ac26b;
+  --gh-3: #2da44e;
+  --gh-4: #116329;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,6 +42,11 @@
     --pats-navy: #7fa0d0;
     --celtics-green: #2fb36a;
     --celtics-gold: #d4b06a;
+    --gh-0: #161b22;
+    --gh-1: #033a16;
+    --gh-2: #196c2e;
+    --gh-3: #2ea043;
+    --gh-4: #56d364;
   }
 }
 
@@ -52,6 +63,11 @@
   --pats-navy: #7fa0d0;
   --celtics-green: #2fb36a;
   --celtics-gold: #d4b06a;
+  --gh-0: #161b22;
+  --gh-1: #033a16;
+  --gh-2: #196c2e;
+  --gh-3: #2ea043;
+  --gh-4: #56d364;
 }
 
 @theme inline {
