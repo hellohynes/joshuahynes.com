@@ -1,19 +1,30 @@
 // All page copy lives here. Every placeholder starts with "TODO:";
 // scripts/check-content.mjs fails the production build while any remain.
 
+import andCultureLogo from './assets/andculture.png'
 import dialpadIcon from './assets/dialpad-icon.svg'
+import stackOverflowLogo from './assets/stack-overflow.svg'
 
 export type GlyphName = 'baseball' | 'basketball' | 'football'
 
 /** A piece of the intro sentence: plain (muted) text, or a name that is picked out in the darker ink. */
 export type IntroPart = string | { strong: string }
 
+/** A company logo, shown 20px square beside the company when its row is hovered. */
+export interface Logo {
+  src: string
+  /** a colour behind the picture. Giving one also clips the logo to a 3px-rounded square */
+  background?: string
+  /** the picture's size in px, when it is not simply the 20px of its frame: it is centred and cropped to the frame */
+  size?: number
+}
+
 export interface Role {
   company: string
   title: string
   dates: string
-  /** a small logo that appears beside the company on hover; leave it out until you have the file */
-  logo?: string
+  /** leave it out for a company without a logo yet */
+  logo?: Logo
 }
 
 export interface Media {
@@ -75,9 +86,14 @@ export const content: Content = {
     '.',
   ],
   history: [
-    { company: 'Dialpad', title: 'Senior Director, Product Design', dates: '2018–Present', logo: dialpadIcon },
-    { company: 'Stack Overflow', title: 'Senior Product Designer', dates: '2013–2018' },
-    { company: 'AndCulture', title: 'Senior Experience Designer', dates: '2006–2013' },
+    { company: 'Dialpad', title: 'Senior Director, Product Design', dates: '2018–Present', logo: { src: dialpadIcon } },
+    { company: 'Stack Overflow', title: 'Senior Product Designer', dates: '2013–2018', logo: { src: stackOverflowLogo } },
+    {
+      company: 'AndCulture',
+      title: 'Senior Experience Designer',
+      dates: '2006–2013',
+      logo: { src: andCultureLogo, background: '#ff5e00', size: 27 },
+    },
   ],
   // The pieces in the design, with the sizes from it. Fill in each piece's text here, add `media` once its file
   // is in public/work/, and change `cols` and `rows` to resize it. Add a new piece by adding an entry.
