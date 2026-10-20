@@ -11,7 +11,7 @@ import { useWorkRoute } from './work/useWorkRoute'
  */
 export function WorkGrid({ work }: { work: WorkItem[] }) {
   const ids = useMemo(() => work.map((item) => item.id), [work])
-  const { openId, open, close } = useWorkRoute(ids)
+  const { openId, closing, open, close } = useWorkRoute(ids)
   const openItem = work.find((item) => item.id === openId)
 
   return (
@@ -26,7 +26,7 @@ export function WorkGrid({ work }: { work: WorkItem[] }) {
           ))}
         </div>
       </div>
-      {openItem && <WorkDetail item={openItem} onClose={close} />}
+      {openItem && <WorkDetail item={openItem} closing={closing} onClose={close} />}
     </section>
   )
 }

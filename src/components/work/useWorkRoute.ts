@@ -3,6 +3,8 @@ import { flushSync } from 'react-dom'
 import { useReducedMotion } from '../../figures/useFigureInput'
 
 const HASH = /^#\/work\/([\w-]+)$/
+/** How long the drawer takes to retract before the frame shrinks back (see the drawer's close duration in WorkDetail). */
+const DRAWER_CLOSE_MS = 320
 const NAME = 'work-frame' // the view-transition name the card carries as it grows into the frame, and back
 
 const readId = (ids: string[]) => {
@@ -14,21 +16,29 @@ const cardPicture = (id: string) => document.querySelector<HTMLElement>(`[data-w
 /**
  * Which piece of work is open. It lives in the URL (#/work/<id>) so a piece can be linked to and the Back
  * button closes it. Where the browser supports view transitions, the card grows into the frame on open and shrinks
- * back into its card on close.
+ * back into its card on close. Closing runs the opening backwards: on a wide screen the drawer retracts first
+ * (`closing` is true meanwhile), then the frame shrinks into its card.
  */
 export function useWorkRoute(ids: string[]) {
   const reduced = useReducedMotion()
   const [openId, setOpenId] = useState<string | null>(() => readId(ids))
+  const [closing, setClosing] = useState(false)
   const current = useRef(openId)
+  const retracting = useRef(false)
+  const retractTimer = useRef(0)
 
-  const show = useCallback(
+  useEffect(() => () => window.clearTimeout(retractTimer.current), [])
+
+  const swap = useCallback(
     (next: string | null) => {
       const prev = current.current
       if (prev === next) return
       const apply = () =>
         flushSync(() => {
           current.current = next
+          retracting.current = false
           setOpenId(next)
+          setClosing(false)
         })
 
       if (reduced || typeof document.startViewTransition !== 'function' || (prev && next)) {
@@ -67,6 +77,31 @@ export function useWorkRoute(ids: string[]) {
     [reduced],
   )
 
+  const show = useCallback(
+    (next: string | null) => {
+      if (current.current === next) return
+      if (next) {
+        // Opening (or going straight to another piece): drop any retract that was under way.
+        window.clearTimeout(retractTimer.current)
+        retracting.current = false
+        setClosing(false)
+        swap(next)
+        return
+      }
+      if (retracting.current) return
+      const wide = window.matchMedia('(min-width: 64rem)').matches
+      if (reduced || !wide || typeof document.startViewTransition !== 'function') {
+        swap(null)
+        return
+      }
+      // Wide screen: retract the drawer in the live page first, then shrink the frame into its card.
+      retracting.current = true
+      setClosing(true)
+      retractTimer.current = window.setTimeout(() => swap(null), DRAWER_CLOSE_MS)
+    },
+    [reduced, swap],
+  )
+
   const open = useCallback(
     (id: string) => {
       window.history.pushState({ work: true }, '', `#/work/${id}`)
@@ -91,5 +126,5 @@ export function useWorkRoute(ids: string[]) {
     return () => window.removeEventListener('popstate', onPop)
   }, [ids, show])
 
-  return { openId, open, close }
+  return { openId, closing, open, close }
 }
