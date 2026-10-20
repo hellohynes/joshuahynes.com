@@ -272,6 +272,15 @@
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
+/* Closing is quicker than opening: the frame shrinks into its tile in 220ms (see DRAWER_CLOSE_MS in useWorkRoute). */
+html[data-vt='close']::view-transition-group(work-frame) {
+  animation-duration: 0.22s;
+}
+/* The page-level group defaults to 250ms, which would hold the whole transition open longer than the shrink needs. */
+html[data-vt='close']::view-transition-group(root) {
+  animation-duration: 0.15s;
+}
+
 /*
  * The page behind. Opening: it stays exactly where it is and the dimmed backdrop comes up over it while the
  * card grows. Closing: the backdrop clears while the frame shrinks back into its card. The default
@@ -292,7 +301,7 @@ html[data-vt='open']::view-transition-new(root) {
 
 html[data-vt='close']::view-transition-old(root) {
   z-index: 2;
-  animation: vt-fade-out 0.22s ease-in both;
+  animation: vt-fade-out 0.15s ease-in both;
 }
 html[data-vt='close']::view-transition-new(root) {
   animation: none;

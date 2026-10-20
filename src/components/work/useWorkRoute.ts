@@ -3,8 +3,13 @@ import { flushSync } from 'react-dom'
 import { useReducedMotion } from '../../figures/useFigureInput'
 
 const HASH = /^#\/work\/([\w-]+)$/
-/** How long the drawer takes to retract before the frame shrinks back (see the drawer's close duration in WorkDetail). */
-const DRAWER_CLOSE_MS = 320
+/**
+ * Closing takes about 75% of the time opening does (opening is about 530ms: the frame grows in 360ms and the drawer
+ * opens from 110ms to 530ms). The drawer retracts for this long, then the frame shrinks for 220ms (index.css); with the view
+ * transition's setup that measures at about 75% of the time opening takes (about 385ms against 513ms). For 50%, use about
+ * 90 and 130. Keep this equal to the drawer's close duration in WorkDetail.
+ */
+const DRAWER_CLOSE_MS = 140
 const NAME = 'work-frame' // the view-transition name the card carries as it grows into the frame, and back
 
 const readId = (ids: string[]) => {

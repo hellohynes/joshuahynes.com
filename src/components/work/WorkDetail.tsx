@@ -67,7 +67,7 @@ export function WorkDetail({ item, closing, onClose }: { item: WorkItem; closing
         {/* On a wide screen the drawer column opens from nothing to 30rem, which is what pushes the picture over. */}
         <div
           data-pushed={pushed && !closing ? '' : undefined}
-          className="grid min-h-full lg:h-full lg:grid-cols-[minmax(0,1fr)_0px] lg:transition-[grid-template-columns] lg:duration-[320ms] lg:ease-[cubic-bezier(0.2,0,0,1)] lg:data-[pushed]:grid-cols-[minmax(0,1fr)_30rem] lg:data-[pushed]:duration-[420ms] motion-reduce:transition-none"
+          className="grid min-h-full lg:h-full lg:grid-cols-[minmax(0,1fr)_0px] lg:transition-[grid-template-columns] lg:duration-[140ms] lg:ease-[cubic-bezier(0.2,0,0,1)] lg:data-[pushed]:grid-cols-[minmax(0,1fr)_30rem] lg:data-[pushed]:duration-[420ms] motion-reduce:transition-none"
         >
           <div
             className="relative aspect-(--ratio) max-h-[75dvh] overflow-hidden lg:aspect-auto lg:h-full lg:max-h-none"
