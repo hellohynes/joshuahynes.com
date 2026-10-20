@@ -5,8 +5,9 @@ import { WorkDetail } from './work/WorkDetail'
 import { useWorkRoute } from './work/useWorkRoute'
 
 /**
- * A masonry grid of the work. CSS columns do the packing, so there is no layout script: cards of different
- * heights stack down each column, and the column count follows the screen. Opening a card shows that piece full page.
+ * The work, as a grid of tiles. Each piece says how many of the grid's 8 columns and how many rows it takes up
+ * (in content.ts), so tiles can be wide, tall or small; the layout rules are in index.css. Opening a tile
+ * shows that piece full page.
  */
 export function WorkGrid({ work }: { work: WorkItem[] }) {
   const ids = useMemo(() => work.map((item) => item.id), [work])
@@ -14,14 +15,16 @@ export function WorkGrid({ work }: { work: WorkItem[] }) {
   const openItem = work.find((item) => item.id === openId)
 
   return (
-    <section id="work" aria-labelledby="work-h" className="scroll-mt-4 pb-16 pt-16">
-      <h2 id="work-h" className="pb-6 font-mono text-xs uppercase tracking-[0.08em] text-muted">
+    <section id="work" aria-labelledby="work-h" className="scroll-mt-4">
+      <h2 id="work-h" className="sr-only">
         Work
       </h2>
-      <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
-        {work.map((item, i) => (
-          <WorkCard key={item.id} item={item} index={i + 1} onOpen={open} />
-        ))}
+      <div className="work-grid-wrap">
+        <div className="work-grid">
+          {work.map((item) => (
+            <WorkCard key={item.id} item={item} onOpen={open} />
+          ))}
+        </div>
       </div>
       {openItem && <WorkDetail item={openItem} onClose={close} />}
     </section>

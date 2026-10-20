@@ -46,7 +46,7 @@ function Video({ media, fit }: { media: Media; fit: string }) {
 
 interface WorkMediaProps {
   media?: Media
-  /** shown on the grey placeholder until the file exists */
+  /** shown on the grey placeholder until the file exists (the piece's title) */
   label: string
   fit?: 'cover' | 'contain'
   /** the open view's picture loads straight away; cards load as they scroll near */
@@ -59,8 +59,8 @@ export function WorkMedia({ media, label, fit = 'cover', eager = false }: WorkMe
 
   if (!media) {
     return (
-      <div className="flex size-full items-center justify-center bg-[color-mix(in_srgb,var(--ink)_10%,var(--bg))]">
-        <span className="font-mono text-xs uppercase tracking-[0.08em] text-muted">{label}</span>
+      <div className="flex size-full items-center justify-center bg-[#4a4a4a]">
+        <span className="text-xl text-muted">{label}</span>
       </div>
     )
   }

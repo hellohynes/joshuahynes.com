@@ -1,16 +1,16 @@
 @import "tailwindcss";
-@import "@fontsource-variable/newsreader";
 @import "@fontsource-variable/jetbrains-mono";
 @import "@fontsource/yellowtail";
 
-/* Palette (approved 2026-10-13). `rule` is decorative only: 1.5:1 on bg.
-   Meaningful lines use ink or muted, live state uses accent. */
+/* Palette from the design: white, near-black for names, a cool grey for the rest, and a light hairline.
+   `rule` is decorative only. Live state uses accent. */
 :root {
   color-scheme: light;
-  --bg: #f5f2ea;
+  --bg: #ffffff;
   --ink: #161513;
-  --muted: #5e5a51;
-  --rule: #cbc5b8;
+  --muted: #828696;
+  --rule: #c8cad2;
+  --glyph: #303445;
   --accent: #b4491b;
   /* Team colours, one set per figure. Gold is darkened and silver omitted so
      meaningful marks keep 3:1 or better on the cream background. */
@@ -35,6 +35,7 @@
     --ink: #eeebe3;
     --muted: #a29d91;
     --rule: #3b3935;
+    --glyph: #eeebe3;
     --accent: #f08a5d;
     --sox-red: #e5535d;
     --sox-navy: #7fa0d0;
@@ -56,6 +57,7 @@
   --ink: #eeebe3;
   --muted: #a29d91;
   --rule: #3b3935;
+  --glyph: #eeebe3;
   --accent: #f08a5d;
   --sox-red: #e5535d;
   --sox-navy: #7fa0d0;
@@ -71,7 +73,8 @@
 }
 
 @theme inline {
-  --font-serif: "Newsreader Variable", ui-serif, Georgia, serif;
+  /* SF Pro, as in the design, where it is installed (Apple devices); the system font elsewhere. */
+  --font-sans: "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, "Helvetica Neue", Arial, sans-serif;
   --font-script: "Yellowtail", "Brush Script MT", cursive;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", monospace;
   --color-bg: var(--bg);
@@ -86,7 +89,7 @@
     scrollbar-gutter: stable; /* so opening a project (which locks scrolling) does not shift the page */
     background: var(--bg);
     color: var(--ink);
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
 
@@ -94,16 +97,6 @@
     outline: 2px solid var(--accent);
     outline-offset: 3px;
   }
-}
-
-/* The logo SVG is a fixed near-black (#0C0D0E). Inverting it gives near-white on the dark theme. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .logo {
-    filter: invert(1);
-  }
-}
-:root[data-theme="dark"] .logo {
-  filter: invert(1);
 }
 
 /* Hairline figures ------------------------------------------------------ */
@@ -321,5 +314,43 @@ html[data-vt='close']::view-transition-new(root) {
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none;
+  }
+}
+
+/* Work grid: 8 columns, rows of a fixed height ------------------------------------------------------ */
+
+/*
+ * Tiles take `--cols` columns and `--rows` rows. The row height is set from the column width, so a tile's
+ * shape depends only on its cols and rows, however wide the page is. (In the design a column is 106.6px, a
+ * row is 78.5px and the gap is 27px at 1217px wide; everything here scales from that.)
+ */
+.work-grid-wrap {
+  container-type: inline-size;
+}
+
+.work-grid {
+  --gap: clamp(10px, 2.2cqw, 27px);
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-auto-rows: calc((100cqw - 7 * var(--gap)) / 8 * 0.736);
+}
+
+.work-tile {
+  grid-column: span var(--cols);
+  grid-row: span var(--rows);
+  min-width: 0;
+}
+
+/* On a narrow screen the tiles stack in one column, each keeping its shape. */
+@container (max-width: 39.99rem) {
+  .work-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+  }
+  .work-tile {
+    grid-column: auto;
+    grid-row: auto;
+    aspect-ratio: calc(var(--cols) / (var(--rows) * 0.736));
   }
 }

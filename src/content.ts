@@ -1,25 +1,19 @@
 // All page copy lives here. Every placeholder starts with "TODO:";
 // scripts/check-content.mjs fails the production build while any remain.
 
+import dialpadIcon from './assets/dialpad-icon.svg'
+
 export type GlyphName = 'baseball' | 'basketball' | 'football'
 
-/** The small drawing that sits at the end of an intro statement. */
-export type InlineItem = 'dialpad' | 'terminal' | 'robot' | 'commits'
-
-export interface Stat {
-  value: string
-  label: string
-}
-
-export interface Statement {
-  text: string
-  item: InlineItem
-}
+/** A piece of the intro sentence: plain (muted) text, or a name that is picked out in the darker ink. */
+export type IntroPart = string | { strong: string }
 
 export interface Role {
   company: string
   title: string
   dates: string
+  /** a small logo that appears beside the company on hover; leave it out until you have the file */
+  logo?: string
 }
 
 export interface Media {
@@ -40,161 +34,63 @@ export interface WorkItem {
   period: string
   problem: string
   outcome: string
-  /** width / height of the card, so the masonry columns have a varied rhythm */
-  ratio: string
+  /**
+   * How much of the grid this piece takes up. The grid is 8 columns wide and its rows are a fixed height, so
+   * `cols: 5, rows: 3` is a wide tile and `cols: 3, rows: 6` is a tall one. Pieces are placed in order.
+   */
+  cols: number
+  rows: number
   /** how the picture fills its frame: "cover" crops to fill, "contain" shows all of it. Defaults to cover */
   fit?: 'cover' | 'contain'
-  /** leave out until the file exists: the card shows a grey placeholder */
+  /** leave out until the file exists: the tile shows a grey placeholder with the title */
   media?: Media
 }
 
 export interface Content {
   name: string
-  current: Role & { statements: Statement[]; scope: Stat[] }
-  earlier: Role[]
+  intro: IntroPart[]
+  history: Role[]
   work: WorkItem[]
-  reading: string[]
-  listening: string[]
-  contact: { label: string; href: string }
+  social: { x: string; github: string }
+}
+
+const todo = {
+  role: 'TODO: Your role',
+  period: 'TODO: Time range',
+  problem: 'TODO: The problem, in a sentence or two.',
+  outcome: 'TODO: The outcome, with one specific result.',
 }
 
 export const content: Content = {
   name: 'Joshua Hynes',
-  current: {
-    company: 'Dialpad',
-    title: 'Sr Director of Product Design',
-    dates: '2018 – Present',
-    statements: [
-      { text: 'Leading the product design as we create the future of AI‑powered business communications', item: 'dialpad' },
-      {
-        text: 'Rethinking the product design craft alongside Product and Engineering while keeping humans in the loop',
-        item: 'terminal',
-      },
-      { text: 'Creating systems that empower designers to build at the speed of thought', item: 'robot' },
-      { text: 'Supporting designers to help them ship work that accurately reflects their intent', item: 'commits' },
-    ],
-    scope: [
-      { value: '30', label: 'people led, at peak' },
-      { value: '4', label: 'managers' },
-      { value: '4', label: 'disciplines' },
-    ],
-  },
-  earlier: [
-    { company: 'Stack Overflow', title: 'Senior Product Designer', dates: '2013 – 2018' },
-    { company: 'andCulture', title: 'Senior Experience Designer & Strategist', dates: '2006 – 2013' },
+  intro: [
+    'I’m ',
+    { strong: 'Joshua Hynes' },
+    ', a ',
+    { strong: 'Design Leader' },
+    ' and ',
+    { strong: 'Principal Designer' },
+    '. Currently I’m leading design building the new era of AI-powered communications with ',
+    { strong: 'Dialpad' },
+    '.',
   ],
-  // Twelve slots. Fill in each piece's text here, and add `media` once its file is in public/work/.
+  history: [
+    { company: 'Dialpad', title: 'Senior Director, Product Design', dates: '2018–Present', logo: dialpadIcon },
+    { company: 'Stack Overflow', title: 'Senior Product Designer', dates: '2013–2018' },
+    { company: 'AndCulture', title: 'Senior Experience Designer', dates: '2006–2013' },
+  ],
+  // The pieces in the design, with the sizes from it. Fill in each piece's text here, add `media` once its file
+  // is in public/work/, and change `cols` and `rows` to resize it. Add a new piece by adding an entry.
   work: [
-    {
-      id: 'work-01',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '4 / 3',
-    },
-    {
-      id: 'work-02',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '3 / 4',
-    },
-    {
-      id: 'work-03',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '1 / 1',
-    },
-    {
-      id: 'work-04',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '16 / 10',
-    },
-    {
-      id: 'work-05',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '4 / 5',
-    },
-    {
-      id: 'work-06',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '3 / 2',
-    },
-    {
-      id: 'work-07',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '1 / 1',
-    },
-    {
-      id: 'work-08',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '4 / 3',
-    },
-    {
-      id: 'work-09',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '3 / 4',
-    },
-    {
-      id: 'work-10',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '16 / 10',
-    },
-    {
-      id: 'work-11',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '5 / 4',
-    },
-    {
-      id: 'work-12',
-      title: 'TODO: Project title',
-      role: 'TODO: Your role',
-      period: 'TODO: Time range',
-      problem: 'TODO: The problem, in a sentence or two.',
-      outcome: 'TODO: The outcome, with one specific result.',
-      ratio: '1 / 1',
-    },
+    { id: 'dialpad', title: 'Dialpad', ...todo, cols: 5, rows: 3 },
+    { id: 'calling', title: 'Calling', ...todo, cols: 3, rows: 6 },
+    { id: 'agent-studio', title: 'Agent Studio', ...todo, cols: 2, rows: 3 },
+    { id: 'text-input', title: 'Text Input', ...todo, cols: 3, rows: 2 },
+    { id: 'ryte', title: 'Ryte', ...todo, cols: 3, rows: 3 },
+    { id: 'ai-composer', title: 'AI Composer', ...todo, cols: 2, rows: 2 },
+    { id: 'agent-skills', title: 'Agent Skills', ...todo, cols: 3, rows: 2 },
+    { id: 'meetings', title: 'Meetings', ...todo, cols: 4, rows: 4 },
+    { id: 'beacon', title: 'Beacon', ...todo, cols: 4, rows: 4 },
   ],
-  reading: ['TODO: Book or article, Author', 'TODO: Book or article, Author', 'TODO: Book or article, Author'],
-  listening: ['TODO: Album, Artist', 'TODO: Album, Artist', 'TODO: Album, Artist'],
-  contact: { label: 'TODO: you@example.com', href: 'TODO: mailto:you@example.com' },
+  social: { x: 'TODO: https://x.com/', github: 'TODO: https://github.com/' },
 }

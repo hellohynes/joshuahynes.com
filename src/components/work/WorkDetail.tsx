@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom'
 import type { WorkItem } from '../../content'
 import { WorkMedia } from './WorkMedia'
 
-const label = 'font-mono text-xs uppercase tracking-[0.08em] text-muted'
+const label = 'text-xs leading-[1.6] text-muted'
 
 /** How long after the frame appears the drawer starts to slide in and push the picture over. */
 const DRAWER_DELAY_MS = 110
@@ -59,7 +59,7 @@ export function WorkDetail({ item, onClose }: { item: WorkItem; onClose: () => v
           ref={closeButton}
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 cursor-pointer border border-rule bg-bg px-3 py-2 font-mono text-xs uppercase tracking-[0.08em] hover:border-ink"
+          className="absolute right-4 top-4 z-10 cursor-pointer border border-rule bg-bg px-3 py-2 text-xs hover:border-ink"
         >
           Close
         </button>
@@ -71,7 +71,7 @@ export function WorkDetail({ item, onClose }: { item: WorkItem; onClose: () => v
         >
           <div
             className="relative aspect-(--ratio) max-h-[75dvh] overflow-hidden lg:aspect-auto lg:h-full lg:max-h-none"
-            style={{ '--ratio': item.ratio } as CSSProperties}
+            style={{ '--ratio': item.cols / (item.rows * 0.736) } as CSSProperties}
           >
             <WorkMedia media={item.media} fit={item.fit} label={item.title} eager />
           </div>
@@ -79,25 +79,25 @@ export function WorkDetail({ item, onClose }: { item: WorkItem; onClose: () => v
           {/* The column clips the drawer as it opens; the drawer itself keeps its width and sits against the right edge. */}
           <div className="lg:min-h-0 lg:overflow-hidden">
             <aside className="border-t border-rule p-6 sm:p-8 lg:ml-auto lg:h-full lg:w-[30rem] lg:overflow-y-auto lg:border-l lg:border-t-0 lg:pt-20">
-              <h2 id="work-title" className="font-serif text-[clamp(1.75rem,2.6vw,3rem)] font-[380] leading-[1.1] tracking-[-0.02em]">
+              <h2 id="work-title" className="text-[clamp(1.5rem,2.2vw,1.875rem)] leading-[1.2] text-ink">
                 {item.title}
               </h2>
               <dl className="mt-10 grid gap-8">
                 <div className="grid gap-2">
                   <dt className={label}>Role</dt>
-                  <dd className="m-0 text-lg leading-snug">{item.role}</dd>
+                  <dd className="m-0 text-xl leading-[1.35] text-ink">{item.role}</dd>
                 </div>
                 <div className="grid gap-2">
                   <dt className={label}>Time range</dt>
-                  <dd className="m-0 text-lg leading-snug">{item.period}</dd>
+                  <dd className="m-0 text-xl leading-[1.35] text-ink">{item.period}</dd>
                 </div>
                 <div className="grid gap-2">
                   <dt className={label}>Problem</dt>
-                  <dd className="m-0 text-lg leading-snug">{item.problem}</dd>
+                  <dd className="m-0 text-xl leading-[1.35] text-ink">{item.problem}</dd>
                 </div>
                 <div className="grid gap-2">
                   <dt className={label}>Outcome</dt>
-                  <dd className="m-0 text-lg leading-snug">{item.outcome}</dd>
+                  <dd className="m-0 text-xl leading-[1.35] text-ink">{item.outcome}</dd>
                 </div>
               </dl>
             </aside>
