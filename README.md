@@ -57,7 +57,7 @@ Pieces are sorted newest first by `date`. A year-only date (`2025`) sorts after 
 
 ## Drafts
 
-A piece with `draft: true` is routed, listed and rendered in development only (`pnpm dev`). Production and PR-preview builds never route or list it, and no HTML is written for it. Drafts are exempt from the `TODO:` check, so you can leave placeholders in one while you work.
+A piece with `draft: true` is routed, listed and rendered in development only (`pnpm dev`). Production and PR-preview builds never route or list it, and no HTML is written for it. Drafts are also removed from the built JavaScript at build time. Drafts are exempt from the `TODO:` check, so you can leave placeholders in one while you work.
 
 ## The production check
 

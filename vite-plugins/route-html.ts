@@ -8,12 +8,28 @@ export function routePaths(items: readonly Item[]): string[] {
   return [...new Set(['/work', '/about', ...published.map(itemPath)])]
 }
 
+const ITEMS_MODULE = '/src/content/items.ts'
+
+/**
+ * Replaces the items module with its published items so drafts never reach the production bundle.
+ * Returns null for any other module.
+ */
+export function stripDraftsFromModule(_code: string, id: string, items: readonly Item[]): string | null {
+  const path = id.split('?')[0].replaceAll('\\', '/')
+  if (!path.endsWith(ITEMS_MODULE)) return null
+  return `export const allItems = ${JSON.stringify(visibleItems(items, { includeDrafts: false }))}`
+}
+
 // Static hosts serve real files only, so every route gets its own copy of the SPA shell.
 export function routeHtml(): Plugin {
   return {
     name: 'route-html',
     apply: 'build',
     enforce: 'post',
+    transform(code, id) {
+      const stripped = stripDraftsFromModule(code, id, allItems)
+      return stripped === null ? null : { code: stripped, map: null }
+    },
     generateBundle(_options, bundle) {
       const shell = bundle['index.html']
       if (shell?.type !== 'asset') {
