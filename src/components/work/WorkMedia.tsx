@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Media } from '../../content/types.ts'
 import { useReducedMotion } from '../../figures/useFigureInput'
+import { assetUrl } from '../../lib/assets.ts'
+
+const BASE = import.meta.env.BASE_URL
 
 /** Whether the element is on screen right now (not just once), so a video can pause when scrolled away. */
 function useOnScreen<T extends Element>() {
@@ -32,8 +35,8 @@ function Video({ media, fit }: { media: Media; fit: string }) {
   return (
     <video
       ref={ref}
-      src={media.src}
-      poster={media.poster}
+      src={assetUrl(media.src, BASE)}
+      poster={media.poster && assetUrl(media.poster, BASE)}
       aria-label={media.alt}
       muted
       loop
@@ -67,7 +70,7 @@ export function WorkMedia({ media, label, fit = 'cover', eager = false }: WorkMe
   if (media.kind === 'video') return <Video media={media} fit={fitClass} />
   return (
     <img
-      src={media.src}
+      src={assetUrl(media.src, BASE)}
       alt={media.alt}
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"

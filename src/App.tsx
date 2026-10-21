@@ -6,6 +6,7 @@ import { findItem } from './lib/items.ts'
 import { useRoute } from './lib/router.tsx'
 import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
+import { Work } from './pages/Work'
 
 // Stand-ins until the work, piece and about pages land.
 function Placeholder({ text }: { text: string }) {
@@ -49,7 +50,7 @@ function App() {
     case 'home':
       return <Home />
     case 'work':
-      return <Placeholder text="Work (coming in Task 8)" />
+      return <Work />
     case 'about':
       return <Placeholder text="About (coming in Task 9)" />
     case 'piece':

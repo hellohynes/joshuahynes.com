@@ -252,114 +252,106 @@
   }
 }
 
-/* Work: the card grows into the frame, and the frame shrinks back into the card ------------ */
-
-.work-frame {
-  view-transition-name: work-frame;
-}
-
-/* The two snapshots can differ in shape, so both fill the moving box and crop, never stretch. */
-::view-transition-old(work-frame),
-::view-transition-new(work-frame) {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  overflow: clip;
-}
-
-::view-transition-group(work-frame) {
-  animation-duration: 0.36s;
-  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
-}
-
-/* Closing is quicker than opening: the frame shrinks into its tile in 220ms (see DRAWER_CLOSE_MS in useWorkRoute). */
-html[data-vt='close']::view-transition-group(work-frame) {
-  animation-duration: 0.22s;
-}
-/* The page-level group defaults to 250ms, which would hold the whole transition open longer than the shrink needs. */
-html[data-vt='close']::view-transition-group(root) {
-  animation-duration: 0.15s;
-}
+/* Work grid: colour cells --------------------------------------------------------------------------- */
 
 /*
- * The page behind. Opening: it stays exactly where it is and the dimmed backdrop comes up over it while the
- * card grows. Closing: the backdrop clears while the frame shrinks back into its card. The default
- * cross-fade of the whole page would hide the growth, and its blend mode would wash out the overlap, so
- * both are replaced.
+ * At rest a cell is just a small caption under a hairline. Hovering or focusing it floods the top 42% with the
+ * piece's colour and shows its picture in the lower 58%. The change is instant, with no transition, and keyboard
+ * focus shows exactly what hover does. Where there is no hover, or on a narrow screen, both are always shown.
  */
-html[data-vt]::view-transition-old(root),
-html[data-vt]::view-transition-new(root) {
-  mix-blend-mode: normal;
-}
-
-html[data-vt='open']::view-transition-old(root) {
-  animation: none;
-}
-html[data-vt='open']::view-transition-new(root) {
-  animation: vt-fade-in 0.22s ease-out both;
-}
-
-html[data-vt='close']::view-transition-old(root) {
-  z-index: 2;
-  animation: vt-fade-out 0.15s ease-in both;
-}
-html[data-vt='close']::view-transition-new(root) {
-  animation: none;
-}
-
-@keyframes vt-fade-in {
-  from {
-    opacity: 0;
-  }
-}
-@keyframes vt-fade-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none;
-  }
-}
-
-/* Work grid: 8 columns, rows of a fixed height ------------------------------------------------------ */
-
-/*
- * Tiles take `--cols` columns and `--rows` rows. The row height is set from the column width, so a tile's
- * shape depends only on its cols and rows, however wide the page is. (In the design a column is 106.6px, a
- * row is 78.5px and the gap is 27px at 1217px wide; everything here scales from that.)
- */
-.work-grid-wrap {
+.work-cells {
   container-type: inline-size;
 }
 
-.work-grid {
-  --gap: clamp(10px, 2.2cqw, 27px);
+.work-cells-list {
   display: grid;
-  gap: var(--gap);
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-  grid-auto-rows: calc((100cqw - 7 * var(--gap)) / 8 * 0.736);
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.work-tile {
-  grid-column: span var(--cols);
-  grid-row: span var(--rows);
-  min-width: 0;
-}
-
-/* On a narrow screen the tiles stack in one column, each keeping its shape. */
-@container (max-width: 39.99rem) {
-  .work-grid {
-    grid-template-columns: minmax(0, 1fr);
-    grid-auto-rows: auto;
+@media (min-width: 40rem) {
+  .work-cells-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .work-tile {
-    grid-column: auto;
-    grid-row: auto;
-    aspect-ratio: calc(var(--cols) / (var(--rows) * 0.736));
+}
+
+@media (min-width: 64rem) {
+  .work-cells-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.work-cell {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  height: 27cqw;
+  overflow: hidden;
+  border-top: 1px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.work-cell-caption {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  z-index: 3;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.work-cell-caption span {
+  display: block;
+}
+
+.work-cell-field {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 1;
+  height: 42%;
+  background: var(--cell-bg);
+  opacity: 0;
+  transition: none;
+}
+
+.work-cell-media {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 0;
+  height: 58%;
+  overflow: hidden;
+  opacity: 0;
+  transition: none;
+}
+
+.work-cell:hover .work-cell-field,
+.work-cell:focus-visible .work-cell-field,
+.work-cell:hover .work-cell-media,
+.work-cell:focus-visible .work-cell-media {
+  opacity: 1;
+}
+
+.work-cell:hover .work-cell-caption,
+.work-cell:focus-visible .work-cell-caption {
+  color: var(--cell-fg);
+}
+
+/* A single column is wide, so its cells are tall enough to hold the field and the picture. */
+@media (max-width: 39.99rem) {
+  .work-cell {
+    height: 75cqw;
+  }
+}
+
+@media (hover: none), (max-width: 40rem) {
+  .work-cell-field,
+  .work-cell-media {
+    opacity: 1;
+  }
+  .work-cell-caption {
+    color: var(--cell-fg);
   }
 }
