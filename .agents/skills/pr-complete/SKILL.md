@@ -42,14 +42,19 @@ the number.
        `git for-each-ref --format='%(tree)' refs/remotes/origin | grep -qxF "$(git rev-parse "$LOCAL_TIP^{tree}")"`.
        This covers a PR merged before a follow-up commit was pushed, with that follow-up on another remote
        branch (a cherry-pick has a different SHA, so (a) fails).
-     - **(c)** `git cherry "origin/$BASE" "$LOCAL_TIP" "$HEAD_REF_OID"` prints no line starting with `+`:
-       every commit past the PR head is patch-equivalent to a commit already in the base. This covers a
-       follow-up that was carried to a new branch and merged after the base moved on, when (b) no longer
-       matches, and a PR that was rebased or force-pushed.
+     - **(c)** `git cherry "origin/$BASE" "$LOCAL_TIP" "$HEAD_REF_OID"` prints no line starting with `+`,
+       and `git rev-list --merges "$HEAD_REF_OID".."$LOCAL_TIP"` prints nothing (`git cherry` skips merge
+       commits, and a merge can hold hand edits made while resolving it). Every commit past the PR head is
+       then patch-equivalent to a commit already in the base. This covers a follow-up carried to a new
+       branch and merged, by rebase or as a single-commit squash, after the base moved on, when (b) no
+       longer matches. A multi-commit squash of the follow-up, or a local branch rewritten after a
+       force-push, matches nothing: stop with `needs decision` and show
+       `git diff "$HEAD_REF_OID" "$LOCAL_TIP"` so the user can judge whether anything is unpublished.
 
      (b) and (c) prove the content is published, not these commit SHAs. Report every local-only commit the
-     deletion will drop, by full SHA (`git log --format=%H "$HEAD_REF_OID".."$LOCAL_TIP"`), and say they
-     stay recoverable only from the reflog.
+     deletion will drop, by full SHA (`git log --format=%H "$HEAD_REF_OID".."$LOCAL_TIP"`). Say each stays
+     recoverable by that SHA with `git branch <name> <sha>` until git garbage-collects it, and from HEAD's
+     reflog if it was checked out here. The branch's own reflog is deleted with the ref.
 
      When none holds, stop and name the commits in `"$HEAD_REF_OID".."$LOCAL_TIP"` as unpublished work.
      Say how to carry them forward: a new branch from `origin/$BASE`, `git cherry-pick` of those commits,

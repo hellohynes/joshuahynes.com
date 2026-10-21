@@ -21,16 +21,18 @@ read-only refresh, not publication: confirm before any push or PR mutation.
      command's shell and require it to succeed and be non-empty (an empty `GH_TOKEN` is ignored, which
      would silently run as the active account). Then run the same `gh api` check with
      `GH_TOKEN="$ACCOUNT_TOKEN"` and stop at the first account that prints exactly `true`.
+   - Record the chosen account's login with `gh api --hostname github.com user --jq .login`, run under
+     that account's token like any other call.
    - Never export a token, print it or write it down. `gh auth switch` changes the active account for
      every repo and terminal, and the global git config uses `gh` as its credential helper, so a switch
      would redirect your other repos' HTTPS operations.
    - If no signed-in account can push, stop and tell the user to run `gh auth login`; never run
      `gh auth switch` or `gh auth login` yourself.
    - `git push` uses git's credential helper, not `gh`. Read
-     `git config --get-all credential.https://github.com.helper`: when its last value is
-     `!gh auth git-credential` (no repo-local override), the push runs as the active `gh` account, so stop
-     if that account cannot push and tell the user. In this repo `.git/config` overrides it with
-     `osxkeychain` and the origin URL names `hellohynes`.
+     `git config --get-all credential.https://github.com.helper` and keep only the values after the last
+     empty one (an empty value resets the list). When any of them ends with `gh auth git-credential`, the
+     push may run as the active `gh` account: stop if that account cannot push and tell the user. In this
+     repo `.git/config` resets the list to `osxkeychain` and the origin URL names `hellohynes`.
 3. Resolve `BASE_REF` (`origin/<default branch>`), run `git fetch origin`, capture `BASE_SHA` and
    `HEAD_SHA`. If `git rev-list --count "$BASE_REF"..HEAD` is zero, report nothing to publish and stop.
 4. Look up an existing PR: `gh pr list --repo "$SLUG" --head "$BRANCH" --state all --json
@@ -55,17 +57,18 @@ read-only refresh, not publication: confirm before any push or PR mutation.
    mutation, unless the user supplies a URL (it gets the same check) or says to publish without one.
 9. Propose the exact `git push -u origin "$BRANCH"` and `gh pr create` (or the edit) with the title and
    body, and wait for explicit confirmation. A changed head, base, title, body or GIF invalidates it.
-   When step 2 chose a non-active account, each write command (`gh pr create`, `gh api -X PATCH`) carries
-   an inline `GH_TOKEN="$(gh auth token --hostname github.com --user "$ACCOUNT")"` prefix. Show the user
-   that unexpanded text, never a token value.
+   When step 2 chose a non-active account, each write command (`gh pr create`, `gh api -X PATCH`) runs as
+   `T="$(gh auth token --hostname github.com --user "$ACCOUNT")" && [ -n "$T" ] && GH_TOKEN="$T" gh pr
+   create ...`, so a failed or empty token stops the command instead of falling back to the active
+   account. Show the user that unexpanded text, never a token value.
    For an edit use `gh api -X PATCH "repos/$SLUG/pulls/$N" -F body=@FILE`, adding `-f title="$TITLE"` only
    when the title changes: `gh pr edit` can fail on a Projects (classic) GraphQL deprecation error. Keep
    FILE in the session scratch or notes folder, never in the repo, so the next clean-tree check passes.
 10. After confirmation: push, create or edit, then verify the returned PR's head, base and state. For a
     new PR the preview deploys at `https://www.joshuahynes.com/<PR number>/` once the PR Preview workflow
     passes; report that URL and the workflow state rather than claiming it is live.
-11. Update only a PR whose author login equals the account step 2 chose (or the repo owner). For another
-    author's PR, keep the proposed body local.
+11. Update only a PR whose `author.login` from step 4 equals the login recorded in step 2, and check that
+    before step 9. For another author's PR, keep the proposed body local.
 
 ## Safety
 
