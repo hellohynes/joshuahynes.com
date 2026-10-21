@@ -71,10 +71,12 @@ export function RotatingHeadline({ paused }: { paused: boolean }) {
     let raf = 0
     let ticket = 0
     let settle: (() => void) | null = null
+    let cells: Cell[] = []
 
     // Start from the plain first word, whatever an earlier run of this effect left behind.
     verbEl.textContent = current.verb
     verbEl.removeAttribute('style')
+    cells = []
 
     function applyColor() {
       verbEl!.style.color = colorFor(current.color, currentTheme()) ?? ''
@@ -84,6 +86,31 @@ export function RotatingHeadline({ paused }: { paused: boolean }) {
       const natural = inner!.offsetWidth
       const scale = fitScale(line!.getBoundingClientRect().width, natural)
       inner!.style.transform = scale === 1 ? '' : `scale(${scale})`
+    }
+
+    /**
+     * Pins every cell to its final glyph's width and records where the baseline sits in a cell (it varies with the
+     * face; the cursor and spinner are placed from it). Both depend on the font size, which follows the window, so
+     * this runs on every resize too. It clears the line's scale first: rects measured through a scale come back
+     * shrunk, and the cells would be pinned too narrow. Setting widths cannot resize the observed line (the inner
+     * line is absolutely positioned), so the observer cannot loop.
+     */
+    function measure() {
+      if (cells.length === 0) return
+      inner!.style.transform = ''
+      cells.forEach((c) => {
+        c.el.style.width = ''
+      })
+      const widths = cells.map((c) => c.fin.getBoundingClientRect().width)
+      cells.forEach((c, i) => {
+        c.el.style.width = `${widths[i]}px`
+      })
+      const probe = document.createElement('i')
+      probe.className = 'rh-probe'
+      cells[0].fin.append(probe)
+      const baseline = probe.getBoundingClientRect().bottom - cells[0].el.getBoundingClientRect().top
+      probe.remove()
+      verbEl!.style.setProperty('--bl', `${baseline}px`)
     }
 
     function buildCells(pick: VerbPick, useFont: boolean): Cell[] {
@@ -99,7 +126,7 @@ export function RotatingHeadline({ paused }: { paused: boolean }) {
       }
       applyColor()
 
-      const cells: Cell[] = []
+      const built: Cell[] = []
       for (const char of pick.verb) {
         if (char === ' ') {
           verbEl!.append(' ')
@@ -111,27 +138,15 @@ export function RotatingHeadline({ paused }: { paused: boolean }) {
         const [fin, fl, cu] = Array.from(el.children) as HTMLElement[]
         fin.textContent = char
         verbEl!.append(el)
-        cells.push({ el, fin, fl, cu, phase: '', glyph: -1 })
+        built.push({ el, fin, fl, cu, phase: '', glyph: -1 })
       }
 
-      // Pin every cell to its final glyph's width (reads first, then writes), so nothing shifts as letters lock in.
-      const widths = cells.map((c) => c.fin.getBoundingClientRect().width)
-      cells.forEach((c, i) => {
-        c.el.style.width = `${widths[i]}px`
-      })
-      // Where the baseline sits in a cell, which varies with the face: the cursor and spinner are placed from it.
-      if (cells.length > 0) {
-        const probe = document.createElement('i')
-        probe.className = 'rh-probe'
-        cells[0].fin.append(probe)
-        const baseline = probe.getBoundingClientRect().bottom - cells[0].el.getBoundingClientRect().top
-        probe.remove()
-        verbEl!.style.setProperty('--bl', `${baseline}px`)
-      }
+      cells = built
+      measure()
       const end = document.createElement('span')
       end.className = 'rh-end'
-      cells[cells.length - 1]?.el.append(end)
-      return cells
+      built[built.length - 1]?.el.append(end)
+      return built
     }
 
     function render(cells: Cell[], t: number) {
@@ -192,11 +207,11 @@ export function RotatingHeadline({ paused }: { paused: boolean }) {
       if (disposed || mine !== ticket) return
 
       current = useFont ? pick : { ...pick, font: null }
-      const cells = buildCells(current, useFont)
+      const printed = buildCells(current, useFont)
       applyFit()
-      const duration = flipDuration(cells.length)
+      const duration = flipDuration(printed.length)
       let start: number | null = null
-      render(cells, 0)
+      render(printed, 0)
 
       const done = () => {
         settle = null
@@ -205,7 +220,7 @@ export function RotatingHeadline({ paused }: { paused: boolean }) {
       }
       settle = () => {
         cancelAnimationFrame(raf)
-        render(cells, duration)
+        render(printed, duration)
         done()
       }
       const frame = (now: number) => {
@@ -215,7 +230,7 @@ export function RotatingHeadline({ paused }: { paused: boolean }) {
           settle?.()
           return
         }
-        render(cells, t)
+        render(printed, t)
         raf = requestAnimationFrame(frame)
       }
       raf = requestAnimationFrame(frame)
@@ -243,13 +258,19 @@ export function RotatingHeadline({ paused }: { paused: boolean }) {
       else schedule()
     }
 
-    const resize = new ResizeObserver(applyFit)
+    const resize = new ResizeObserver(() => {
+      measure()
+      applyFit()
+    })
     resize.observe(line)
     const themeObserver = new MutationObserver(applyColor)
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
     schemeQuery.addEventListener('change', applyColor)
     reducedQuery.addEventListener('change', onReduced)
     document.addEventListener('visibilitychange', onVisibility)
+
+    // The spinner glyphs are always Silkscreen, so have it ready well before the first print.
+    document.fonts.load('400 1em "Silkscreen"', POOL).catch(() => {})
 
     applyFit()
     schedule()
