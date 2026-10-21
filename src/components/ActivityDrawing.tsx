@@ -19,7 +19,7 @@ const ROWS = ACTIVITY_WEEKS.length
 const SAMPLES = 220
 // Each week's line crosses left to right in DRAW_LINE_MS, starting DRAW_STAGGER_MS after the one behind it, oldest first.
 const DRAW_LINE_MS = 700
-const DRAW_STAGGER_MS = 5
+const DRAW_STAGGER_MS = 15
 const DRAW_TOTAL_MS = DRAW_LINE_MS + (ROWS - 1) * DRAW_STAGGER_MS
 const HOVER_MS = 700
 // The plot fills the whole canvas: edge to edge across, and down the full height with a small inset top and bottom
