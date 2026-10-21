@@ -61,7 +61,7 @@ A piece with `draft: true` is routed, listed and rendered in development only (`
 
 ## The production check
 
-`pnpm check` validates the content (ids, dates, colours, one to three `impact` points) and fails if any published piece, or `src/content/site.ts`, still contains a string starting with `TODO:`. That includes the contact email in `site.ts`, which is a placeholder until you set it, so the check fails until then. The production deploy runs it, so placeholders cannot ship.
+`pnpm check` validates the content (ids, dates, colours, one to three `impact` points) and fails if any published piece, or `src/content/site.ts`, still contains a string starting with `TODO:`. That includes the contact email in `site.ts`, which is a placeholder until you set it, so the check fails until then. The production workflow (`.github/workflows/production.yml`) runs it, so placeholders cannot ship to production. The `deploy.yml` and `pr-preview.yml` workflows do not run it.
 
 ## Deploys and base paths
 

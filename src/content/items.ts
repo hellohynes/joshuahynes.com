@@ -19,10 +19,6 @@ export const allItems: Item[] = [
       'A paragraph on the approach and what changed as a result.',
     ],
     credits: [{ role: 'Engineering', name: 'Sam Rivera' }],
-    media: { kind: 'image', src: '/work/example-piece/cover.jpg', alt: 'Describe the cover image' },
-    gallery: [
-      { kind: 'image', src: '/work/example-piece/one.jpg', alt: 'Describe the first image' },
-    ],
   },
   // To add a piece, copy this block above the example and fill it in. Optional fields are marked.
   // {
