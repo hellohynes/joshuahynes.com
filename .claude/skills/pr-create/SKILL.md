@@ -29,7 +29,8 @@ read-only refresh, not publication: confirm before any push or PR mutation.
 7. **Body:** one `## Summary` that states the problem and who it affects, then the solution, then short
    bullets of concrete changes. Add `## Notes` only for something the reviewer must act on or know, such
    as a setting to change. Remove any empty section entirely. Run `writing-help` in edit mode on the
-   drafted title and body. No AI attribution.
+   drafted title and body, but keep any `What changed` summary out of the body and keep the step 6 title
+   format. No AI attribution.
 8. Propose the exact `git push -u origin "$BRANCH"` and `gh pr create` (or `gh pr edit`) with the title and
    body, and wait for explicit confirmation. A changed head, base, title or body invalidates it.
 9. After confirmation: push, create or edit, then verify the returned PR's head, base and state. For a

@@ -106,6 +106,14 @@ describe('checkAgentTooling', () => {
       /shaping.*copy of references\/patterns\.md differs from the canonical/,
     ],
     [
+      'a Claude copy that differs only in bytes that are not valid text',
+      (root) => {
+        put(root, '.agents/skills/shaping/references/data.bin', Buffer.from([0xff]))
+        put(root, '.claude/skills/shaping/references/data.bin', Buffer.from([0xfe]))
+      },
+      /shaping.*copy of references\/data\.bin differs from the canonical/,
+    ],
+    [
       'a reference file missing from the Claude copy',
       (root) => rmSync(join(root, '.claude/skills/shaping/references/patterns.md')),
       /shaping.*references\/patterns\.md is missing/,

@@ -46,7 +46,7 @@ function checkSkills(root, problems) {
     for (const file of canonicalFiles) {
       const copy = join(copyDir, file)
       if (!existsSync(copy)) problems.push(`skill ${name}: .claude/skills/${name}/${file} is missing`)
-      else if (read(copy) !== read(join(canonicalDir, file))) {
+      else if (!readFileSync(copy).equals(readFileSync(join(canonicalDir, file)))) {
         problems.push(`skill ${name}: .claude copy of ${file} differs from the canonical file`)
       }
     }

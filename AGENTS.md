@@ -28,7 +28,8 @@ Use pnpm (`packageManager` pins the version) and Node from `.nvmrc`. Never npm o
 - No AI attribution in commit messages, PR titles or PR bodies.
 - Writing (replies, code comments, plans, PR bodies) is plain, terse and direct. Keep identifiers, paths
   and commands exact. Read `.agents/skills/writing-help/references/patterns.md` once per session and apply
-  it to everything you write. For a whole document or PR body, run `writing-help`.
+  it to everything you write. For a whole document or PR body, run `writing-help`. Site copy in
+  `src/content/` is the user's own voice: audit it, but edit it only when asked.
 
 ## Plans and other artifacts
 
@@ -44,7 +45,7 @@ Both Claude and Codex run the same skills and agents.
 | Path | Purpose |
 | --- | --- |
 | `.agents/skills/<skill>/SKILL.md` | Canonical skill. Codex reads it directly. |
-| `.claude/skills/<skill>/SKILL.md` | Byte-identical copy for Claude, synced by Pilot. Never edit it; edit the canonical file. |
+| `.claude/skills/<skill>/` | Byte-identical copy of the whole skill folder for Claude, synced by Pilot. Never edit it; edit the canonical files. |
 | `.agents/agents/<agent>.md` | Shared agent instructions. |
 | `.claude/agents/<agent>.md`, `.codex/agents/<agent>.toml` | Profiles with the same name and sandbox capability. |
 

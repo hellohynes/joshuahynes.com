@@ -41,8 +41,8 @@ as evidence, not as a claim about who wrote the draft.
 Do not apply a surface rule when it would make the technical contract less precise.
 
 - Preserve project and product names as proper nouns even when the same word appears on a generic banned-word list.
-- Preserve exact negative constraints such as "does not write seed data" and "fails on unknown
-  ownership."
+- Preserve exact negative constraints such as "never edit on `main`" and "`pnpm check` fails on `TODO:`
+  placeholders."
 - Preserve repeated identifiers when they refer to distinct code types or stages. Explain the
   distinction instead of replacing them with casual synonyms.
 - Preserve lists that encode real options, validation rules, mappings, or ordered procedures.

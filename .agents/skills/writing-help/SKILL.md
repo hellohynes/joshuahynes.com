@@ -30,7 +30,7 @@ the user asks for an edit.
 | --------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | Chat replies                                  | Standing rule in `AGENTS.md`. Apply the patterns while writing; do not run the full workflow. |
 | Code comments                                 | Apply the patterns while writing: say why, not what.                                          |
-| Plans, shaping, breadboard, design-spec, build plans | Edit mode on the finished document.                                                    |
+| Plans, shaping, breadboards, specs            | Edit mode on the finished document.                                                           |
 | Documentation (`README.md`, `AGENTS.md`)      | Edit mode. Keep the commands, paths and rules exact.                                          |
 | PR bodies                                     | `pr-create` runs it on the drafted body.                                                      |
 | Site copy (`src/content/`)                    | Detect mode only, unless the user asks for an edit. It is the user's own voice.               |
