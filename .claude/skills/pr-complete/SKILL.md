@@ -32,10 +32,19 @@ the number.
      say so, and still do steps 5 and 8.
    - `SOURCE` is not `BASE`.
    - If a local `refs/heads/$SOURCE` exists, call its tip `LOCAL_TIP`. `HEAD_REF_OID` must be present
-     locally (run `git fetch origin "pull/$N/head"` if it is not; still missing is unverified). Then
-     `git merge-base --is-ancestor "$LOCAL_TIP" "$HEAD_REF_OID"` must succeed: a branch equal to or behind
-     the PR head holds nothing unpublished. Otherwise stop and name the commits in
-     `"$HEAD_REF_OID".."$LOCAL_TIP"` as unpublished work.
+     locally (run `git fetch origin "pull/$N/head"` if it is not; still missing is unverified). Then the
+     local tip must be published, by either test:
+     - **(a)** `git merge-base --is-ancestor "$LOCAL_TIP" "$HEAD_REF_OID"` succeeds: the branch is equal to
+       or behind the PR head.
+     - **(b)** its tree equals the tree at the tip of a remote branch:
+       `git for-each-ref --format='%(tree)' refs/remotes/origin | grep -qxF "$(git rev-parse "$LOCAL_TIP^{tree}")"`.
+       This covers a PR merged before a follow-up commit was pushed, with that follow-up carried to another
+       branch (a cherry-pick has a different SHA, so (a) fails). It proves the content is published, not the
+       commit history; say so in the report.
+
+     When neither holds, stop and name the commits in `"$HEAD_REF_OID".."$LOCAL_TIP"` as unpublished work.
+     Say how to carry them forward: a new branch from `origin/$BASE`, `git cherry-pick` of those commits,
+     published through `pr-create`, then rerun `pr-complete "$N"`.
    - `git worktree list --porcelain` shows `refs/heads/$SOURCE` checked out in no other worktree.
    - `git ls-remote --exit-code --heads origin "refs/heads/$SOURCE"`: exit 2 means the branch is already
      gone (GitHub may delete on merge), which counts as done. Exit 0 means it exists: its SHA must equal
