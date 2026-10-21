@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { items } from './content/index.ts'
 import { site } from './content/site.ts'
 import { findItem } from './lib/items.ts'
@@ -8,6 +8,14 @@ import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
 import { Work } from './pages/Work'
 import { WorkPage } from './pages/WorkPage'
+
+/** Where focus goes after an in-app route change: back to the piece's cell from its page, otherwise the new page's main. */
+function focusAfterNavigation(from: string, to: string) {
+  const piece = from.startsWith('piece:') ? from.slice('piece:'.length) : null
+  const cell = piece && to === 'work' ? document.querySelector<HTMLElement>(`.work-cells a[href$="/work/${piece}"]`) : null
+  const target = cell ?? document.getElementById('main')
+  target?.focus({ preventScroll: true })
+}
 
 function App() {
   const route = useRoute()
@@ -35,6 +43,16 @@ function App() {
     document.title = title
   }, [title])
 
+  // Focus follows an in-app route change, not the first load or a hash jump (those have their own targets).
+  const routeKey = route.name === 'piece' ? `piece:${route.id}` : route.name
+  const previousKey = useRef<string | null>(null)
+  useEffect(() => {
+    const from = previousKey.current
+    previousKey.current = routeKey
+    if (from === null || from === routeKey || location.hash) return
+    focusAfterNavigation(from, routeKey)
+  }, [routeKey])
+
   switch (route.name) {
     case 'home':
       return <Home />
@@ -43,7 +61,7 @@ function App() {
     case 'about':
       return <About />
     case 'piece':
-      return piece ? <WorkPage id={piece.id} /> : <NotFound />
+      return piece ? <WorkPage key={piece.id} id={piece.id} /> : <NotFound />
     default:
       return <NotFound />
   }

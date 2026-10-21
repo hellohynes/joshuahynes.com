@@ -42,7 +42,7 @@ export function WorkPage({ id }: { id: string }) {
         </Link>
       </header>
 
-      <main id="main" className={`grid flex-1 ${hasPictures ? 'lg:grid-cols-[2fr_1fr]' : ''}`}>
+      <main id="main" tabIndex={-1} className={`grid flex-1 ${hasPictures ? 'lg:grid-cols-[2fr_1fr]' : ''}`}>
         {hasPictures && (
           <div className="flex flex-col gap-6 px-6 pt-6 pb-12 lg:gap-[3vw] lg:border-r lg:border-current lg:px-[3vw] lg:pt-[3vw] lg:pb-[6vw]">
             {item.media && (

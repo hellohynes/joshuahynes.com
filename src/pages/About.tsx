@@ -24,8 +24,8 @@ export function About() {
 
   return (
     <div className="px-[clamp(1.5rem,6.8vw,6rem)]">
-      <SiteHeader />
-      <main id="main">
+      <SiteHeader section="about" />
+      <main id="main" tabIndex={-1}>
         <Intro name={site.name} parts={site.intro} />
         <WorkHistory history={site.history} />
         <section id="contact" tabIndex={-1} aria-label="Contact" className="scroll-mt-6 outline-none">
