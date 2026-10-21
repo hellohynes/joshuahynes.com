@@ -18,7 +18,7 @@ read-only refresh, not publication: confirm before any push or PR mutation.
 3. Resolve `BASE_REF` (`origin/<default branch>`), run `git fetch origin`, capture `BASE_SHA` and
    `HEAD_SHA`. If `git rev-list --count "$BASE_REF"..HEAD` is zero, report nothing to publish and stop.
 4. Look up an existing PR: `gh pr list --repo "$SLUG" --head "$BRANCH" --state all --json
-   number,state,author,url,title,baseRefName`. The command must succeed; a failed lookup is unknown and
+   number,state,author,url,title,baseRefName,body`. The command must succeed; a failed lookup is unknown and
    blocks everything. An empty result means none. For an existing PR its live base is authoritative.
 5. Read the latest `pr-prep` report for this branch in `<date>/reports/`. Require `Verdict: Ready`, a
    `HEAD_SHA` equal to the current HEAD, and a `BASE_SHA` equal to the refreshed base. Missing, stale or
@@ -32,13 +32,15 @@ read-only refresh, not publication: confirm before any push or PR mutation.
    drafted title and body, but keep any `What changed` summary out of the body and keep the step 6 title
    format. No AI attribution.
 8. **GIF (required):** read `references/gif-selection.md`, select and validate one GIF, and add it as the
-   final `## GIF` section. An existing PR keeps its current valid GIF unless the user asks for a
-   replacement. With no validated GIF, stop before any push or PR mutation, unless the user supplies a URL
-   or says to publish without one.
+   final `## GIF` section. An existing PR keeps its GIF unless the user asks for a replacement: take the
+   `## GIF` section from its current `body`, run the reference's URL check on it, and re-append it last. If
+   it is absent or fails the check, select a new one. With no validated GIF, stop before any push or PR
+   mutation, unless the user supplies a URL (it gets the same check) or says to publish without one.
 9. Propose the exact `git push -u origin "$BRANCH"` and `gh pr create` (or the edit) with the title and
    body, and wait for explicit confirmation. A changed head, base, title, body or GIF invalidates it.
-   For an edit use `gh api -X PATCH "repos/$SLUG/pulls/$N" -F body=@FILE`: `gh pr edit` can fail on a
-   Projects (classic) GraphQL deprecation error.
+   For an edit use `gh api -X PATCH "repos/$SLUG/pulls/$N" -F body=@FILE`, adding `-f title="$TITLE"` only
+   when the title changes: `gh pr edit` can fail on a Projects (classic) GraphQL deprecation error. Keep
+   FILE in the session scratch or notes folder, never in the repo, so the next clean-tree check passes.
 10. After confirmation: push, create or edit, then verify the returned PR's head, base and state. For a
     new PR the preview deploys at `https://www.joshuahynes.com/<PR number>/` once the PR Preview workflow
     passes; report that URL and the workflow state rather than claiming it is live.
