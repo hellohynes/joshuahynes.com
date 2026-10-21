@@ -252,6 +252,12 @@
   }
 }
 
+/* Work page: the piece's colour fills the page; `--piece-bg` and `--piece-fg` are set on the root by WorkPage.
+   The site accent is not checked against piece colours, so focus uses the page's own text colour. */
+.piece :focus-visible {
+  outline-color: var(--piece-fg);
+}
+
 /* Work grid: colour cells --------------------------------------------------------------------------- */
 
 /*

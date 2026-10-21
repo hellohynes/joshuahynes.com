@@ -7,8 +7,9 @@ import { useRoute } from './lib/router.tsx'
 import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
 import { Work } from './pages/Work'
+import { WorkPage } from './pages/WorkPage'
 
-// Stand-ins until the work, piece and about pages land.
+// Stand-in until the about page lands.
 function Placeholder({ text }: { text: string }) {
   return (
     <div className="px-[clamp(1.5rem,6.8vw,6rem)]">
@@ -54,7 +55,7 @@ function App() {
     case 'about':
       return <Placeholder text="About (coming in Task 9)" />
     case 'piece':
-      return piece ? <Placeholder text={`${piece.title} (coming in Task 8)`} /> : <NotFound />
+      return piece ? <WorkPage id={piece.id} /> : <NotFound />
     default:
       return <NotFound />
   }
