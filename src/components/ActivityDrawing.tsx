@@ -3,7 +3,8 @@ import { ACTIVITY_GENERATED, ACTIVITY_WEEKS, DOCUMENTS_SINCE } from '../data/act
 import { summarize } from '../lib/activity.ts'
 import { depthAlpha } from '../lib/depth.ts'
 import { count, formatNumber, monthDay, totalsLine, withYear } from '../lib/format.ts'
-import { clampTip, easeOut, hoverProgress } from '../lib/readout.ts'
+import { drawProgress } from '../lib/drawin.ts'
+import { clampTip, hoverProgress } from '../lib/readout.ts'
 import {
   busyScale,
   dayAt,
@@ -16,7 +17,10 @@ import {
 
 const ROWS = ACTIVITY_WEEKS.length
 const SAMPLES = 220
-const DRAW_IN_MS = 4000
+// Each week's line crosses left to right in DRAW_LINE_MS, starting DRAW_STAGGER_MS after the one behind it, oldest first.
+const DRAW_LINE_MS = 700
+const DRAW_STAGGER_MS = 5
+const DRAW_TOTAL_MS = DRAW_LINE_MS + (ROWS - 1) * DRAW_STAGGER_MS
 const HOVER_MS = 700
 // The plot fills the whole canvas: edge to edge across, and down the full height with a small inset top and bottom
 // (a fraction of the height), so the lines pass over the header, headline and footer whatever the viewport.
@@ -84,13 +88,13 @@ export function ActivityDrawing() {
     const layerCtx = layer.getContext('2d')
     let layerKey = ''
 
-    const drawInActive = (now: number) => !reducedMotion && startedAt !== null && now - startedAt < DRAW_IN_MS
+    const drawInActive = (now: number) => !reducedMotion && startedAt !== null && now - startedAt < DRAW_TOTAL_MS
 
-    const rowsShown = (now: number) => {
-      if (reducedMotion) return ROWS
+    // How far along the draw-in each week's line is (0..1): all finished under reduced motion, none before it starts.
+    const lineProgress = (now: number, week: number) => {
+      if (reducedMotion) return 1
       if (startedAt === null) return 0
-      const t = Math.min(1, Math.max(0, (now - startedAt) / DRAW_IN_MS))
-      return Math.floor(easeOut(t) * ROWS)
+      return drawProgress(now - startedAt, week, DRAW_STAGGER_MS, DRAW_LINE_MS)
     }
 
     const schedule = () => {
@@ -117,7 +121,10 @@ export function ActivityDrawing() {
       const bottom = height * (1 - INSET)
       const rowHeight = (bottom - top) / (ROWS - 1)
       const amplitude = rowHeight * AMPLITUDE_ROWS
-      const shown = rowsShown(now)
+      const animating = drawInActive(now)
+      // Weeks that have finished drawing: hover only sees these. They are a prefix, as older weeks start first.
+      let shown = 0
+      while (shown < ROWS && lineProgress(now, shown) === 1) shown++
       const pointAt = (week: number, u: number) => ({
         x: x0 + (x1 - x0) * u,
         y: top + week * rowHeight - PROFILES[week](u) * amplitude,
@@ -158,20 +165,24 @@ export function ActivityDrawing() {
       else if (hover?.week !== hot.week) hover = { week: hot.week, since: now }
       const progress = hover && !reducedMotion ? hoverProgress(now - hover.since, HOVER_MS) : 1
 
-      // The settled layer: every week in its resting style, oldest first. Each week is filled before it is
-      // stroked, so newer weeks hide the older lines behind them. The stroke tone fades with depth (`depthAlpha`).
+      // The layer: every week in its resting style, oldest first. Each week is filled before it is stroked, so newer
+      // weeks hide the older lines behind them. The stroke tone fades with depth (`depthAlpha`). A week still drawing
+      // in is cut off at its own reveal point, fill and stroke alike, so it covers the lines behind it only as far as
+      // it has been drawn. The layer changes every frame during the draw-in, so it is cached only once settled.
       const key = `${canvas.width}x${canvas.height}|${shown}|${palette.ink}|${palette.fill}|${palette.cobalt}`
-      if (key !== layerKey) {
-        layerKey = key
+      if (animating || key !== layerKey) {
+        layerKey = animating ? '' : key
         layer.width = canvas.width
         layer.height = canvas.height
         layerCtx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0)
         layerCtx.lineJoin = 'round'
-        for (let week = 0; week < shown; week++) {
+        for (let week = 0; week < ROWS; week++) {
+          const reveal = lineProgress(now, week)
+          if (reveal === 0) break // later weeks start later still
           const base = top + week * rowHeight
           const accent = week === ROWS - 1
-          trace(layerCtx, week, 1)
-          layerCtx.lineTo(x1, base + 1)
+          trace(layerCtx, week, reveal)
+          layerCtx.lineTo(x0 + (x1 - x0) * reveal, base + 1)
           layerCtx.lineTo(x0, base + 1)
           layerCtx.closePath()
           layerCtx.fillStyle = palette.fill
@@ -179,7 +190,7 @@ export function ActivityDrawing() {
           layerCtx.strokeStyle = accent ? palette.cobalt : palette.ink
           layerCtx.lineWidth = accent ? 1.1 : 0.7
           layerCtx.globalAlpha = accent ? 1 : depthAlpha(week, ROWS)
-          trace(layerCtx, week, 1)
+          trace(layerCtx, week, reveal)
           layerCtx.stroke()
           layerCtx.globalAlpha = 1
         }
@@ -236,7 +247,7 @@ export function ActivityDrawing() {
         tip.style.display = 'none'
       }
 
-      if (drawInActive(now) || progress < 1) schedule()
+      if (animating || progress < 1) schedule()
     }
 
     const setPointer = (event: PointerEvent) => {
