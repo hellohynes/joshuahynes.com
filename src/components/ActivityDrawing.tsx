@@ -28,7 +28,7 @@ const HOVER_MS = 700
 const INSET = 0.03
 // Peak height as a multiple of the row spacing, so the proportions hold as the rows spread over the screen.
 const AMPLITUDE_ROWS = 9
-// The hovered day's marker: radius and the ring around it, in CSS px.
+// A day marker (the hovered day, and the thumb on the newest line's end): radius and the ring around it, in CSS px.
 const DAY_DOT = 4.5
 const DAY_RING = 1.5
 
@@ -150,6 +150,19 @@ export function ActivityDrawing() {
         }
       }
 
+      // An accent dot with a ring in the blend's neutral colour (the page, once blended), so it stays visible over the
+      // other lines.
+      const marker = (c: CanvasRenderingContext2D, x: number, y: number) => {
+        c.fillStyle = palette.fill
+        c.beginPath()
+        c.arc(x, y, DAY_DOT + DAY_RING, 0, Math.PI * 2)
+        c.fill()
+        c.fillStyle = palette.cobalt
+        c.beginPath()
+        c.arc(x, y, DAY_DOT, 0, Math.PI * 2)
+        c.fill()
+      }
+
       // The week whose curve is nearest the pointer at its x, sticky to the week already hovered.
       let hot: { week: number; day: number } | null = null
       if (pointer.inside) {
@@ -200,6 +213,12 @@ export function ActivityDrawing() {
           trace(layerCtx, week, upTo)
           layerCtx.stroke()
           layerCtx.globalAlpha = 1
+          if (accent && lineProgress(now, week) === 1) {
+            // The thumb: a resting marker on the end of the newest line, once it has finished drawing in, so the line
+            // does not look cut off. Inset from the right edge when the week is complete, so it is never clipped.
+            const end = pointAt(week, upTo)
+            marker(layerCtx, Math.min(end.x, width - DAY_DOT - DAY_RING), end.y)
+          }
         }
       }
       ctx.drawImage(layer, 0, 0, width, height)
@@ -214,18 +233,8 @@ export function ActivityDrawing() {
 
         const week = ACTIVITY_WEEKS[hot.week]
         const rest = pointAt(hot.week, (hot.day + 0.5) / 7)
-        if (progress === 1) {
-          // The hovered day: an accent dot with a ring in the blend's neutral colour (the page, once blended), so it
-          // stays visible over the other lines.
-          ctx.fillStyle = palette.fill
-          ctx.beginPath()
-          ctx.arc(rest.x, rest.y, DAY_DOT + DAY_RING, 0, Math.PI * 2)
-          ctx.fill()
-          ctx.fillStyle = palette.cobalt
-          ctx.beginPath()
-          ctx.arc(rest.x, rest.y, DAY_DOT, 0, Math.PI * 2)
-          ctx.fill()
-        }
+        // The hovered day. On the newest line's last day it lands exactly on the thumb, same size, so it just takes over.
+        if (progress === 1) marker(ctx, rest.x, rest.y)
 
         const contributions = week.days.reduce<number>((sum, count) => sum + (count ?? 0), 0)
         const day = week.days[hot.day]
