@@ -11,8 +11,9 @@ branch, fast-forwarding it, and deleting the verified merged source branch local
 
 ## Inputs
 
-A PR number or URL. Default: the PR for the current branch. A detached HEAD has no current branch, so it
-needs an argument.
+A PR number or URL. Default: the PR for the current branch. A detached HEAD has no current branch, and the
+base branch has no PR of its own (a rerun after step 5 has already left the source branch), so both need
+the number.
 
 ## Workflow
 
@@ -26,10 +27,15 @@ needs an argument.
 3. **Merge gate.** Only `MERGED` continues. `OPEN`, `CLOSED` or no PR: stop, change nothing, and say so.
 4. **Safety gates, all read-only, before any mutation.** Any failure stops the run.
    - The tree is clean except the known noise in `AGENTS.md`, and `git fetch origin` succeeds.
+   - `headRepositoryOwner.login` equals the owner in `$SLUG`. A fork, or a null owner (a deleted fork), is
+     not this repo's branch: skip every remaining gate that looks at `$SOURCE` and skip steps 6 and 7,
+     say so, and still do steps 5 and 8.
    - `SOURCE` is not `BASE`.
-   - `headRepositoryOwner.login` equals the owner in `$SLUG`. For a fork, skip steps 6 and 7 and say so.
-   - If a local `refs/heads/$SOURCE` exists, its tip equals `HEAD_REF_OID`. Commits past it are
-     unpublished work: stop and name them.
+   - If a local `refs/heads/$SOURCE` exists, call its tip `LOCAL_TIP`. `HEAD_REF_OID` must be present
+     locally (run `git fetch origin "pull/$N/head"` if it is not; still missing is unverified). Then
+     `git merge-base --is-ancestor "$LOCAL_TIP" "$HEAD_REF_OID"` must succeed: a branch equal to or behind
+     the PR head holds nothing unpublished. Otherwise stop and name the commits in
+     `"$HEAD_REF_OID".."$LOCAL_TIP"` as unpublished work.
    - `git worktree list --porcelain` shows `refs/heads/$SOURCE` checked out in no other worktree.
    - `git ls-remote --exit-code --heads origin "refs/heads/$SOURCE"`: exit 2 means the branch is already
      gone (GitHub may delete on merge), which counts as done. Exit 0 means it exists: its SHA must equal
@@ -44,7 +50,7 @@ needs an argument.
    the error and skip step 7.
 7. **Local source branch.** Only after step 6 succeeded or the remote branch was proven gone. Skip it when
    `git show-ref --verify --quiet "refs/heads/$SOURCE"` fails and report `not present`. Otherwise
-   `git update-ref -d "refs/heads/$SOURCE" "$HEAD_REF_OID"` (the expected SHA makes it fail if the ref
+   `git update-ref -d "refs/heads/$SOURCE" "$LOCAL_TIP"` (the expected SHA makes it fail if the ref
    moved), then `git config --remove-section "branch.$SOURCE"` (ignore failure) and
    `git fetch --prune origin`.
 8. **Production.** Read the default branch with `gh repo view "$SLUG" --json defaultBranchRef --jq
@@ -59,8 +65,12 @@ needs an argument.
    - Failure: report the failing step from `gh run view "$ID" --repo "$SLUG" --verbose`, or the output
      from `--log-failed`.
    - The PR's preview folder on `gh-pages` stays; nothing removes it.
-9. Classify the result: `complete` (every applicable step succeeded or was not applicable), `stopped` (a
-   gate or a step failure prevented closeout) or `needs decision`.
+9. Classify the result:
+   - `complete`: every applicable step succeeded or was not applicable. A production run that is `not
+     started yet`, `queued` or `in_progress` still counts, with `production pending` as the next action.
+   - `stopped`: a gate or a step failure prevented closeout.
+   - `needs decision`: closeout finished but production needs the user, meaning a failed run or a
+     non-200 after a successful run.
 
 ## Rules
 
@@ -76,4 +86,5 @@ needs an argument.
 The PR number, title, state, merge time and full merge SHA; the base and source branches; each gate result;
 the base switch and pull result; the remote and local deletion results; the production run state and the
 URL checks; the final branch as its own field; and one concrete next action. When a blocker must clear
-first, say `Rerun pr-complete after <condition>`.
+first, say `Rerun pr-complete <N> after <condition>` with the PR number, because the rerun may no longer
+be on the source branch.
