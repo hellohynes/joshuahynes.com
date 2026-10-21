@@ -35,3 +35,6 @@ yarn.lock
 .env
 .env.*
 !.env.example
+
+# Pilot skill sync bookkeeping
+.claude/skills/.pilot-sync-manifest.json

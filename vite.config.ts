@@ -7,6 +7,6 @@ export default defineConfig({
   plugins: [react(), routeHtml()],
   base: '/',
   test: {
-    include: ['src/**/*.test.ts', 'vite-plugins/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'vite-plugins/**/*.test.ts', 'scripts/**/*.test.mjs'],
   },
 })

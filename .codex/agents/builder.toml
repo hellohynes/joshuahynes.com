@@ -1,0 +1,13 @@
+name = "builder"
+description = "Builds one approved build plan on this site, writing only the paths the plan lists, and reports validation per acceptance item."
+model = "gpt-6-luna"
+sandbox_mode = "workspace-write"
+developer_instructions = """
+# Builder
+
+Read `.agents/agents/builder.md` and follow it exactly. It is the shared instruction set for this agent
+and its Claude counterpart, `.claude/agents/builder.md`.
+
+Hard limits: write only the paths in the plan's Where section, never the plan file; do not commit, push,
+create or switch branches, or open pull requests.
+"""
