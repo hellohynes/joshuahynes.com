@@ -26,6 +26,9 @@ Use pnpm (`packageManager` pins the version) and Node from `.nvmrc`. Never npm o
   changes) and the untracked `.codegraph/`. Never stage either.
 - Site content comes from `src/content/`. Drafts never ship; `pnpm check` fails on `TODO:` placeholders.
 - No AI attribution in commit messages, PR titles or PR bodies.
+- Every PR body ends with a validated GIF section (`pr-create` selects it). A PR goes out without one
+  only when the user says so.
+- Production is `https://www.joshuahynes.com`; PR previews are at `/<PR number>/` on it.
 - Writing (replies, code comments, plans, PR bodies) is plain, terse and direct. Keep identifiers, paths
   and commands exact. Read `.agents/skills/writing-help/references/patterns.md` once per session and apply
   it to everything you write. For a whole document or PR body, run `writing-help`. Site copy in
@@ -50,7 +53,7 @@ Both Claude and Codex run the same skills and agents.
 | `.claude/agents/<agent>.md`, `.codex/agents/<agent>.toml` | Profiles with the same name and sandbox capability. |
 
 Skills: `project-start`, `shaping`, `breadboard`, `design-spec`, `delegate`, `builder`, `pr-prep`,
-`pr-create`, `writing-help`. Agents: `builder` (writes the paths its plan lists), `reviewer` (read-only).
+`pr-create`, `pr-complete`, `writing-help`. Agents: `builder` (writes the paths its plan lists), `reviewer` (read-only).
 
 To add a skill, write `.agents/skills/<skill>/SKILL.md`, confirm Pilot copied it to `.claude/skills/`, and
 run `pnpm check:agents`.
