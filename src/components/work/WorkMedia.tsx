@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { Media } from '../../content'
+import type { Media } from '../../content/types.ts'
 import { useReducedMotion } from '../../figures/useFigureInput'
 
 /** Whether the element is on screen right now (not just once), so a video can pause when scrolled away. */

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent, ReactNode } from 'react'
-import type { GlyphName } from '../content'
+export type GlyphName = 'baseball' | 'basketball' | 'football'
 import { SpinBall } from './ball/SpinBall'
 import { LOOKS } from './ball/looks'
 import type { Look } from './ball/looks'

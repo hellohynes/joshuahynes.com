@@ -1,4 +1,5 @@
-import type { Role } from '../content'
+import type { Role } from '../content/types.ts'
+import { logos } from './logos.ts'
 
 /** Longer than the logo and the gap beside it (20px + 16px), so the text clears the logo when it slides over. */
 const SHIFT = 'group-hover:translate-x-9'
@@ -12,30 +13,32 @@ const EASE = 'motion-safe:transition-[translate,opacity] motion-safe:duration-30
 export function WorkHistory({ history }: { history: Role[] }) {
   return (
     <ul aria-label="Work history" className="m-0 list-none p-0 pb-16">
-      {history.map((role) => (
+      {history.map((role) => {
+        const logo = role.logo ? logos[role.logo] : undefined
+        return (
         <li key={role.company} className="group border-t border-rule pt-4 first:border-t-0 first:pt-0 [&:not(:first-child)]:mt-4">
           <div className="relative">
-            {role.logo && (
+            {logo && (
               <span
                 aria-hidden="true"
-                style={role.logo.background ? { background: role.logo.background } : undefined}
+                style={logo.background ? { background: logo.background } : undefined}
                 className={`absolute left-0 top-[4.5px] block size-5 -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 ${
-                  role.logo.background ? 'overflow-hidden rounded-[3px]' : ''
+                  logo.background ? 'overflow-hidden rounded-[3px]' : ''
                 } ${EASE}`}
               >
                 <img
-                  src={role.logo.src}
+                  src={logo.src}
                   alt=""
-                  style={role.logo.size ? { width: role.logo.size, height: role.logo.size } : undefined}
+                  style={logo.size ? { width: logo.size, height: logo.size } : undefined}
                   className={
-                    role.logo.size
+                    logo.size
                       ? 'absolute left-[calc(50%-0.5px)] top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2'
                       : 'size-full'
                   }
                 />
               </span>
             )}
-            <div className={role.logo ? `${SHIFT} ${EASE}` : ''}>
+            <div className={logo ? `${SHIFT} ${EASE}` : ''}>
               <p className="m-0 text-2xl leading-[1.2] text-muted">
                 <span className="text-ink">{role.company}</span>, {role.title}
               </p>
@@ -43,7 +46,8 @@ export function WorkHistory({ history }: { history: Role[] }) {
             </div>
           </div>
         </li>
-      ))}
+        )
+      })}
     </ul>
   )
 }

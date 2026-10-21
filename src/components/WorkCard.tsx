@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import type { WorkItem } from '../content'
+import type { WorkItem } from './work/legacy.ts'
 import { WorkMedia } from './work/WorkMedia'
 
 /**

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
-import type { WorkItem } from '../../content'
+import type { WorkItem } from './legacy.ts'
 import { WorkMedia } from './WorkMedia'
 
 const label = 'text-xs leading-[1.6] text-muted'

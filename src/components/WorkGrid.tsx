@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { WorkItem } from '../content'
+import type { WorkItem } from './work/legacy.ts'
 import { WorkCard } from './WorkCard'
 import { WorkDetail } from './work/WorkDetail'
 import { useWorkRoute } from './work/useWorkRoute'
