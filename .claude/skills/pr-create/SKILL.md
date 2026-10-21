@@ -12,9 +12,16 @@ read-only refresh, not publication: confirm before any push or PR mutation.
 
 1. `git status --short`. Any path present, except the known noise in `AGENTS.md`: stop and tell the user
    to commit, then run `pr-prep`, then rerun this. Never stage, commit, stash or rebase here.
-2. Resolve the repo slug from `git remote get-url origin`. Run `gh auth status` and confirm the active
-   account can push to that repo (this repo belongs to `hellohynes`). If it cannot, stop and tell the
-   user to run `gh auth switch --user hellohynes`; never switch accounts yourself.
+2. Resolve the repo slug from `git remote get-url origin`. Pick the account for the `gh` calls that
+   write (PR create and edit). Use the active account when `gh api "repos/$SLUG" --jq .permissions.push`
+   prints `true`. Otherwise list the signed-in accounts in `gh auth status` and run the same check with
+   `GH_TOKEN="$(gh auth token --user "$ACCOUNT")"` until one prints `true` (this repo belongs to
+   `hellohynes`). Pass that token inline on the single `gh` command that needs it. Never export it, print
+   it or write it down: `gh auth switch` changes the active account for every repo and terminal, and the
+   global git config uses `gh` as its credential helper, so a switch would redirect your other repos'
+   HTTPS operations. If no signed-in account can push, stop and tell the user to run `gh auth login`;
+   never run `gh auth switch` or `gh auth login` yourself. `git push` uses the repo's own credential
+   helper, not `gh`.
 3. Resolve `BASE_REF` (`origin/<default branch>`), run `git fetch origin`, capture `BASE_SHA` and
    `HEAD_SHA`. If `git rev-list --count "$BASE_REF"..HEAD` is zero, report nothing to publish and stop.
 4. Look up an existing PR: `gh pr list --repo "$SLUG" --head "$BRANCH" --state all --json
@@ -54,6 +61,7 @@ read-only refresh, not publication: confirm before any push or PR mutation.
   there is no validated GIF (without the user's explicit waiver).
 - Never rebase or merge here; `pr-prep` owns integration.
 - Do not push, create or edit without the separate explicit confirmation.
+- Never print, echo, export or persist a token, and never change the active `gh` account.
 
 ## Output
 
