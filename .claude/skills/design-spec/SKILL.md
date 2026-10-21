@@ -15,7 +15,9 @@ plan, and say which one you are in before acting.
 
 - Plan and Plan review write only the external plan file.
 - Implement needs explicit implementation intent, an approved exact plan revision, one eligible slice,
-  and a clean non-`main` feature branch. Otherwise stop and route branch setup to `project-start`.
+  and a non-`main` feature branch whose working tree holds no unrelated changes (the recorded paths of
+  earlier slices and the known noise in `AGENTS.md` are fine; slices are not committed unless the user
+  asks). Otherwise stop and route branch setup to `project-start`.
 - Verify reads the repo and updates the plan. It creates no branches, commits, PRs or comments.
 - A verified spec is not PR readiness. Recommend `pr-prep`; never invoke it or claim its verdict.
 

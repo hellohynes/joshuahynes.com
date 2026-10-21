@@ -50,7 +50,7 @@ outside their files. Worker count: 1 for up to about 10 small tasks, 2 to 3 for 
 
 1. Read each report and inspect the actual changes; "done" is not evidence.
 2. Resolve overlaps in the main session.
-3. Run `pnpm lint`, `pnpm test` and `pnpm build` once over the combined result.
+3. Run `pnpm lint`, `pnpm test`, `pnpm build` and `pnpm check` once over the combined result.
 4. Redo any task that failed or came back incomplete in the main session.
 
 ## Rules

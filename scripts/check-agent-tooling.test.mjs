@@ -66,4 +66,50 @@ describe('checkAgentTooling', () => {
     rmSync(join(root, '.codex/agents/builder.toml'))
     expect(checkAgentTooling(root).join('\n')).toMatch(/builder.*\.codex\/agents\/builder\.toml/)
   })
+
+  it.each([
+    [
+      'a skill with an empty description',
+      (root) => {
+        const text = '---\nname: shaping\ndescription:\n---\n'
+        put(root, '.agents/skills/shaping/SKILL.md', text)
+        put(root, '.claude/skills/shaping/SKILL.md', text)
+      },
+      /shaping.*description is empty/,
+    ],
+    [
+      'a missing Claude skill copy',
+      (root) => rmSync(join(root, '.claude/skills/shaping/SKILL.md')),
+      /shaping.*\.claude\/skills\/shaping\/SKILL\.md is missing/,
+    ],
+    [
+      'a Claude agent that does not load the shared instructions',
+      (root) => put(root, '.claude/agents/builder.md', '---\nname: builder\ndescription: x.\n---\n\nNothing.\n'),
+      /builder.*\.claude\/agents\/builder\.md does not load \.agents\/agents\/builder\.md/,
+    ],
+    [
+      'a Codex agent whose name differs from its file',
+      (root) => put(root, '.codex/agents/builder.toml', codexAgent('other', 'workspace-write')),
+      /builder.*\.codex\/agents\/builder\.toml name is not "builder"/,
+    ],
+    [
+      'a Codex agent with an unrecognised sandbox',
+      (root) => put(root, '.codex/agents/builder.toml', codexAgent('builder', 'danger-full-access')),
+      /builder.*sandbox_mode is "danger-full-access"/,
+    ],
+    [
+      'a Claude profile with no shared instructions',
+      (root) => put(root, '.claude/agents/stray.md', claudeAgent('stray')),
+      /stray.*\.claude\/agents\/stray\.md has no shared/,
+    ],
+    [
+      'a Codex profile with no shared instructions',
+      (root) => put(root, '.codex/agents/stray.toml', codexAgent('stray', 'read-only')),
+      /stray.*\.codex\/agents\/stray\.toml has no shared/,
+    ],
+  ])('reports %s', (_label, breakIt, expected) => {
+    const root = fixture()
+    breakIt(root)
+    expect(checkAgentTooling(root).join('\n')).toMatch(expected)
+  })
 })

@@ -17,7 +17,7 @@ Node 24 and `pnpm@10.34.6` (see `.nvmrc` and `package.json`).
 | `pnpm build` | Typecheck, then build to `dist/`. |
 | `pnpm preview` | Serve `dist/` locally. |
 | `pnpm test` | Run the unit tests (Vitest). |
-| `pnpm lint` | Run Oxlint (`.oxlintrc.json`: correctness rules plus the React hooks, React Compiler and Fast Refresh rules). |
+| `pnpm lint` | Run Oxlint (`.oxlintrc.json`: the correctness category, the ESLint and typescript-eslint recommended rules that Oxlint supports, and the React hooks, React Compiler and Fast Refresh rules). |
 | `pnpm check` | Validate the content and fail on any `TODO:` placeholder (see below). |
 | `pnpm activity` | Refresh `src/data/activity.ts`, the data behind the home drawing (see below). Needs the `gh` CLI, signed in. |
 | `pnpm check:agents` | Verify the Claude and Codex agent tooling match (see Agent tooling). Not part of `pnpm check`. |

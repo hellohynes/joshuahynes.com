@@ -34,6 +34,8 @@ you give it the output. Triggered lenses to add to the packet:
   both themes.
 - Changed `vite.config.ts`, `.github/`, `vite-plugins/`: the single `base: ` line rule and deploy paths.
 - Changed `src/content/`, `src/data/`, `scripts/`: privacy (aggregate counts only), `TODO:` placeholders.
+- Changed `.agents/`, `.claude/`, `.codex/`: skill and agent consistency (copies identical, profiles
+  match, every named command and path real).
 - Changed behavior or commands: documentation sync.
 
 If no isolated reviewer exists, run the same lenses yourself in sequence and record
@@ -53,8 +55,8 @@ cannot start until every finding is Resolved, Disputed or Deferred.
 
 ## 5. Gates
 
-Run, from the repo root: `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm check`. Docs-only changes run
-`pnpm lint` and `pnpm check`. A gate that changes files invalidates the review and returns to step 4.
+Run, from the repo root: `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm check`, plus `pnpm check:agents`
+when `.agents/`, `.claude/` or `.codex/` changed. Docs-only changes run `pnpm lint` and `pnpm check`. A gate that changes files invalidates the review and returns to step 4.
 Stop on any failure; report it with its output. Never claim a gate passed that you did not run.
 
 ## 6. Report
