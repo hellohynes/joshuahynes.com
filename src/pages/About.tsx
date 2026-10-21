@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import { Footer } from '../components/Footer'
 import { Intro } from '../components/Intro'
 import { BELOW_HEADER, PageFrame } from '../components/PageFrame'
+import { SiteFooter } from '../components/SiteFooter'
 import { SiteHeader } from '../components/SiteHeader'
 import { WorkHistory } from '../components/WorkHistory'
 import { site } from '../content/site.ts'
@@ -26,13 +26,11 @@ export function About() {
   return (
     <PageFrame>
       <SiteHeader section="about" />
-      <main id="main" tabIndex={-1} className={BELOW_HEADER}>
+      <main id="main" tabIndex={-1} className={`${BELOW_HEADER} flex-1`}>
         <Intro name={site.name} parts={site.intro} />
         <WorkHistory history={site.history} />
-        <section id="contact" tabIndex={-1} aria-label="Contact" className="scroll-mt-6 outline-none">
-          <Footer email={site.contact.email} />
-        </section>
       </main>
+      <SiteFooter id="contact" />
     </PageFrame>
   )
 }

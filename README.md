@@ -3,7 +3,7 @@
 Joshua Hynes's portfolio. React 19, Vite, Tailwind v4 and TypeScript, with pnpm. It is a static single-page app with real paths:
 
 - `/` home
-- `/work` the grid of pieces, newest first
+- `/work` the grid of pieces, newest first (the Work link is hidden from the navigation until `showWork` is set to `true` in `src/content/site.ts`; the page itself still resolves)
 - `/work/<id>` one piece
 - `/about`
 
@@ -27,7 +27,7 @@ Everything on the site comes from `src/content/`:
 
 - `types.ts` defines the shape of a piece and of the site details.
 - `items.ts` is the list of pieces (`allItems`). It also holds a commented template and a draft example.
-- `site.ts` holds your name, role, headline, intro, work history and contact email.
+- `site.ts` holds your name, role, headline, intro, work history, contact email, the footer stats, and `showWork` (whether the Work link shows in the navigation).
 
 Pieces are sorted newest first by `date`. A year-only date (`2025`) sorts after every dated month of that year. Pieces with the same date keep their order in `items.ts`.
 

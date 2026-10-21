@@ -22,6 +22,7 @@ const validSite = (over: Partial<Site> = {}): Site => ({
   headline: { first: 'Design leader.', verbs: ['Building', 'Spelunking'], rest: 'with AI.' },
   intro: ['I am ', { strong: 'Joshua' }, '.'],
   history: [{ company: 'Dialpad', title: 'Director', dates: '2018–Present', logo: 'dialpad' }],
+  showWork: false,
   contact: { email: 'me@example.com' },
   stats: { lead: 'Since 2025:', items: ['3,800+ contributions', '85+ skills created'] },
   ...over,

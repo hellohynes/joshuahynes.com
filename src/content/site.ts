@@ -33,6 +33,8 @@ export const site: Site = {
     { company: 'Stack Overflow', title: 'Senior Product Designer', dates: '2013–2018', logo: 'stack-overflow' },
     { company: 'AndCulture', title: 'Senior Experience Designer', dates: '2006–2013', logo: 'andculture' },
   ],
+  // Hidden from the navigation for now; set to true when the first piece is ready. /work still resolves either way.
+  showWork: false,
   contact: { email: 'work@joshuahynes.com' },
   // Hand-maintained, rounded on purpose so they do not go stale quickly; update them when it makes sense. Sources:
   // contributions and pull requests from the GitHub contributions graph, commits, additions and deletions from the

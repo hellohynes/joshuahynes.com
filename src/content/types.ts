@@ -43,6 +43,8 @@ export type Site = {
   headline: { first: string; verbs: string[]; rest: string }
   intro: IntroPart[]
   history: Role[]
+  /** Whether the Work link appears in the navigation. The /work page itself still exists either way. */
+  showWork: boolean
   contact: { email: string }
   stats: { lead: string; items: string[] }
 }

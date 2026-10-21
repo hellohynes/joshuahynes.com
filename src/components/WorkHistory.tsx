@@ -6,7 +6,7 @@ const SHIFT = 'group-hover:translate-x-9'
 const EASE = 'motion-safe:transition-[translate,opacity] motion-safe:duration-300 motion-safe:ease-[cubic-bezier(0.2,0,0,1)]'
 
 /**
- * The work history: a company and title with the dates under it, and a hairline between rows. Where a role has
+ * The work history: a company and title with the dates under it, with space and no rules between rows. Where a role has
  * a logo it eases in beside the company when the row is hovered, and the text slides over to make room.
  * Every row has one in the design; a logo with a `background` is clipped to a rounded square, as AndCulture's is.
  */
@@ -16,7 +16,7 @@ export function WorkHistory({ history }: { history: Role[] }) {
       {history.map((role) => {
         const logo = role.logo ? logos[role.logo] : undefined
         return (
-        <li key={role.company} className="group border-t border-rule pt-4 first:border-t-0 first:pt-0 [&:not(:first-child)]:mt-4">
+        <li key={role.company} className="group [&:not(:first-child)]:mt-6">
           <div className="relative">
             {logo && (
               <span

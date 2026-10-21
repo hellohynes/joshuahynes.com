@@ -7,10 +7,10 @@ const navLink = 'inline-flex h-11 items-center text-ink underline-offset-4 hover
 
 /**
  * The glyph, name and role on the left (name over role below `sm`, so the row still fits beside the sections), the
- * sections and the theme toggle on the right. `section` marks the current page; null marks none. It has no padding of
+ * sections (Home, About, and Work once `site.showWork` is on) and the theme toggle on the right. `section` marks the current page; null marks none. It has no padding of
  * its own: the page's `PageFrame` insets it, so it sits in the window corners on every page.
  */
-export function SiteHeader({ section }: { section: 'work' | 'about' | null }) {
+export function SiteHeader({ section }: { section: 'home' | 'work' | 'about' | null }) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-x-6 text-[15px] leading-[1.2] tracking-[-0.3px]">
       <a
@@ -28,9 +28,14 @@ export function SiteHeader({ section }: { section: 'work' | 'about' | null }) {
       </Link>
       <div className="flex items-center gap-5">
         <nav aria-label="Main" className="flex items-center gap-5">
-          <Link to="/work" className={navLink} aria-current={section === 'work' ? 'page' : undefined}>
-            Work
+          <Link to="/" className={navLink} aria-current={section === 'home' ? 'page' : undefined}>
+            Home
           </Link>
+          {site.showWork && (
+            <Link to="/work" className={navLink} aria-current={section === 'work' ? 'page' : undefined}>
+              Work
+            </Link>
+          )}
           <Link to="/about" className={navLink} aria-current={section === 'about' ? 'page' : undefined}>
             About
           </Link>
