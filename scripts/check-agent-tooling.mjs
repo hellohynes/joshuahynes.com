@@ -2,7 +2,7 @@
 // .agents/skills; Pilot syncs a byte-identical copy to .claude/skills. Each agent has shared instructions in
 // .agents/agents plus a Claude and a Codex profile with the same name and sandbox capability.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const READ_ONLY_TOOLS = new Set(['Read', 'Grep', 'Glob'])
@@ -10,6 +10,12 @@ const READ_ONLY_TOOLS = new Set(['Read', 'Grep', 'Glob'])
 const read = (path) => readFileSync(path, 'utf8')
 const subdirs = (path) =>
   existsSync(path) ? readdirSync(path, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name) : []
+const filesUnder = (dir) =>
+  existsSync(dir)
+    ? readdirSync(dir, { recursive: true, withFileTypes: true })
+        .filter((d) => d.isFile())
+        .map((d) => relative(dir, join(d.parentPath, d.name)))
+    : []
 const files = (path, ext) => (existsSync(path) ? readdirSync(path).filter((f) => f.endsWith(ext)) : [])
 
 function frontmatter(text) {
@@ -34,9 +40,19 @@ function checkSkills(root, problems) {
     if (meta.name !== name) problems.push(`skill ${name}: frontmatter name is "${meta.name ?? ''}", expected "${name}"`)
     if (!meta.description) problems.push(`skill ${name}: frontmatter description is empty`)
 
-    const copy = join(root, '.claude/skills', name, 'SKILL.md')
-    if (!existsSync(copy)) problems.push(`skill ${name}: .claude/skills/${name}/SKILL.md is missing`)
-    else if (read(copy) !== read(source)) problems.push(`skill ${name}: .claude copy differs from the canonical skill`)
+    const canonicalDir = join(root, '.agents/skills', name)
+    const copyDir = join(root, '.claude/skills', name)
+    const canonicalFiles = filesUnder(canonicalDir)
+    for (const file of canonicalFiles) {
+      const copy = join(copyDir, file)
+      if (!existsSync(copy)) problems.push(`skill ${name}: .claude/skills/${name}/${file} is missing`)
+      else if (read(copy) !== read(join(canonicalDir, file))) {
+        problems.push(`skill ${name}: .claude copy of ${file} differs from the canonical file`)
+      }
+    }
+    for (const file of filesUnder(copyDir)) {
+      if (!canonicalFiles.includes(file)) problems.push(`skill ${name}: .claude/skills/${name}/${file} has no canonical file`)
+    }
   }
   for (const name of subdirs(join(root, '.claude/skills'))) {
     if (!canonical.includes(name)) problems.push(`skill ${name}: .claude/skills/${name} has no canonical skill in .agents/skills`)

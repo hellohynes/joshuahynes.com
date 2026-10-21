@@ -20,7 +20,10 @@ const codexAgent = (name, sandbox) =>
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), 'agent-tooling-'))
   roots.push(root)
-  for (const dir of ['.agents/skills', '.claude/skills']) put(root, `${dir}/shaping/SKILL.md`, skill('shaping'))
+  for (const dir of ['.agents/skills', '.claude/skills']) {
+    put(root, `${dir}/shaping/SKILL.md`, skill('shaping'))
+    put(root, `${dir}/shaping/references/patterns.md`, '# Patterns\n')
+  }
   put(root, '.agents/agents/builder.md', '# Builder\n')
   put(root, '.agents/agents/reviewer.md', '# Reviewer\n')
   put(root, '.claude/agents/builder.md', claudeAgent('builder'))
@@ -96,6 +99,21 @@ describe('checkAgentTooling', () => {
       'a Codex agent with an unrecognised sandbox',
       (root) => put(root, '.codex/agents/builder.toml', codexAgent('builder', 'danger-full-access')),
       /builder.*sandbox_mode is "danger-full-access"/,
+    ],
+    [
+      'a Claude copy of a reference file that drifted',
+      (root) => put(root, '.claude/skills/shaping/references/patterns.md', '# Edited\n'),
+      /shaping.*copy of references\/patterns\.md differs from the canonical/,
+    ],
+    [
+      'a reference file missing from the Claude copy',
+      (root) => rmSync(join(root, '.claude/skills/shaping/references/patterns.md')),
+      /shaping.*references\/patterns\.md is missing/,
+    ],
+    [
+      'an extra file in a Claude skill copy',
+      (root) => put(root, '.claude/skills/shaping/notes.md', 'x\n'),
+      /shaping.*notes\.md has no canonical file/,
     ],
     [
       'a canonical skill directory without a SKILL.md',

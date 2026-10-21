@@ -27,7 +27,8 @@ Use pnpm (`packageManager` pins the version) and Node from `.nvmrc`. Never npm o
 - Site content comes from `src/content/`. Drafts never ship; `pnpm check` fails on `TODO:` placeholders.
 - No AI attribution in commit messages, PR titles or PR bodies.
 - Writing (replies, code comments, plans, PR bodies) is plain, terse and direct. Keep identifiers, paths
-  and commands exact.
+  and commands exact. Read `.agents/skills/writing-help/references/patterns.md` once per session and apply
+  it to everything you write. For a whole document or PR body, run `writing-help`.
 
 ## Plans and other artifacts
 
@@ -48,7 +49,7 @@ Both Claude and Codex run the same skills and agents.
 | `.claude/agents/<agent>.md`, `.codex/agents/<agent>.toml` | Profiles with the same name and sandbox capability. |
 
 Skills: `project-start`, `shaping`, `breadboard`, `design-spec`, `delegate`, `builder`, `pr-prep`,
-`pr-create`. Agents: `builder` (writes the paths its plan lists), `reviewer` (read-only).
+`pr-create`, `writing-help`. Agents: `builder` (writes the paths its plan lists), `reviewer` (read-only).
 
 To add a skill, write `.agents/skills/<skill>/SKILL.md`, confirm Pilot copied it to `.claude/skills/`, and
 run `pnpm check:agents`.
