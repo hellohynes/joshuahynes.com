@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { WeekActivity } from './activity.ts'
-import { busyScale, dayAt, monotoneCurve, nearestLine, weekProfile } from './ridge.ts'
+import { busyScale, dayAt, monotoneCurve, nearestLine, weekEnd, weekProfile } from './ridge.ts'
 
 const week = (days: (number | null)[]): WeekActivity => ({
   start: '2026-01-04',
@@ -79,6 +79,25 @@ describe('weekProfile', () => {
   })
 })
 
+describe('weekEnd', () => {
+  it('is 1 when every day is recorded', () => {
+    expect(weekEnd([1, 2, 3, 4, 5, 6, 7])).toBe(1)
+  })
+
+  it('ends at the centre of the last recorded day when later days are null', () => {
+    expect(weekEnd([3, 9, 1, 20, null, null, null])).toBe(3.5 / 7)
+    expect(weekEnd([4, null, null, null, null, null, null])).toBe(0.5 / 7)
+  })
+
+  it('is 0 when no day is recorded', () => {
+    expect(weekEnd([null, null, null, null, null, null, null])).toBe(0)
+  })
+
+  it('is not shortened by a null in the middle', () => {
+    expect(weekEnd([1, null, 3, null, 5, 6, 7])).toBe(1)
+  })
+})
+
 describe('busyScale', () => {
   it('is at least 1 for an all-zero set', () => {
     expect(busyScale([week([0, 0, 0, 0, 0, 0, 0])])).toBe(1)
@@ -141,6 +160,21 @@ describe('nearestLine', () => {
   it('still selects at exactly the clear distance', () => {
     expect(pick(154, [100, 120, 140])).toBe(2)
     expect(pick(154.5, [100, 120, 140])).toBeNull()
+  })
+
+  it('never picks a week whose curve is unreachable (non-finite)', () => {
+    expect(pick(119, [100, 120, Infinity])).toBe(1)
+    expect(pick(125, [100, 120, NaN])).toBe(1)
+    expect(pick(100, [Infinity, NaN])).toBeNull()
+  })
+
+  it('drops a current week that has become unreachable', () => {
+    expect(pick(119, [100, 120, Infinity], 2)).toBe(1)
+    expect(pick(119, [Infinity, NaN], 0)).toBeNull()
+  })
+
+  it('does not count an unreachable current week as a stick-band distance', () => {
+    expect(pick(131, [100, NaN, 140], 1)).toBe(2)
   })
 
   it('treats a current week that no longer exists as nothing hovered, and no curves as null', () => {

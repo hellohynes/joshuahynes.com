@@ -75,6 +75,18 @@ export function weekProfile(days: readonly (number | null)[], scale: number): (u
   return monotoneCurve(xs, ys)
 }
 
+/**
+ * Where a week's line ends, as `u` in 0..1 across the week: the centre of the last recorded day, so a week whose
+ * later days have not happened yet stops there instead of running on at zero. Only trailing nulls shorten it; a null
+ * between recorded days is a quiet day. 1 for a full week, 0 when nothing is recorded.
+ */
+export function weekEnd(days: readonly (number | null)[]): number {
+  let last = days.length - 1
+  while (last >= 0 && days[last] === null) last--
+  if (last === days.length - 1) return 1
+  return last < 0 ? 0 : (last + 0.5) / days.length
+}
+
 /** Hover tuning, in CSS px. */
 export const HOVER_STICK = 10
 export const HOVER_SWITCH_MARGIN = 6
@@ -85,7 +97,8 @@ export const HOVER_CLEAR_DISTANCE = 14
  * (oldest first). The hovered week `current` is sticky: it is kept while the pointer is within `stick` of its curve,
  * unless another curve is closer by more than `switchMargin`, so dragging along a line does not jump to the line
  * behind it at a crossing. Outside the stick band the nearest curve wins (a tie goes to the newer week). When even
- * the nearest curve is farther than `clearDistance`, nothing is hovered (null).
+ * the nearest curve is farther than `clearDistance`, nothing is hovered (null). A non-finite entry means the week has
+ * no line at that x (it ends further left): it is never chosen and, as the current week, is dropped.
  */
 export function nearestLine(args: {
   py: number
@@ -99,6 +112,7 @@ export function nearestLine(args: {
   let nearest = -1
   let nearestDistance = Infinity
   for (let i = 0; i < curveYs.length; i++) {
+    if (!Number.isFinite(curveYs[i])) continue
     const distance = Math.abs(py - curveYs[i])
     if (distance <= nearestDistance) {
       nearest = i
@@ -107,7 +121,7 @@ export function nearestLine(args: {
   }
   if (nearest === -1 || nearestDistance > clearDistance) return null
 
-  if (current !== null && current >= 0 && current < curveYs.length) {
+  if (current !== null && current >= 0 && current < curveYs.length && Number.isFinite(curveYs[current])) {
     const currentDistance = Math.abs(py - curveYs[current])
     if (currentDistance <= stick && currentDistance - nearestDistance <= switchMargin) return current
   }

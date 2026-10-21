@@ -12,6 +12,7 @@ import {
   HOVER_STICK,
   HOVER_SWITCH_MARGIN,
   nearestLine,
+  weekEnd,
   weekProfile,
 } from '../lib/ridge.ts'
 
@@ -33,6 +34,8 @@ const DAY_RING = 1.5
 
 const SCALE = busyScale(ACTIVITY_WEEKS)
 const PROFILES = ACTIVITY_WEEKS.map((week) => weekProfile(week.days, SCALE))
+// Where each week's line stops (0..1 of the width): the current week ends at its last recorded day, the rest at 1.
+const ENDS = ACTIVITY_WEEKS.map((week) => weekEnd(week.days))
 const SUMMARY = summarize(ACTIVITY_WEEKS)
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -96,6 +99,8 @@ export function ActivityDrawing() {
       if (startedAt === null) return 0
       return drawProgress(now - startedAt, week, DRAW_STAGGER_MS, DRAW_LINE_MS)
     }
+    // How much of the width a week's line covers right now: the draw-in, never past the week's own end.
+    const reveal = (now: number, week: number) => Math.min(lineProgress(now, week), ENDS[week])
 
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(draw)
@@ -149,7 +154,8 @@ export function ActivityDrawing() {
       let hot: { week: number; day: number } | null = null
       if (pointer.inside) {
         const u = Math.min(1, Math.max(0, (pointer.x - x0) / (x1 - x0)))
-        const curveYs = Array.from({ length: shown }, (_, week) => pointAt(week, u).y)
+        // A week that ends left of the pointer has no line there: Infinity makes it unreachable.
+        const curveYs = Array.from({ length: shown }, (_, week) => (u > ENDS[week] ? Infinity : pointAt(week, u).y))
         const week = nearestLine({
           py: pointer.y,
           curveYs,
@@ -177,12 +183,13 @@ export function ActivityDrawing() {
         layerCtx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0)
         layerCtx.lineJoin = 'round'
         for (let week = 0; week < ROWS; week++) {
-          const reveal = lineProgress(now, week)
-          if (reveal === 0) break // later weeks start later still
+          if (lineProgress(now, week) === 0) break // later weeks start later still
+          const upTo = reveal(now, week)
+          if (upTo === 0) continue // nothing recorded yet
           const base = top + week * rowHeight
           const accent = week === ROWS - 1
-          trace(layerCtx, week, reveal)
-          layerCtx.lineTo(x0 + (x1 - x0) * reveal, base + 1)
+          trace(layerCtx, week, upTo)
+          layerCtx.lineTo(x0 + (x1 - x0) * upTo, base + 1)
           layerCtx.lineTo(x0, base + 1)
           layerCtx.closePath()
           layerCtx.fillStyle = palette.fill
@@ -190,7 +197,7 @@ export function ActivityDrawing() {
           layerCtx.strokeStyle = accent ? palette.cobalt : palette.ink
           layerCtx.lineWidth = accent ? 1.1 : 0.7
           layerCtx.globalAlpha = accent ? 1 : depthAlpha(week, ROWS)
-          trace(layerCtx, week, reveal)
+          trace(layerCtx, week, upTo)
           layerCtx.stroke()
           layerCtx.globalAlpha = 1
         }
@@ -202,7 +209,7 @@ export function ActivityDrawing() {
         ctx.lineJoin = 'round'
         ctx.strokeStyle = palette.cobalt
         ctx.lineWidth = 1.6
-        trace(ctx, hot.week, progress)
+        trace(ctx, hot.week, Math.min(progress, ENDS[hot.week]))
         ctx.stroke()
 
         const week = ACTIVITY_WEEKS[hot.week]
