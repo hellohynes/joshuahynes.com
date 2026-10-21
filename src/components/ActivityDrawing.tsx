@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { ACTIVITY_GENERATED, ACTIVITY_WEEKS, DOCUMENTS_SINCE } from '../data/activity.ts'
 import { summarize } from '../lib/activity.ts'
+import { depthAlpha } from '../lib/depth.ts'
 import { count, formatNumber, monthDay, totalsLine, withYear } from '../lib/format.ts'
 import { clampTip, easeOut, hoverProgress } from '../lib/readout.ts'
 import {
@@ -158,7 +159,7 @@ export function ActivityDrawing() {
       const progress = hover && !reducedMotion ? hoverProgress(now - hover.since, HOVER_MS) : 1
 
       // The settled layer: every week in its resting style, oldest first. Each week is filled before it is
-      // stroked, so newer weeks hide the older lines behind them.
+      // stroked, so newer weeks hide the older lines behind them. The stroke tone fades with depth (`depthAlpha`).
       const key = `${canvas.width}x${canvas.height}|${shown}|${palette.ink}|${palette.fill}|${palette.cobalt}`
       if (key !== layerKey) {
         layerKey = key
@@ -177,7 +178,7 @@ export function ActivityDrawing() {
           layerCtx.fill()
           layerCtx.strokeStyle = accent ? palette.cobalt : palette.ink
           layerCtx.lineWidth = accent ? 1.1 : 0.7
-          layerCtx.globalAlpha = accent ? 1 : 0.8
+          layerCtx.globalAlpha = accent ? 1 : depthAlpha(week, ROWS)
           trace(layerCtx, week, 1)
           layerCtx.stroke()
           layerCtx.globalAlpha = 1
