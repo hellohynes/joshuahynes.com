@@ -87,7 +87,7 @@ A "Pause word changes" button in the footer stops the changes (WCAG 2.2.2) and b
 
 Claude and Codex share the same skills and agents (`AGENTS.md` has the rules and the layout):
 
-- Skills: `project-start`, `shaping`, `breadboard`, `design-spec`, `delegate`, `builder`, `pr-prep`, `pr-create`, `writing-help`. Each is written once in `.agents/skills/<skill>/`; Pilot keeps a byte-identical copy of the folder in `.claude/skills/`, so edit only `.agents/skills`.
+- Skills: `project-start`, `shaping`, `breadboard`, `design-spec`, `delegate`, `builder`, `pr-prep`, `pr-create`, `pr-complete`, `writing-help`. Each is written once in `.agents/skills/<skill>/`; Pilot keeps a byte-identical copy of the folder in `.claude/skills/`, so edit only `.agents/skills`.
 - Agents: `builder` (writes the paths its plan lists) and `reviewer` (read-only). Shared instructions are in `.agents/agents/`, with a Claude profile in `.claude/agents/` and a Codex profile in `.codex/agents/`.
 - Plans, shaping docs, breadboards and reports are written outside the repository, under `~/notes/sessions/<date>/` (or `$SESSION_NOTES_ROOT`).
 - `pnpm check:agents` fails when a skill folder differs from its Claude copy (any file missing, extra or changed), or an agent pair differs in name or sandbox capability (a read-only profile must be read-only in both).

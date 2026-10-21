@@ -31,21 +31,29 @@ read-only refresh, not publication: confirm before any push or PR mutation.
    as a setting to change. Remove any empty section entirely. Run `writing-help` in edit mode on the
    drafted title and body, but keep any `What changed` summary out of the body and keep the step 6 title
    format. No AI attribution.
-8. Propose the exact `git push -u origin "$BRANCH"` and `gh pr create` (or `gh pr edit`) with the title and
-   body, and wait for explicit confirmation. A changed head, base, title or body invalidates it.
-9. After confirmation: push, create or edit, then verify the returned PR's head, base and state. For a
-   new PR the preview deploys at `https://www.joshuahynes.com/<PR number>/` once the PR Preview workflow
-   passes; report that URL and the workflow state rather than claiming it is live.
-10. Update only a PR you authored. For another author's PR, keep the proposed body local.
+8. **GIF (required):** read `references/gif-selection.md`, select and validate one GIF, and add it as the
+   final `## GIF` section. An existing PR keeps its current valid GIF unless the user asks for a
+   replacement. With no validated GIF, stop before any push or PR mutation, unless the user supplies a URL
+   or says to publish without one.
+9. Propose the exact `git push -u origin "$BRANCH"` and `gh pr create` (or the edit) with the title and
+   body, and wait for explicit confirmation. A changed head, base, title, body or GIF invalidates it.
+   For an edit use `gh api -X PATCH "repos/$SLUG/pulls/$N" -F body=@FILE`: `gh pr edit` can fail on a
+   Projects (classic) GraphQL deprecation error.
+10. After confirmation: push, create or edit, then verify the returned PR's head, base and state. For a
+    new PR the preview deploys at `https://www.joshuahynes.com/<PR number>/` once the PR Preview workflow
+    passes; report that URL and the workflow state rather than claiming it is live.
+11. Update only a PR you authored. For another author's PR, keep the proposed body local.
 
 ## Safety
 
 - Only a successful empty lookup proves there is no PR.
-- Do not push or create when the tree is dirty, the prep report is missing or stale, or the base moved.
+- Do not push or create when the tree is dirty, the prep report is missing or stale, the base moved, or
+  there is no validated GIF (without the user's explicit waiver).
 - Never rebase or merge here; `pr-prep` owns integration.
 - Do not push, create or edit without the separate explicit confirmation.
 
 ## Output
 
-Create or update mode, the title, the PR URL or the proposed command and body, the prep report used,
-the preview URL and workflow state, and anything left undone.
+Create or update mode, the title, the PR URL or the proposed command and body, the GIF URL and its
+validation result (or the waiver), the prep report used, the preview URL and workflow state, and anything
+left undone.
