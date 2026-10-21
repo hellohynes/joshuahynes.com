@@ -1,25 +1,13 @@
 import { useEffect } from 'react'
-import { SiteHeader } from './components/SiteHeader'
 import { items } from './content/index.ts'
 import { site } from './content/site.ts'
 import { findItem } from './lib/items.ts'
 import { useRoute } from './lib/router.tsx'
+import { About } from './pages/About'
 import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
 import { Work } from './pages/Work'
 import { WorkPage } from './pages/WorkPage'
-
-// Stand-in until the about page lands.
-function Placeholder({ text }: { text: string }) {
-  return (
-    <div className="px-[clamp(1.5rem,6.8vw,6rem)]">
-      <SiteHeader />
-      <main id="main">
-        <p className="m-0 text-muted">{text}</p>
-      </main>
-    </div>
-  )
-}
 
 function App() {
   const route = useRoute()
@@ -53,7 +41,7 @@ function App() {
     case 'work':
       return <Work />
     case 'about':
-      return <Placeholder text="About (coming in Task 9)" />
+      return <About />
     case 'piece':
       return piece ? <WorkPage id={piece.id} /> : <NotFound />
     default:
