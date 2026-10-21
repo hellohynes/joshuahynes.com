@@ -26,9 +26,6 @@ export function SiteHeader({ section }: { section: 'work' | 'about' | null }) {
           <Link to="/about" className={navLink} aria-current={section === 'about' ? 'page' : undefined}>
             About
           </Link>
-          <Link to="/about#contact" className={navLink}>
-            Contact
-          </Link>
         </nav>
         <ThemeToggle />
       </div>

@@ -21,5 +21,5 @@ export const site: Site = {
     { company: 'Stack Overflow', title: 'Senior Product Designer', dates: '2013–2018', logo: 'stack-overflow' },
     { company: 'AndCulture', title: 'Senior Experience Designer', dates: '2006–2013', logo: 'andculture' },
   ],
-  contact: { email: 'TODO: your email address' },
+  contact: { email: 'work@joshuahynes.com' },
 }
