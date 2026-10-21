@@ -1,15 +1,14 @@
-// Fails when src/content.ts still holds "TODO:" placeholders, so they cannot ship to production.
-import { readFileSync } from 'node:fs'
+// Fails when content is invalid or a published item or the site still holds "TODO:" placeholders,
+// so they cannot ship to production. Node loads the .ts modules directly (type stripping).
+import { allItems } from '../src/content/items.ts'
+import { site } from '../src/content/site.ts'
+import { validateItems, validateSite } from '../src/lib/validate.ts'
 
-const file = new URL('../src/content.ts', import.meta.url)
-const lines = readFileSync(file, 'utf8').split('\n')
-const hits = lines
-  .map((text, i) => ({ line: i + 1, text: text.trim() }))
-  .filter(({ text }) => !text.startsWith('//') && /['"`]TODO:/.test(text))
+const problems = [...validateItems(allItems), ...validateSite(site)]
 
-if (hits.length > 0) {
-  console.error(`src/content.ts has ${hits.length} placeholder(s) left:`)
-  for (const { line, text } of hits) console.error(`  line ${line}: ${text}`)
+if (problems.length > 0) {
+  console.error(`content check: ${problems.length} problem(s)`)
+  for (const problem of problems) console.error(`  ${problem}`)
   process.exit(1)
 }
-console.log('content check: no placeholders left')
+console.log('content check: ok')

@@ -27,3 +27,21 @@ export type WorkItem = {
 }
 
 export type Item = WorkItem
+
+export type IntroPart = string | { strong: string }
+
+export type Role = {
+  company: string
+  title: string
+  dates: string
+  logo?: 'dialpad' | 'stack-overflow' | 'andculture'
+}
+
+export type Site = {
+  name: string
+  role: string
+  headline: string[]
+  intro: IntroPart[]
+  history: Role[]
+  contact: { email: string }
+}
