@@ -3,7 +3,15 @@ import { ACTIVITY_GENERATED, ACTIVITY_WEEKS, DOCUMENTS_SINCE } from '../data/act
 import { summarize } from '../lib/activity.ts'
 import { count, formatNumber, monthDay, totalsLine, withYear } from '../lib/format.ts'
 import { clampTip, easeOut, hoverProgress } from '../lib/readout.ts'
-import { busyScale, hitTest, weekProfile } from '../lib/ridge.ts'
+import {
+  busyScale,
+  dayAt,
+  HOVER_CLEAR_DISTANCE,
+  HOVER_STICK,
+  HOVER_SWITCH_MARGIN,
+  nearestLine,
+  weekProfile,
+} from '../lib/ridge.ts'
 
 const ROWS = ACTIVITY_WEEKS.length
 const SAMPLES = 220
@@ -130,8 +138,21 @@ export function ActivityDrawing() {
         }
       }
 
-      const hit = pointer.inside ? hitTest({ x: pointer.x, y: pointer.y, x0, x1, top, bottom, rows: ROWS }) : null
-      const hot = hit && hit.week < shown ? hit : null
+      // The week whose curve is nearest the pointer at its x, sticky to the week already hovered.
+      let hot: { week: number; day: number } | null = null
+      if (pointer.inside) {
+        const u = Math.min(1, Math.max(0, (pointer.x - x0) / (x1 - x0)))
+        const curveYs = Array.from({ length: shown }, (_, week) => pointAt(week, u).y)
+        const week = nearestLine({
+          py: pointer.y,
+          curveYs,
+          current: hover?.week ?? null,
+          stick: HOVER_STICK,
+          switchMargin: HOVER_SWITCH_MARGIN,
+          clearDistance: HOVER_CLEAR_DISTANCE,
+        })
+        if (week !== null) hot = { week, day: dayAt(pointer.x, x0, x1) }
+      }
       // A new week restarts the animation; moving along the same week does not; leaving clears it.
       if (!hot) hover = null
       else if (hover?.week !== hot.week) hover = { week: hot.week, since: now }

@@ -75,28 +75,46 @@ export function weekProfile(days: readonly (number | null)[], scale: number): (u
   return monotoneCurve(xs, ys)
 }
 
+/** Hover tuning, in CSS px. */
+export const HOVER_STICK = 10
+export const HOVER_SWITCH_MARGIN = 6
+export const HOVER_CLEAR_DISTANCE = 14
+
 /**
- * Map a pointer position to a week row and a day. Rows are evenly spaced from `top` to `bottom`. `week` is
- * the nearest row; a pointer up to one row-height beyond the first or last row still counts (clamped to
- * it), further out is null. `x` outside `x0..x1` is null; `x` exactly at `x1` is day 6. With a single row
- * there is no row spacing, so any `y` within `top..bottom` resolves to week 0.
+ * Pick the week whose curve is nearest the pointer, given each week's curve height `curveYs[i]` at the pointer's x
+ * (oldest first). The hovered week `current` is sticky: it is kept while the pointer is within `stick` of its curve,
+ * unless another curve is closer by more than `switchMargin`, so dragging along a line does not jump to the line
+ * behind it at a crossing. Outside the stick band the nearest curve wins (a tie goes to the newer week). When even
+ * the nearest curve is farther than `clearDistance`, nothing is hovered (null).
  */
-export function hitTest(args: {
-  x: number
-  y: number
-  x0: number
-  x1: number
-  top: number
-  bottom: number
-  rows: number
-}): { week: number; day: number } | null {
-  const { x, y, x0, x1, top, bottom, rows } = args
-  if (x < x0 || x > x1) return null
+export function nearestLine(args: {
+  py: number
+  curveYs: readonly number[]
+  current: number | null
+  stick: number
+  switchMargin: number
+  clearDistance: number
+}): number | null {
+  const { py, curveYs, current, stick, switchMargin, clearDistance } = args
+  let nearest = -1
+  let nearestDistance = Infinity
+  for (let i = 0; i < curveYs.length; i++) {
+    const distance = Math.abs(py - curveYs[i])
+    if (distance <= nearestDistance) {
+      nearest = i
+      nearestDistance = distance
+    }
+  }
+  if (nearest === -1 || nearestDistance > clearDistance) return null
 
-  const rowHeight = rows > 1 ? (bottom - top) / (rows - 1) : 0
-  if (y < top - rowHeight || y > bottom + rowHeight) return null
+  if (current !== null && current >= 0 && current < curveYs.length) {
+    const currentDistance = Math.abs(py - curveYs[current])
+    if (currentDistance <= stick && currentDistance - nearestDistance <= switchMargin) return current
+  }
+  return nearest
+}
 
-  const week = rowHeight === 0 ? 0 : Math.min(rows - 1, Math.max(0, Math.round((y - top) / rowHeight)))
-  const day = Math.min(6, Math.max(0, Math.floor(((x - x0) / (x1 - x0)) * 7)))
-  return { week, day }
+/** The day (0..6) under `x` across the plot `x0..x1`, clamped to the ends. */
+export function dayAt(x: number, x0: number, x1: number): number {
+  return Math.min(6, Math.max(0, Math.floor(((x - x0) / (x1 - x0)) * 7)))
 }

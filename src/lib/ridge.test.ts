@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { WeekActivity } from './activity.ts'
-import { busyScale, hitTest, monotoneCurve, weekProfile } from './ridge.ts'
+import { busyScale, dayAt, monotoneCurve, nearestLine, weekProfile } from './ridge.ts'
 
 const week = (days: (number | null)[]): WeekActivity => ({
   start: '2026-01-04',
@@ -101,45 +101,67 @@ describe('busyScale', () => {
   })
 })
 
-describe('hitTest', () => {
-  const grid = { x0: 100, x1: 800, top: 100, bottom: 500, rows: 5 }
+describe('nearestLine', () => {
+  const limits = { stick: 10, switchMargin: 6, clearDistance: 14 }
+  const pick = (py: number, curveYs: number[], current: number | null = null) =>
+    nearestLine({ py, curveYs, current, ...limits })
 
-  it('finds the first and last cells', () => {
-    expect(hitTest({ ...grid, x: 100, y: 100 })).toEqual({ week: 0, day: 0 })
-    expect(hitTest({ ...grid, x: 799.9, y: 500 })).toEqual({ week: 4, day: 6 })
+  it('picks the curve nearest the pointer when nothing is hovered', () => {
+    expect(pick(119, [100, 120, 140])).toBe(1)
+    expect(pick(101, [100, 120, 140])).toBe(0)
+    expect(pick(139, [100, 120, 140])).toBe(2)
   })
 
-  it('treats x exactly at x1 as inside, in the last day', () => {
-    expect(hitTest({ ...grid, x: 800, y: 300 })).toEqual({ week: 2, day: 6 })
+  it('breaks a tie towards the newer week', () => {
+    expect(pick(110, [100, 120])).toBe(1)
   })
 
-  it('finds a middle cell', () => {
-    expect(hitTest({ ...grid, x: 450, y: 300 })).toEqual({ week: 2, day: 3 })
+  it('stays on the current line while it is within the stick band, even if another is a little nearer', () => {
+    // 8px from curve 0, 2px from curve 1: closer by exactly the margin, so it stays.
+    expect(pick(108, [100, 110, 140], 0)).toBe(0)
+    expect(pick(105, [100, 110, 140], 0)).toBe(0)
   })
 
-  it('snaps y to the nearest row', () => {
-    expect(hitTest({ ...grid, x: 450, y: 249 })).toEqual({ week: 1, day: 3 })
-    expect(hitTest({ ...grid, x: 450, y: 251 })).toEqual({ week: 2, day: 3 })
+  it('switches when another curve is closer by more than the margin', () => {
+    // 9px from curve 0, 1px from curve 1: closer by 8.
+    expect(pick(109, [100, 110, 140], 0)).toBe(1)
   })
 
-  it('is null outside the horizontal range', () => {
-    expect(hitTest({ ...grid, x: 99, y: 300 })).toBeNull()
-    expect(hitTest({ ...grid, x: 801, y: 300 })).toBeNull()
+  it('switches to the nearest curve once the pointer leaves the stick band of the current one', () => {
+    // 11px from curve 1 (beyond the band), 9px from curve 2: only 2px closer, but the band is gone.
+    expect(pick(131, [100, 120, 140], 1)).toBe(2)
   })
 
-  it('allows up to one row-height outside the vertical range, clamping to the end row', () => {
-    expect(hitTest({ ...grid, x: 450, y: 60 })).toEqual({ week: 0, day: 3 })
-    expect(hitTest({ ...grid, x: 450, y: 0 })).toEqual({ week: 0, day: 3 })
-    expect(hitTest({ ...grid, x: 450, y: 600 })).toEqual({ week: 4, day: 3 })
-    expect(hitTest({ ...grid, x: 450, y: 100 - 150 })).toBeNull()
-    expect(hitTest({ ...grid, x: 450, y: -1 })).toBeNull()
-    expect(hitTest({ ...grid, x: 450, y: 601 })).toBeNull()
+  it('is null when the pointer is farther than the clear distance from every curve', () => {
+    expect(pick(160, [100, 120, 140])).toBeNull()
+    expect(pick(160, [100, 120, 140], 2)).toBeNull()
+    expect(pick(60, [100, 120, 140], 0)).toBeNull()
   })
 
-  it('returns week 0 for a single row without dividing by zero', () => {
-    expect(hitTest({ x: 450, y: 100, x0: 100, x1: 800, top: 100, bottom: 100, rows: 1 })).toEqual({
-      week: 0,
-      day: 3,
-    })
+  it('still selects at exactly the clear distance', () => {
+    expect(pick(154, [100, 120, 140])).toBe(2)
+    expect(pick(154.5, [100, 120, 140])).toBeNull()
+  })
+
+  it('treats a current week that no longer exists as nothing hovered, and no curves as null', () => {
+    expect(pick(119, [100, 120, 140], 7)).toBe(1)
+    expect(pick(119, [])).toBeNull()
+  })
+})
+
+describe('dayAt', () => {
+  it('splits the plot width into seven days', () => {
+    expect(dayAt(0, 0, 700)).toBe(0)
+    expect(dayAt(99, 0, 700)).toBe(0)
+    expect(dayAt(100, 0, 700)).toBe(1)
+    expect(dayAt(350, 0, 700)).toBe(3)
+    expect(dayAt(699, 0, 700)).toBe(6)
+  })
+
+  it('clamps outside the plot and honours an offset', () => {
+    expect(dayAt(-5, 0, 700)).toBe(0)
+    expect(dayAt(700, 0, 700)).toBe(6)
+    expect(dayAt(900, 0, 700)).toBe(6)
+    expect(dayAt(250, 100, 800)).toBe(1)
   })
 })
