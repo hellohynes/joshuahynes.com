@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react'
-import { ACTIVITY_GENERATED, ACTIVITY_WEEKS } from '../data/activity.ts'
+import { ACTIVITY_GENERATED, ACTIVITY_WEEKS, DOCUMENTS_SINCE } from '../data/activity.ts'
 import { summarize } from '../lib/activity.ts'
-import { hoverProgress, easeOut } from '../lib/readout.ts'
+import { count, formatNumber, monthDay, totalsLine, withYear } from '../lib/format.ts'
+import { clampTip, easeOut, hoverProgress } from '../lib/readout.ts'
 import { busyScale, hitTest, weekProfile } from '../lib/ridge.ts'
 
 const ROWS = ACTIVITY_WEEKS.length
@@ -16,18 +17,7 @@ const SCALE = busyScale(ACTIVITY_WEEKS)
 const PROFILES = ACTIVITY_WEEKS.map((week) => weekProfile(week.days, SCALE))
 const SUMMARY = summarize(ACTIVITY_WEEKS)
 
-const numbers = new Intl.NumberFormat('en-US')
-const count = (n: number, noun: string): string => `${numbers.format(n)} ${noun}${n === 1 ? '' : 's'}`
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-
-// Dates are `YYYY-MM-DD`; building them in UTC and reading them back in UTC keeps the day from shifting with the time zone.
-const utc = (date: string, addDays = 0): Date => {
-  const [year, month, day] = date.split('-').map(Number)
-  return new Date(Date.UTC(year, month - 1, day + addDays))
-}
-const monthDay = (date: Date): string => `${MONTHS[date.getUTCMonth()]} ${date.getUTCDate()}`
-const withYear = (date: Date): string => `${monthDay(date)}, ${date.getUTCFullYear()}`
 
 /**
  * Ink and the blend that lets the lines pass over the headline without hiding it. On a light page the canvas is
@@ -197,25 +187,29 @@ export function ActivityDrawing() {
         const day = week.days[hot.day]
         const parts = [count(contributions, 'contribution'), count(week.prs, 'pull request')]
         if (week.documents !== null) parts.push(count(week.documents, 'document'))
-        tipLines[0].textContent = `Week of ${monthDay(utc(week.start))} – ${withYear(utc(week.start, 6))}`
+        tipLines[0].textContent = `Week of ${monthDay(week.start)} – ${withYear(week.start, 6)}`
         tipLines[1].textContent = parts.join(' · ')
-        tipLines[2].textContent = `${WEEKDAYS[hot.day]} ${monthDay(utc(week.start, hot.day))}: ${
-          day === null ? 'not yet' : numbers.format(day)
+        tipLines[2].textContent = `${WEEKDAYS[hot.day]} ${monthDay(week.start, hot.day)}: ${
+          day === null ? 'no data yet' : formatNumber(day)
         }`
         tipLines[2].style.color = palette.cobalt
 
         // The readout anchors to the hovered day's point, not to the travelling dot.
         const rest = pointAt(hot.week, (hot.day + 0.5) / 7)
-        const tipWidth = tip.offsetWidth
-        const tipHeight = tip.offsetHeight
-        const margin = 8
-        const right = rest.x + 14
-        const left = right + tipWidth > width - margin ? rest.x - 14 - tipWidth : right
-        tip.style.left = `${Math.max(margin, left)}px`
-        tip.style.top = `${Math.min(height - tipHeight - margin, Math.max(margin, rest.y - tipHeight - 10))}px`
-        tip.style.visibility = 'visible'
+        // Shown first: a hidden tip has no layout box to measure.
+        tip.style.display = 'block'
+        const { left, top } = clampTip({
+          px: rest.x,
+          py: rest.y,
+          width,
+          height,
+          tipWidth: tip.offsetWidth,
+          tipHeight: tip.offsetHeight,
+        })
+        tip.style.left = `${left}px`
+        tip.style.top = `${top}px`
       } else {
-        tip.style.visibility = 'hidden'
+        tip.style.display = 'none'
       }
 
       if (drawInActive(now) || progress < 1) schedule()
@@ -247,9 +241,12 @@ export function ActivityDrawing() {
     host.addEventListener('pointercancel', clearPointer)
     document.addEventListener('pointerdown', onDocumentDown)
 
+    // Resizing clears the canvas, so draw straight away rather than waiting a frame with it blank.
     const resizeObserver = new ResizeObserver(() => {
+      cancelAnimationFrame(frame)
+      frame = 0
       resize()
-      schedule()
+      draw(performance.now())
     })
     resizeObserver.observe(canvas)
     const band = host.querySelector('[data-activity-band]')
@@ -309,11 +306,6 @@ export function ActivityDrawing() {
 
 /** The figures behind the drawing, as real text. */
 export function ActivityTotals() {
-  const { contributions, prs, documents, since, documentsSince } = SUMMARY
-  const parts = [count(contributions, 'contribution'), count(prs, 'pull request')]
-  if (documentsSince !== null) {
-    parts.push(`${count(documents, 'document')} written with AI agents (since ${withYear(utc(documentsSince))})`)
-  }
-  parts.push(`since ${withYear(utc(since))}`, `updated ${monthDay(utc(ACTIVITY_GENERATED))}`)
-  return <p className="m-0 text-[13px] leading-[1.4] tracking-[-0.2px] text-ink md:text-right">{parts.join(' · ')}</p>
+  const line = totalsLine({ summary: SUMMARY, documentsSince: DOCUMENTS_SINCE, generated: ACTIVITY_GENERATED })
+  return <p className="m-0 text-[13px] leading-[1.4] tracking-[-0.2px] text-ink md:text-right">{line}</p>
 }
