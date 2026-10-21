@@ -1,11 +1,12 @@
+import { BELOW_HEADER, PageFrame } from '../components/PageFrame'
 import { SiteHeader } from '../components/SiteHeader'
 import { Link } from '../lib/router.tsx'
 
 export function NotFound() {
   return (
-    <div className="px-[clamp(1.5rem,6.8vw,6rem)]">
+    <PageFrame>
       <SiteHeader section={null} />
-      <main id="main" tabIndex={-1} className="py-24">
+      <main id="main" tabIndex={-1} className={BELOW_HEADER}>
         <h1 className="m-0 text-[clamp(1.5rem,2.2vw,1.875rem)] font-normal leading-[1.2] text-muted">
           There is nothing at this address.
         </h1>
@@ -15,6 +16,6 @@ export function NotFound() {
           </Link>
         </p>
       </main>
-    </div>
+    </PageFrame>
   )
 }

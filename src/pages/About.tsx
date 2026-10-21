@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Footer } from '../components/Footer'
 import { Intro } from '../components/Intro'
+import { BELOW_HEADER, PageFrame } from '../components/PageFrame'
 import { SiteHeader } from '../components/SiteHeader'
 import { WorkHistory } from '../components/WorkHistory'
 import { site } from '../content/site.ts'
@@ -23,15 +24,15 @@ export function About() {
   useEffect(scrollToHash, [])
 
   return (
-    <div className="px-[clamp(1.5rem,6.8vw,6rem)]">
+    <PageFrame>
       <SiteHeader section="about" />
-      <main id="main" tabIndex={-1}>
+      <main id="main" tabIndex={-1} className={BELOW_HEADER}>
         <Intro name={site.name} parts={site.intro} />
         <WorkHistory history={site.history} />
         <section id="contact" tabIndex={-1} aria-label="Contact" className="scroll-mt-6 outline-none">
           <Footer email={site.contact.email} />
         </section>
       </main>
-    </div>
+    </PageFrame>
   )
 }

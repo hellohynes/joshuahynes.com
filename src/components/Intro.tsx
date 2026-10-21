@@ -3,7 +3,7 @@ import type { IntroPart } from '../content/types.ts'
 /** The introduction: one sentence in the muted grey, with the names picked out in the darker ink. */
 export function Intro({ name, parts }: { name: string; parts: IntroPart[] }) {
   return (
-    <section aria-labelledby="intro-name" className="pb-32 pt-16">
+    <section aria-labelledby="intro-name" className="pb-32">
       <h1 id="intro-name" className="sr-only">
         {name}
       </h1>
