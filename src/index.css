@@ -298,6 +298,83 @@
   scroll-padding-block: 3.5rem;
 }
 
+/* Home headline: the changing word -------------------------------------------------------------------------------
+   Line two is a fixed-height box (the h1's 0.9 leading) holding an absolutely positioned inner line, so no face, however
+   tall, can change the headline's height. Every box in the word has line-height 0, so none can push the line's baseline
+   either: "with AI." stays put. A cell is as wide as its final glyph; the final letter (.rh-fin) appears when its cell
+   locks, the spinner (.rh-fl, always the pixel face) and the block cursor (.rh-cu) are positioned from the baseline,
+   which RotatingHeadline measures into --bl. */
+.rh-line {
+  position: relative;
+  display: block;
+  height: 0.9em;
+}
+
+.rh-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: pre;
+  line-height: 0.9em;
+  transform-origin: left bottom;
+}
+
+.rh-verb {
+  line-height: 0;
+}
+
+.rh-ch {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+  line-height: 0;
+}
+
+.rh-fin {
+  opacity: 0;
+}
+
+.rh-fl {
+  position: absolute;
+  top: calc(var(--bl, 0px) - 0.4em);
+  right: 0;
+  left: 0;
+  font-family: "Silkscreen", ui-monospace, monospace;
+  font-size: 0.9em;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0;
+  text-align: center;
+  opacity: 0;
+}
+
+.rh-cu {
+  position: absolute;
+  top: calc(var(--bl, 0px) - 0.72em);
+  right: 0;
+  left: 0;
+  height: 0.72em;
+  background: currentColor;
+  opacity: 0;
+}
+
+.rh-end {
+  position: absolute;
+  top: calc(var(--bl, 0px) - 0.72em);
+  left: 100%;
+  width: 0.22em;
+  height: 0.72em;
+  margin-left: 0.04em;
+  background: currentColor;
+  opacity: 0;
+}
+
+.rh-probe {
+  display: inline-block;
+  width: 0;
+  height: 0;
+}
+
 /* Work grid: colour cells --------------------------------------------------------------------------- */
 
 /*
