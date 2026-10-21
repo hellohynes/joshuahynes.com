@@ -257,8 +257,9 @@
   outline: none;
 }
 
-/* Home activity drawing: a canvas laid over the headline. The blend mode is set from script, since it follows the
-   theme (multiply on light, screen on dark). It takes no pointer events: the parent listens, so text stays selectable. */
+/* Home activity drawing: a canvas laid over the whole home page, edge to edge. The blend mode is set from script,
+   since it follows the theme (multiply on light, screen on dark). It takes no pointer events: the parent listens,
+   so text stays selectable. */
 .activity-canvas {
   position: absolute;
   inset: 0;

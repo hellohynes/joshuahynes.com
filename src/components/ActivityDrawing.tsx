@@ -1,13 +1,16 @@
 import { useEffect, useRef } from 'react'
 import { ACTIVITY_GENERATED, ACTIVITY_WEEKS } from '../data/activity.ts'
 import { summarize } from '../lib/activity.ts'
+import { hoverProgress, easeOut } from '../lib/readout.ts'
 import { busyScale, hitTest, weekProfile } from '../lib/ridge.ts'
 
 const ROWS = ACTIVITY_WEEKS.length
 const SAMPLES = 220
 const DRAW_IN_MS = 4000
-// The plot as fractions of the canvas, so the lines pass over the headline whatever the viewport.
-const PLOT = { left: 0.06, right: 0.94, top: 0.17, bottom: 0.86 }
+const HOVER_MS = 700
+// The vertical plot band as fractions of the band element (`main`), so the lines pass over the headline whatever
+// the viewport. Horizontally the lines run the full width of the canvas, edge to edge.
+const BAND = { top: 0.17, bottom: 0.86 }
 
 const SCALE = busyScale(ACTIVITY_WEEKS)
 const PROFILES = ACTIVITY_WEEKS.map((week) => weekProfile(week.days, SCALE))
@@ -25,8 +28,6 @@ const utc = (date: string, addDays = 0): Date => {
 }
 const monthDay = (date: Date): string => `${MONTHS[date.getUTCMonth()]} ${date.getUTCDate()}`
 const withYear = (date: Date): string => `${monthDay(date)}, ${date.getUTCFullYear()}`
-
-const easeOut = (t: number): number => 1 - (1 - t) ** 3
 
 /**
  * Ink and the blend that lets the lines pass over the headline without hiding it. On a light page the canvas is
@@ -47,7 +48,8 @@ function readPalette(canvas: HTMLCanvasElement) {
 }
 
 /**
- * The last 80 weeks of activity as stacked lines, one per week, drawn over the positioned parent. Purely decorative:
+ * The last 80 weeks of activity as stacked lines, one per week, drawn edge to edge over the positioned parent (the
+ * whole home page); the vertical band comes from the `data-activity-band` element inside it. Purely decorative:
  * the canvas and the readout are aria-hidden and the figures live in `ActivityTotals`. Pointer events are taken from
  * the parent so the canvas never intercepts clicks or text selection.
  */
@@ -68,10 +70,19 @@ export function ActivityDrawing() {
     let palette = readPalette(canvas)
     let width = 0
     let height = 0
+    let plotTop = 0 // the vertical plot band, in canvas coordinates; set by resize()
+    let plotBottom = 0
     let frame = 0
     let startedAt: number | null = null // set when the drawing first scrolls into view
+    // The hovered week's top stroke is re-drawn left to right from `since`; null when nothing is hovered.
+    let hover: { week: number; since: number } | null = null
 
-    const animating = (now: number) => !reducedMotion && startedAt !== null && now - startedAt < DRAW_IN_MS
+    // Everything but the hovered week's top stroke, cached so a hover frame is one blit plus a short stroke.
+    const layer = document.createElement('canvas')
+    const layerCtx = layer.getContext('2d')
+    let layerKey = ''
+
+    const drawInActive = (now: number) => !reducedMotion && startedAt !== null && now - startedAt < DRAW_IN_MS
 
     const rowsShown = (now: number) => {
       if (reducedMotion) return ROWS
@@ -86,8 +97,12 @@ export function ActivityDrawing() {
 
     const resize = () => {
       const dpr = Math.min(2, window.devicePixelRatio || 1)
+      const box = canvas.getBoundingClientRect()
+      const band = (host.querySelector('[data-activity-band]') ?? host).getBoundingClientRect()
       width = canvas.clientWidth
       height = canvas.clientHeight
+      plotTop = band.top - box.top + band.height * BAND.top
+      plotBottom = band.top - box.top + band.height * BAND.bottom
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
@@ -96,57 +111,86 @@ export function ActivityDrawing() {
     const draw = (now: number) => {
       frame = 0
       ctx.clearRect(0, 0, width, height)
-      if (width === 0 || height === 0) return
+      if (width === 0 || height === 0 || !layerCtx) return
 
-      const x0 = width * PLOT.left
-      const x1 = width * PLOT.right
-      const top = height * PLOT.top
-      const bottom = height * PLOT.bottom
+      const x0 = 0
+      const x1 = width
+      const top = plotTop
+      const bottom = plotBottom
       const rowHeight = (bottom - top) / (ROWS - 1)
       const amplitude = rowHeight * 9
       const shown = rowsShown(now)
+      const pointAt = (week: number, u: number) => ({
+        x: x0 + (x1 - x0) * u,
+        y: top + week * rowHeight - PROFILES[week](u) * amplitude,
+      })
 
-      const hit = pointer.inside ? hitTest({ x: pointer.x, y: pointer.y, x0, x1, top, bottom, rows: ROWS }) : null
-      const hot = hit && hit.week < shown ? hit : null
-
-      const trace = (week: number, base: number) => {
-        ctx.beginPath()
-        for (let i = 0; i <= SAMPLES; i++) {
-          const u = i / SAMPLES
-          const x = x0 + (x1 - x0) * u
-          const y = base - PROFILES[week](u) * amplitude
-          if (i) ctx.lineTo(x, y)
-          else ctx.moveTo(x, y)
+      // The week's line from the left edge to `upTo` (0..1 of the width) as a new path.
+      const trace = (c: CanvasRenderingContext2D, week: number, upTo: number) => {
+        const last = Math.floor(SAMPLES * upTo)
+        c.beginPath()
+        for (let i = 0; i <= last; i++) {
+          const { x, y } = pointAt(week, i / SAMPLES)
+          if (i) c.lineTo(x, y)
+          else c.moveTo(x, y)
+        }
+        if (last < SAMPLES) {
+          const { x, y } = pointAt(week, upTo)
+          c.lineTo(x, y)
         }
       }
 
-      ctx.lineJoin = 'round'
-      // Oldest first: each week is filled before it is stroked, so newer weeks hide the older lines behind them.
-      for (let week = 0; week < shown; week++) {
-        const base = top + week * rowHeight
-        const accent = week === ROWS - 1 || week === hot?.week
-        trace(week, base)
-        ctx.lineTo(x1, base + 1)
-        ctx.lineTo(x0, base + 1)
-        ctx.closePath()
-        ctx.fillStyle = palette.fill
-        ctx.fill()
-        ctx.strokeStyle = accent ? palette.cobalt : palette.ink
-        ctx.lineWidth = accent ? 1.1 : 0.7
-        ctx.globalAlpha = accent ? 1 : 0.8
-        trace(week, base)
-        ctx.stroke()
-        ctx.globalAlpha = 1
+      const hit = pointer.inside ? hitTest({ x: pointer.x, y: pointer.y, x0, x1, top, bottom, rows: ROWS }) : null
+      const hot = hit && hit.week < shown ? hit : null
+      // A new week restarts the animation; moving along the same week does not; leaving clears it.
+      if (!hot) hover = null
+      else if (hover?.week !== hot.week) hover = { week: hot.week, since: now }
+      const progress = hover && !reducedMotion ? hoverProgress(now - hover.since, HOVER_MS) : 1
+
+      // The settled layer: every week in its resting style, oldest first. Each week is filled before it is
+      // stroked, so newer weeks hide the older lines behind them.
+      const key = `${canvas.width}x${canvas.height}|${top}|${bottom}|${shown}|${palette.ink}|${palette.fill}|${palette.cobalt}`
+      if (key !== layerKey) {
+        layerKey = key
+        layer.width = canvas.width
+        layer.height = canvas.height
+        layerCtx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0)
+        layerCtx.lineJoin = 'round'
+        for (let week = 0; week < shown; week++) {
+          const base = top + week * rowHeight
+          const accent = week === ROWS - 1
+          trace(layerCtx, week, 1)
+          layerCtx.lineTo(x1, base + 1)
+          layerCtx.lineTo(x0, base + 1)
+          layerCtx.closePath()
+          layerCtx.fillStyle = palette.fill
+          layerCtx.fill()
+          layerCtx.strokeStyle = accent ? palette.cobalt : palette.ink
+          layerCtx.lineWidth = accent ? 1.1 : 0.7
+          layerCtx.globalAlpha = accent ? 1 : 0.8
+          trace(layerCtx, week, 1)
+          layerCtx.stroke()
+          layerCtx.globalAlpha = 1
+        }
       }
+      ctx.drawImage(layer, 0, 0, width, height)
 
       if (hot) {
+        // The hovered week on top of every other line: a stroke only, so it never punches a hole in the drawing.
+        ctx.lineJoin = 'round'
+        ctx.strokeStyle = palette.cobalt
+        ctx.lineWidth = 1.6
+        trace(ctx, hot.week, progress)
+        ctx.stroke()
+
         const week = ACTIVITY_WEEKS[hot.week]
-        const u = (hot.day + 0.5) / 7
-        const px = x0 + (x1 - x0) * u
-        const py = top + hot.week * rowHeight - PROFILES[hot.week](u) * amplitude
+        // The dot travels with the line, then rests at the hovered day.
+        const dot = progress < 1 ? pointAt(hot.week, progress) : pointAt(hot.week, (hot.day + 0.5) / 7)
+        const px = dot.x
+        const py = dot.y
         ctx.fillStyle = palette.cobalt
         ctx.beginPath()
-        ctx.arc(px, py, 2.4, 0, Math.PI * 2)
+        ctx.arc(px, py, progress < 1 ? 2.6 : 2.4, 0, Math.PI * 2)
         ctx.fill()
 
         const contributions = week.days.reduce<number>((sum, count) => sum + (count ?? 0), 0)
@@ -160,19 +204,21 @@ export function ActivityDrawing() {
         }`
         tipLines[2].style.color = palette.cobalt
 
+        // The readout anchors to the hovered day's point, not to the travelling dot.
+        const rest = pointAt(hot.week, (hot.day + 0.5) / 7)
         const tipWidth = tip.offsetWidth
         const tipHeight = tip.offsetHeight
         const margin = 8
-        const right = px + 14
-        const left = right + tipWidth > width - margin ? px - 14 - tipWidth : right
+        const right = rest.x + 14
+        const left = right + tipWidth > width - margin ? rest.x - 14 - tipWidth : right
         tip.style.left = `${Math.max(margin, left)}px`
-        tip.style.top = `${Math.min(height - tipHeight - margin, Math.max(margin, py - tipHeight - 10))}px`
+        tip.style.top = `${Math.min(height - tipHeight - margin, Math.max(margin, rest.y - tipHeight - 10))}px`
         tip.style.visibility = 'visible'
       } else {
         tip.style.visibility = 'hidden'
       }
 
-      if (animating(now)) schedule()
+      if (drawInActive(now) || progress < 1) schedule()
     }
 
     const setPointer = (event: PointerEvent) => {
@@ -206,6 +252,8 @@ export function ActivityDrawing() {
       schedule()
     })
     resizeObserver.observe(canvas)
+    const band = host.querySelector('[data-activity-band]')
+    if (band) resizeObserver.observe(band)
 
     const onTheme = () => {
       palette = readPalette(canvas)
