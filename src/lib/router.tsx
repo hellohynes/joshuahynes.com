@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components -- the router API (useRoute, navigate, Link) lives in one module by design */
+/* oxlint-disable react/only-export-components -- the router API (useRoute, navigate, Link) lives in one module by design */
 import { useSyncExternalStore } from 'react'
 import type { AnchorHTMLAttributes, MouseEvent } from 'react'
 import { hrefFor, parseRoute } from './route.ts'
