@@ -27,7 +27,8 @@ A PR number or URL. Default: the PR for the current branch.
    - `git fetch origin` succeeds.
    - If a local source branch exists, its tip equals `HEAD_REF_OID`. A local tip with commits past it is
      unpublished work: stop and name the commits.
-   - The head repository owner equals the repo owner. For a fork, skip remote deletion and say so.
+   - `headRepositoryOwner.login` equals the repo owner in `$SLUG`. For a fork, skip remote deletion and
+     say so.
 5. **Return to the base.** When the current branch is the source or the base: `git switch "$BASE"`, then
    `git pull --ff-only origin "$BASE"`. A failed fast-forward stops here. When the current branch is
    something else, do not switch; report the skip.
