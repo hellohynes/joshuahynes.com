@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import "@fontsource-variable/jetbrains-mono";
-@import "@fontsource/yellowtail";
 
 /* Palette from the design: white, near-black for names, a cool grey for the rest, and a light hairline.
    `rule` is decorative only. Live state uses accent. */
