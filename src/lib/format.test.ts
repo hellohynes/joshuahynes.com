@@ -23,16 +23,23 @@ describe('count', () => {
 
 describe('totalsLine', () => {
   const summary = { contributions: 3848, prs: 743, documents: 2924, since: '2025-04-13', documentsSince: '2026-02-08' }
+  const base = { summary, weeks: 80, documentsSince: '2026-02-10', generated: '2026-10-21' }
 
-  it('reads as one sentence with the window start first and the snapshot date last', () => {
-    expect(totalsLine({ summary, documentsSince: '2026-02-10', generated: '2026-10-21' })).toBe(
-      'Since Apr 13, 2025: 3,848 contributions · 743 pull requests · 2,924 documents written with AI agents since Feb 10, 2026 · updated Oct 21, 2026',
+  it('reads as two sentences, then the snapshot date', () => {
+    expect(totalsLine(base)).toBe(
+      'Last 80 weeks, from Apr 13, 2025: 3,848 contributions · 743 pull requests. Since Feb 10, 2026: 2,924 documents written with AI agents. Updated Oct 21, 2026.',
     )
   })
 
-  it('leaves out the documents clause when there is no documents data', () => {
-    expect(
-      totalsLine({ summary: { ...summary, documents: 0, documentsSince: null }, documentsSince: '2026-02-10', generated: '2026-10-21' }),
-    ).toBe('Since Apr 13, 2025: 3,848 contributions · 743 pull requests · updated Oct 21, 2026')
+  it('leaves out the documents sentence when there is no documents data', () => {
+    expect(totalsLine({ ...base, summary: { ...summary, documents: 0, documentsSince: null } })).toBe(
+      'Last 80 weeks, from Apr 13, 2025: 3,848 contributions · 743 pull requests. Updated Oct 21, 2026.',
+    )
+  })
+
+  it('handles singular counts', () => {
+    expect(totalsLine({ ...base, weeks: 1, summary: { ...summary, contributions: 1, prs: 1, documents: 1 } })).toBe(
+      'Last 1 week, from Apr 13, 2025: 1 contribution · 1 pull request. Since Feb 10, 2026: 1 document written with AI agents. Updated Oct 21, 2026.',
+    )
   })
 })

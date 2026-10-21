@@ -327,6 +327,6 @@ export function ActivityDrawing() {
 
 /** The figures behind the drawing, as real text. */
 export function ActivityTotals() {
-  const line = totalsLine({ summary: SUMMARY, documentsSince: DOCUMENTS_SINCE, generated: ACTIVITY_GENERATED })
+  const line = totalsLine({ summary: SUMMARY, weeks: ROWS, documentsSince: DOCUMENTS_SINCE, generated: ACTIVITY_GENERATED })
   return <p className="m-0 text-[13px] leading-[1.4] tracking-[-0.2px] text-ink md:text-right">{line}</p>
 }

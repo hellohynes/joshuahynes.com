@@ -25,19 +25,22 @@ export function withYear(date: string, addDays = 0): string {
 }
 
 /**
- * The figures behind the drawing as one line: the window start, the totals, the documents clause (only when
- * there is documents data) and the snapshot date. `documentsSince` is the first day documents were counted.
+ * The figures behind the drawing as two sentences and the snapshot date: the window's totals, the documents
+ * (only when there is documents data, counted from `documentsSince`), and when the data was generated.
  */
 export function totalsLine(args: {
   summary: ReturnType<typeof summarize>
+  weeks: number
   documentsSince: string
   generated: string
 }): string {
-  const { summary, documentsSince, generated } = args
-  const parts = [count(summary.contributions, 'contribution'), count(summary.prs, 'pull request')]
+  const { summary, weeks, documentsSince, generated } = args
+  const sentences = [
+    `Last ${count(weeks, 'week')}, from ${withYear(summary.since)}: ${count(summary.contributions, 'contribution')} · ${count(summary.prs, 'pull request')}.`,
+  ]
   if (summary.documentsSince !== null) {
-    parts.push(`${count(summary.documents, 'document')} written with AI agents since ${withYear(documentsSince)}`)
+    sentences.push(`Since ${withYear(documentsSince)}: ${count(summary.documents, 'document')} written with AI agents.`)
   }
-  parts.push(`updated ${withYear(generated)}`)
-  return `Since ${withYear(summary.since)}: ${parts.join(' · ')}`
+  sentences.push(`Updated ${withYear(generated)}.`)
+  return sentences.join(' ')
 }
