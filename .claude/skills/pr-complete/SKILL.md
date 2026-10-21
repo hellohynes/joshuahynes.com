@@ -26,16 +26,40 @@ the number.
    state, merge time, full merge SHA (`mergeCommit.oid`), `BASE`, `SOURCE` and `HEAD_REF_OID`.
 3. **Merge gate.** Only `MERGED` continues. `OPEN`, `CLOSED` or no PR: stop, change nothing, and say so.
 4. **Safety gates, all read-only, before any mutation.** Any failure stops the run.
-   - The tree is clean except the known noise in `AGENTS.md`, and `git fetch origin` succeeds.
+   - The tree is clean except the known noise in `AGENTS.md`, and `git fetch --prune origin` succeeds. It
+     only updates remote-tracking refs, and pruning drops refs for deleted remote branches so the tests
+     below cannot match a stale one.
    - `headRepositoryOwner.login` equals the owner in `$SLUG`. A fork, or a null owner (a deleted fork), is
      not this repo's branch: skip every remaining gate that looks at `$SOURCE` and skip steps 6 and 7,
      say so, and still do steps 5 and 8.
    - `SOURCE` is not `BASE`.
    - If a local `refs/heads/$SOURCE` exists, call its tip `LOCAL_TIP`. `HEAD_REF_OID` must be present
-     locally (run `git fetch origin "pull/$N/head"` if it is not; still missing is unverified). Then
-     `git merge-base --is-ancestor "$LOCAL_TIP" "$HEAD_REF_OID"` must succeed: a branch equal to or behind
-     the PR head holds nothing unpublished. Otherwise stop and name the commits in
-     `"$HEAD_REF_OID".."$LOCAL_TIP"` as unpublished work.
+     locally (run `git fetch origin "pull/$N/head"` if it is not; still missing is unverified). Then the
+     local tip must be published, by any one test:
+     - **(a)** `git merge-base --is-ancestor "$LOCAL_TIP" "$HEAD_REF_OID"` succeeds: the branch is equal to
+       or behind the PR head.
+     - **(b)** its tree equals the tree at the tip of a remote branch:
+       `git for-each-ref --format='%(tree)' refs/remotes/origin | grep -qxF "$(git rev-parse "$LOCAL_TIP^{tree}")"`.
+       This covers a PR merged before a follow-up commit was pushed, with that follow-up on another remote
+       branch (a cherry-pick has a different SHA, so (a) fails).
+     - **(c)** `git cherry "origin/$BASE" "$LOCAL_TIP" "$HEAD_REF_OID"` prints no line starting with `+`,
+       and `git rev-list --merges "$HEAD_REF_OID".."$LOCAL_TIP"` prints nothing (`git cherry` skips merge
+       commits, and a merge can hold hand edits made while resolving it). Every commit past the PR head is
+       then patch-equivalent to a commit already in the base. This covers a follow-up carried to a new
+       branch and merged, by rebase or as a single-commit squash, after the base moved on, when (b) no
+       longer matches. A multi-commit squash of the follow-up, or a local branch rewritten after a
+       force-push, matches nothing: stop with `needs decision` and show
+       `git diff "$HEAD_REF_OID" "$LOCAL_TIP"` so the user can judge whether anything is unpublished.
+
+     (b) and (c) prove the content is published, not these commit SHAs. Report every local-only commit the
+     deletion will drop, by full SHA (`git log --format=%H "$HEAD_REF_OID".."$LOCAL_TIP"`). Say each stays
+     recoverable by that SHA with `git branch <name> <sha>` until git garbage-collects it, and from HEAD's
+     reflog if it was checked out here. The branch's own reflog is deleted with the ref.
+
+     When none holds, stop and name the commits in `"$HEAD_REF_OID".."$LOCAL_TIP"` as unpublished work.
+     Say how to carry them forward: a new branch from `origin/$BASE`, `git cherry-pick` of those commits,
+     published through `pr-create`, then rerun `pr-complete "$N"` once that PR is merged. If the follow-up
+     is on an open PR, leave this branch until then.
    - `git worktree list --porcelain` shows `refs/heads/$SOURCE` checked out in no other worktree.
    - `git ls-remote --exit-code --heads origin "refs/heads/$SOURCE"`: exit 2 means the branch is already
      gone (GitHub may delete on merge), which counts as done. Exit 0 means it exists: its SHA must equal
@@ -78,6 +102,8 @@ the number.
   checked-out branch.
 - The bundled authorization covers only the base switch and fast-forward and the deletion of the verified
   merged source branch. It does not cover dirty work, unpublished commits or any other branch.
+- "Unpublished" means content found in no remote branch and not in `origin/$BASE`. Tests (b) and (c) delete
+  a branch whose commit SHAs exist only locally but whose content is published; the report names them.
 - Report each skipped step with its reason.
 - Keep full SHAs from the evidence. Do not abbreviate them in the report.
 
