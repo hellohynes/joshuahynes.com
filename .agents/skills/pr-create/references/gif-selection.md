@@ -55,12 +55,13 @@ Do not use robot, AI or automation-themed GIFs unless the PR is about those topi
 
 ## In the body
 
-Add it as the last section:
+Put it first, above `## Summary`, as a bare image line with no heading:
 
 ```
-## GIF
-
 ![<short description of what the GIF shows>](https://media.giphy.com/media/<ID>/giphy.gif)
+
+## Summary
 ```
 
-The alt text describes the GIF, not the PR.
+The alt text describes the GIF, not the PR. Take it from the GIF's page title, not from a guess about the
+animation.

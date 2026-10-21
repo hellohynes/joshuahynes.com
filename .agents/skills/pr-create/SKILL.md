@@ -31,10 +31,11 @@ read-only refresh, not publication: confirm before any push or PR mutation.
    as a setting to change. Remove any empty section entirely. Run `writing-help` in edit mode on the
    drafted title and body, but keep any `What changed` summary out of the body and keep the step 6 title
    format. No AI attribution.
-8. **GIF (required):** read `references/gif-selection.md`, select and validate one GIF, and add it as the
-   final `## GIF` section. An existing PR keeps its GIF unless the user asks for a replacement: take the
-   `## GIF` section from its current `body`, run the reference's URL check on it, and re-append it last. If
-   it is absent or fails the check, select a new one. With no validated GIF, stop before any push or PR
+8. **GIF (required):** read `references/gif-selection.md`, select and validate one GIF, and put it first in
+   the body, above `## Summary`, as a bare image line with no heading. An existing PR keeps its GIF unless
+   the user asks for a replacement: take the leading image line from its current `body` (or a legacy
+   `## GIF` section), run the reference's URL check on it, and put it first. If it is absent or fails the
+   check, select a new one. With no validated GIF, stop before any push or PR
    mutation, unless the user supplies a URL (it gets the same check) or says to publish without one.
 9. Propose the exact `git push -u origin "$BRANCH"` and `gh pr create` (or the edit) with the title and
    body, and wait for explicit confirmation. A changed head, base, title, body or GIF invalidates it.
