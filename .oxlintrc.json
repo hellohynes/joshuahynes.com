@@ -10,6 +10,7 @@
   },
   "rules": {
     "for-direction": "error",
+    "no-array-constructor": "error",
     "no-async-promise-executor": "error",
     "no-case-declarations": "error",
     "no-compare-neg-zero": "error",
@@ -56,7 +57,6 @@
     "preserve-caught-error": "error",
     "require-yield": "error",
     "typescript/ban-ts-comment": "error",
-    "typescript/no-array-constructor": "error",
     "typescript/no-duplicate-enum-values": "error",
     "typescript/no-empty-object-type": "error",
     "typescript/no-explicit-any": "error",
@@ -69,21 +69,20 @@
     "typescript/no-unnecessary-type-constraint": "error",
     "typescript/no-unsafe-declaration-merging": "error",
     "typescript/no-unsafe-function-type": "error",
-    "typescript/no-unused-expressions": "error",
     "typescript/no-wrapper-object-types": "error",
     "typescript/prefer-as-const": "error",
     "typescript/prefer-namespace-keyword": "error",
     "typescript/triple-slash-reference": "error",
     "use-isnan": "error",
     "valid-typeof": "error",
-    "react/rules-of-hooks": "error",
     "react/exhaustive-deps": "warn",
     "react/only-export-components": [
       "error",
       {
         "allowConstantExport": true
       }
-    ]
+    ],
+    "react/rules-of-hooks": "error"
   },
   "ignorePatterns": [
     "dist",

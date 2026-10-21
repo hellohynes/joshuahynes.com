@@ -98,6 +98,26 @@ describe('checkAgentTooling', () => {
       /builder.*sandbox_mode is "danger-full-access"/,
     ],
     [
+      'a canonical skill directory without a SKILL.md',
+      (root) => rmSync(join(root, '.agents/skills/shaping/SKILL.md')),
+      /shaping.*\.agents\/skills\/shaping\/SKILL\.md is missing/,
+    ],
+    [
+      'a missing Claude agent profile',
+      (root) => rmSync(join(root, '.claude/agents/builder.md')),
+      /builder.*\.claude\/agents\/builder\.md is missing/,
+    ],
+    [
+      'a Claude agent whose name differs from its file',
+      (root) => put(root, '.claude/agents/builder.md', claudeAgent('other')),
+      /builder.*\.claude\/agents\/builder\.md name is "other"/,
+    ],
+    [
+      'a Codex agent that does not load the shared instructions',
+      (root) => put(root, '.codex/agents/builder.toml', 'name = "builder"\nsandbox_mode = "workspace-write"\n'),
+      /builder.*\.codex\/agents\/builder\.toml does not load \.agents\/agents\/builder\.md/,
+    ],
+    [
       'a Claude profile with no shared instructions',
       (root) => put(root, '.claude/agents/stray.md', claudeAgent('stray')),
       /stray.*\.claude\/agents\/stray\.md has no shared/,

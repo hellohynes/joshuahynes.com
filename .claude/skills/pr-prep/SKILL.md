@@ -55,8 +55,9 @@ cannot start until every finding is Resolved, Disputed or Deferred.
 
 ## 5. Gates
 
-Run, from the repo root: `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm check`, plus `pnpm check:agents`
-when `.agents/`, `.claude/` or `.codex/` changed. Docs-only changes run `pnpm lint` and `pnpm check`. A gate that changes files invalidates the review and returns to step 4.
+Run, from the repo root: `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm check`. Docs-only changes run
+`pnpm lint` and `pnpm check`. Whenever `.agents/`, `.claude/` or `.codex/` changed, also run
+`pnpm check:agents`, docs-only or not. A gate that changes files invalidates the review and returns to step 4.
 Stop on any failure; report it with its output. Never claim a gate passed that you did not run.
 
 ## 6. Report
