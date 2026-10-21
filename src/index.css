@@ -86,7 +86,7 @@
 
 @layer base {
   html {
-    scrollbar-gutter: stable; /* so opening a project (which locks scrolling) does not shift the page */
+    scrollbar-gutter: stable; /* so moving between short and long pages does not shift the layout */
     background: var(--bg);
     color: var(--ink);
     font-family: var(--font-sans);
@@ -258,6 +258,13 @@
   outline-color: var(--piece-fg);
 }
 
+/* The piece fills the whole page, so no reserved gutter strip of site background beside it. The sticky top and
+   bottom bars are 3.5rem tall; the scroll padding keeps a focused element from landing underneath them. */
+:root:has(.piece) {
+  scrollbar-gutter: auto;
+  scroll-padding-block: 3.5rem;
+}
+
 /* Work grid: colour cells --------------------------------------------------------------------------- */
 
 /*
@@ -338,6 +345,10 @@
 .work-cell:hover .work-cell-media,
 .work-cell:focus-visible .work-cell-media {
   opacity: 1;
+}
+
+.work-cell:focus-visible {
+  z-index: 1; /* so the focus ring is not clipped by the next cell's colour field */
 }
 
 .work-cell:hover .work-cell-caption,
