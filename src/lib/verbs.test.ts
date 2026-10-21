@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { contrastRatio } from './color.ts'
-import { FLIP_COLORS, FLIP_FONTS, createVerbPicker, type VerbPick } from './verbs.ts'
+import { FLIP_COLORS, FLIP_FONTS, colorFor, createVerbPicker, type VerbPick } from './verbs.ts'
 
 // Seeded generator so every run draws the same sequence.
 function mulberry32(seed: number): () => number {
@@ -96,5 +96,22 @@ describe('FLIP_COLORS', () => {
   it.each(FLIP_COLORS)('$key reaches 3:1 on white (light) and on the dark page (dark)', ({ light, dark }) => {
     expect(contrastRatio(light, '#ffffff')).toBeGreaterThanOrEqual(3)
     expect(contrastRatio(dark, '#0e0e0d')).toBeGreaterThanOrEqual(3)
+  })
+})
+
+describe('colorFor', () => {
+  it.each(FLIP_COLORS)('gives $key its light and dark hex', ({ key, light, dark }) => {
+    expect(colorFor(key, 'light')).toBe(light)
+    expect(colorFor(key, 'dark')).toBe(dark)
+  })
+
+  it('is null for the default colour', () => {
+    expect(colorFor(null, 'light')).toBeNull()
+    expect(colorFor(null, 'dark')).toBeNull()
+  })
+
+  it('is null for a key that is not in the list', () => {
+    expect(colorFor('teal', 'light')).toBeNull()
+    expect(colorFor('', 'dark')).toBeNull()
   })
 })

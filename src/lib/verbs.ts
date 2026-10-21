@@ -22,6 +22,12 @@ export const FLIP_COLORS: readonly { key: string; light: string; dark: string }[
   { key: 'pink', light: '#d4247c', dark: '#ff7ab8' },
 ]
 
+/** The hex for a colour key in the given theme; null (use the ink) for the default colour or an unknown key. */
+export function colorFor(key: string | null, theme: 'light' | 'dark'): string | null {
+  const color = FLIP_COLORS.find((c) => c.key === key)
+  return color ? color[theme] : null
+}
+
 /** `font` and `color` are keys into the lists above; null means the default grotesque / default ink. */
 export type VerbPick = { verb: string; font: string | null; color: string | null }
 
