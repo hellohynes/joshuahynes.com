@@ -44,4 +44,5 @@ export type Site = {
   intro: IntroPart[]
   history: Role[]
   contact: { email: string }
+  stats: { lead: string; items: string[] }
 }

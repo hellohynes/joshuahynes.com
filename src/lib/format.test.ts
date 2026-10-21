@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { count, monthDay, totalsLine, withYear } from './format.ts'
+import { site } from '../content/site.ts'
+import { count, monthDay, statsLine, withYear } from './format.ts'
 
 describe('dates', () => {
   it('formats a YYYY-MM-DD date as written, whatever the time zone', () => {
@@ -21,25 +22,18 @@ describe('count', () => {
   })
 })
 
-describe('totalsLine', () => {
-  const summary = { contributions: 3848, prs: 743, documents: 2924, since: '2025-04-13', documentsSince: '2026-02-08' }
-  const base = { summary, weeks: 80, documentsSince: '2026-02-10', generated: '2026-10-21' }
-
-  it('reads as two sentences, then the snapshot date', () => {
-    expect(totalsLine(base)).toBe(
-      'Last 80 weeks, from Apr 13, 2025: 3,848 contributions · 743 pull requests. Since Feb 10, 2026: 2,924 documents written with AI agents. Updated Oct 21, 2026.',
+describe('statsLine', () => {
+  it('reads the lead, then the items separated by slashes', () => {
+    expect(statsLine(site.stats)).toBe(
+      'Since 2025: 3,800+ contributions / 750+ pull requests / 1,200+ commits / 18M+ additions / 7M+ deletions / 3,000+ AI artifacts created / 85+ skills created',
     )
   })
 
-  it('leaves out the documents sentence when there is no documents data', () => {
-    expect(totalsLine({ ...base, summary: { ...summary, documents: 0, documentsSince: null } })).toBe(
-      'Last 80 weeks, from Apr 13, 2025: 3,848 contributions · 743 pull requests. Updated Oct 21, 2026.',
-    )
+  it('handles a single item', () => {
+    expect(statsLine({ lead: 'Since 2025:', items: ['85+ skills created'] })).toBe('Since 2025: 85+ skills created')
   })
 
-  it('handles singular counts', () => {
-    expect(totalsLine({ ...base, weeks: 1, summary: { ...summary, contributions: 1, prs: 1, documents: 1 } })).toBe(
-      'Last 1 week, from Apr 13, 2025: 1 contribution · 1 pull request. Since Feb 10, 2026: 1 document written with AI agents. Updated Oct 21, 2026.',
-    )
+  it('is just the lead when there are no items', () => {
+    expect(statsLine({ lead: 'Since 2025:', items: [] })).toBe('Since 2025:')
   })
 })

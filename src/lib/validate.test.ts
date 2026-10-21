@@ -23,6 +23,7 @@ const validSite = (over: Partial<Site> = {}): Site => ({
   intro: ['I am ', { strong: 'Joshua' }, '.'],
   history: [{ company: 'Dialpad', title: 'Director', dates: '2018–Present', logo: 'dialpad' }],
   contact: { email: 'me@example.com' },
+  stats: { lead: 'Since 2025:', items: ['3,800+ contributions', '85+ skills created'] },
   ...over,
 })
 
@@ -100,6 +101,33 @@ describe('validateSite', () => {
     const problems = validateSite(validSite({ contact: { email: 'TODO: your email address' } }))
     expect(problems).toHaveLength(1)
     expect(problems[0]).toContain('contact.email')
+  })
+
+  describe('stats', () => {
+    const stats = (over: Partial<Site['stats']>): Site => validSite({ stats: { lead: 'Since 2025:', items: ['85+ skills created'], ...over } })
+
+    it('flags an empty lead', () => {
+      const problems = validateSite(stats({ lead: ' ' }))
+      expect(problems).toHaveLength(1)
+      expect(problems[0]).toContain('stats.lead')
+    })
+
+    it('flags no items', () => {
+      const problems = validateSite(stats({ items: [] }))
+      expect(problems).toHaveLength(1)
+      expect(problems[0]).toContain('stats.items')
+    })
+
+    it('flags a blank item', () => {
+      const problems = validateSite(stats({ items: ['85+ skills created', ' '] }))
+      expect(problems).toHaveLength(1)
+      expect(problems[0]).toContain('stats.items[1]')
+    })
+
+    it('flags a TODO placeholder in the lead or an item', () => {
+      expect(validateSite(stats({ lead: 'TODO: since when' }))).toEqual([expect.stringContaining('stats.lead')])
+      expect(validateSite(stats({ items: ['TODO: a number'] }))).toEqual([expect.stringContaining('stats.items[0]')])
+    })
   })
 
   describe('headline', () => {

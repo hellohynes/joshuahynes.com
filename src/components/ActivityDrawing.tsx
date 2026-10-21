@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { ACTIVITY_GENERATED, ACTIVITY_WEEKS, DOCUMENTS_SINCE } from '../data/activity.ts'
-import { summarize } from '../lib/activity.ts'
+import { ACTIVITY_WEEKS } from '../data/activity.ts'
 import { depthAlpha } from '../lib/depth.ts'
-import { count, formatNumber, monthDay, totalsLine, withYear } from '../lib/format.ts'
+import { count, formatNumber, monthDay, withYear } from '../lib/format.ts'
 import { drawProgress } from '../lib/drawin.ts'
 import { clampTip, hoverProgress } from '../lib/readout.ts'
 import {
@@ -36,7 +35,6 @@ const SCALE = busyScale(ACTIVITY_WEEKS)
 const PROFILES = ACTIVITY_WEEKS.map((week) => weekProfile(week.days, SCALE))
 // Where each week's line stops (0..1 of the width): the current week ends at its last recorded day, the rest at 1.
 const ENDS = ACTIVITY_WEEKS.map((week) => weekEnd(week.days))
-const SUMMARY = summarize(ACTIVITY_WEEKS)
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -60,9 +58,9 @@ function readPalette(canvas: HTMLCanvasElement) {
 
 /**
  * The last 80 weeks of activity as stacked lines, one per week, drawn over the whole positioned parent (the home
- * page), edge to edge and top to bottom. Purely decorative:
- * the canvas and the readout are aria-hidden and the figures live in `ActivityTotals`. Pointer events are taken from
- * the parent so the canvas never intercepts clicks or text selection.
+ * page), edge to edge and top to bottom. Purely decorative: the canvas and the readout are aria-hidden, and the
+ * footer's stats line is separate, hand-edited text. Pointer events are taken from the parent so the canvas never
+ * intercepts clicks or text selection.
  */
 export function ActivityDrawing() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -351,10 +349,4 @@ export function ActivityDrawing() {
       </div>
     </>
   )
-}
-
-/** The figures behind the drawing, as real text. */
-export function ActivityTotals() {
-  const line = totalsLine({ summary: SUMMARY, weeks: ROWS, documentsSince: DOCUMENTS_SINCE, generated: ACTIVITY_GENERATED })
-  return <p className="m-0 text-[13px] leading-[1.4] tracking-[-0.2px] text-ink md:text-right">{line}</p>
 }

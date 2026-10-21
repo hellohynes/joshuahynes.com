@@ -34,4 +34,20 @@ export const site: Site = {
     { company: 'AndCulture', title: 'Senior Experience Designer', dates: '2006–2013', logo: 'andculture' },
   ],
   contact: { email: 'work@joshuahynes.com' },
+  // Hand-maintained, rounded on purpose so they do not go stale quickly; update them when it makes sense. Sources:
+  // contributions and pull requests from the GitHub contributions graph, commits, additions and deletions from the
+  // contributor insights of the repos worked in, AI artifacts from the notes folder, skills from the design repo
+  // plus personal ones.
+  stats: {
+    lead: 'Since 2025:',
+    items: [
+      '3,800+ contributions',
+      '750+ pull requests',
+      '1,200+ commits',
+      '18M+ additions',
+      '7M+ deletions',
+      '3,000+ AI artifacts created',
+      '85+ skills created',
+    ],
+  },
 }

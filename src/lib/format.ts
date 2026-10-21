@@ -1,5 +1,5 @@
-// Text for the drawing's readout and totals line. Pure: no DOM, React or Vite imports.
-import type { summarize } from './activity.ts'
+// Text for the drawing's readout and the footer stats line. Pure: no DOM, React or Vite imports.
+import type { Site } from '../content/types.ts'
 
 const numbers = new Intl.NumberFormat('en-US')
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -24,23 +24,7 @@ export function withYear(date: string, addDays = 0): string {
   return `${monthDay(date, addDays)}, ${utc(date, addDays).getUTCFullYear()}`
 }
 
-/**
- * The figures behind the drawing as two sentences and the snapshot date: the window's totals, the documents
- * (only when there is documents data, counted from `documentsSince`), and when the data was generated.
- */
-export function totalsLine(args: {
-  summary: ReturnType<typeof summarize>
-  weeks: number
-  documentsSince: string
-  generated: string
-}): string {
-  const { summary, weeks, documentsSince, generated } = args
-  const sentences = [
-    `Last ${count(weeks, 'week')}, from ${withYear(summary.since)}: ${count(summary.contributions, 'contribution')} · ${count(summary.prs, 'pull request')}.`,
-  ]
-  if (summary.documentsSince !== null) {
-    sentences.push(`Since ${withYear(documentsSince)}: ${count(summary.documents, 'document')} written with AI agents.`)
-  }
-  sentences.push(`Updated ${withYear(generated)}.`)
-  return sentences.join(' ')
+/** The footer stats as one line: the lead, then the items separated by slashes (just the lead when there are none). */
+export function statsLine(stats: Site['stats']): string {
+  return [stats.lead, stats.items.join(' / ')].filter(Boolean).join(' ')
 }

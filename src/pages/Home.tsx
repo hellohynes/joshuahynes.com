@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { ActivityDrawing, ActivityTotals } from '../components/ActivityDrawing'
+import { ActivityDrawing } from '../components/ActivityDrawing'
 import { PageFrame } from '../components/PageFrame'
 import { RotatingHeadline } from '../components/RotatingHeadline'
 import { SiteHeader } from '../components/SiteHeader'
 import { site } from '../content/site.ts'
+import { statsLine } from '../lib/format.ts'
 import { useReducedMotion } from '../lib/useReducedMotion.ts'
 
 const link = 'text-ink underline-offset-4 hover:underline'
@@ -36,7 +37,7 @@ export function Home() {
             </button>
           )}
         </div>
-        <ActivityTotals />
+        <p className="m-0 text-[13px] leading-[1.4] tracking-[-0.2px] text-ink md:text-right">{statsLine(site.stats)}</p>
       </footer>
       <ActivityDrawing />
     </PageFrame>

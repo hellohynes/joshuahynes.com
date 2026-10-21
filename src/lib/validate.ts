@@ -76,6 +76,16 @@ function validateHeadline(headline: Site['headline']): string[] {
   return problems
 }
 
+function validateStats(stats: Site['stats']): string[] {
+  const problems: string[] = []
+  if (!stats.lead.trim()) problems.push('site: stats.lead is empty')
+  if (stats.items.length === 0) problems.push('site: stats.items is empty')
+  for (const [i, item] of stats.items.entries()) {
+    if (!item.trim()) problems.push(`site: stats.items[${i}] is blank`)
+  }
+  return problems
+}
+
 export function validateSite(site: Site): string[] {
   const problems: string[] = []
   for (const field of ['name', 'role'] as const) {
@@ -85,6 +95,7 @@ export function validateSite(site: Site): string[] {
   if (site.intro.length === 0) problems.push('site: intro is empty')
   if (site.history.length === 0) problems.push('site: history is empty')
   if (!site.contact.email.trim()) problems.push('site: contact.email is empty')
+  problems.push(...validateStats(site.stats))
   problems.push(...placeholders(site, 'site'))
   return problems
 }
