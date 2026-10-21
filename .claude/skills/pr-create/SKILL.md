@@ -12,16 +12,25 @@ read-only refresh, not publication: confirm before any push or PR mutation.
 
 1. `git status --short`. Any path present, except the known noise in `AGENTS.md`: stop and tell the user
    to commit, then run `pr-prep`, then rerun this. Never stage, commit, stash or rebase here.
-2. Resolve the repo slug from `git remote get-url origin`. Pick the account for the `gh` calls that
-   write (PR create and edit). Use the active account when `gh api "repos/$SLUG" --jq .permissions.push`
-   prints `true`. Otherwise list the signed-in accounts in `gh auth status` and run the same check with
-   `GH_TOKEN="$(gh auth token --user "$ACCOUNT")"` until one prints `true` (this repo belongs to
-   `hellohynes`). Pass that token inline on the single `gh` command that needs it. Never export it, print
-   it or write it down: `gh auth switch` changes the active account for every repo and terminal, and the
-   global git config uses `gh` as its credential helper, so a switch would redirect your other repos'
-   HTTPS operations. If no signed-in account can push, stop and tell the user to run `gh auth login`;
-   never run `gh auth switch` or `gh auth login` yourself. `git push` uses the repo's own credential
-   helper, not `gh`.
+2. Resolve the repo slug from `git remote get-url origin`; the repo owner is its first path segment. Pick
+   the account for the `gh` calls that write (PR create and edit):
+   - Use the active account when `gh api --hostname github.com "repos/$SLUG" --jq .permissions.push`
+     prints exactly `true`.
+   - Otherwise try the other signed-in github.com accounts from `gh auth status`, the repo owner first.
+     For each, set `ACCOUNT_TOKEN="$(gh auth token --hostname github.com --user "$ACCOUNT")"` in that one
+     command's shell and require it to succeed and be non-empty (an empty `GH_TOKEN` is ignored, which
+     would silently run as the active account). Then run the same `gh api` check with
+     `GH_TOKEN="$ACCOUNT_TOKEN"` and stop at the first account that prints exactly `true`.
+   - Never export a token, print it or write it down. `gh auth switch` changes the active account for
+     every repo and terminal, and the global git config uses `gh` as its credential helper, so a switch
+     would redirect your other repos' HTTPS operations.
+   - If no signed-in account can push, stop and tell the user to run `gh auth login`; never run
+     `gh auth switch` or `gh auth login` yourself.
+   - `git push` uses git's credential helper, not `gh`. Read
+     `git config --get-all credential.https://github.com.helper`: when its last value is
+     `!gh auth git-credential` (no repo-local override), the push runs as the active `gh` account, so stop
+     if that account cannot push and tell the user. In this repo `.git/config` overrides it with
+     `osxkeychain` and the origin URL names `hellohynes`.
 3. Resolve `BASE_REF` (`origin/<default branch>`), run `git fetch origin`, capture `BASE_SHA` and
    `HEAD_SHA`. If `git rev-list --count "$BASE_REF"..HEAD` is zero, report nothing to publish and stop.
 4. Look up an existing PR: `gh pr list --repo "$SLUG" --head "$BRANCH" --state all --json
@@ -46,13 +55,17 @@ read-only refresh, not publication: confirm before any push or PR mutation.
    mutation, unless the user supplies a URL (it gets the same check) or says to publish without one.
 9. Propose the exact `git push -u origin "$BRANCH"` and `gh pr create` (or the edit) with the title and
    body, and wait for explicit confirmation. A changed head, base, title, body or GIF invalidates it.
+   When step 2 chose a non-active account, each write command (`gh pr create`, `gh api -X PATCH`) carries
+   an inline `GH_TOKEN="$(gh auth token --hostname github.com --user "$ACCOUNT")"` prefix. Show the user
+   that unexpanded text, never a token value.
    For an edit use `gh api -X PATCH "repos/$SLUG/pulls/$N" -F body=@FILE`, adding `-f title="$TITLE"` only
    when the title changes: `gh pr edit` can fail on a Projects (classic) GraphQL deprecation error. Keep
    FILE in the session scratch or notes folder, never in the repo, so the next clean-tree check passes.
 10. After confirmation: push, create or edit, then verify the returned PR's head, base and state. For a
     new PR the preview deploys at `https://www.joshuahynes.com/<PR number>/` once the PR Preview workflow
     passes; report that URL and the workflow state rather than claiming it is live.
-11. Update only a PR you authored. For another author's PR, keep the proposed body local.
+11. Update only a PR whose author login equals the account step 2 chose (or the repo owner). For another
+    author's PR, keep the proposed body local.
 
 ## Safety
 

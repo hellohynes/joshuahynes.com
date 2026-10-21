@@ -26,25 +26,35 @@ the number.
    state, merge time, full merge SHA (`mergeCommit.oid`), `BASE`, `SOURCE` and `HEAD_REF_OID`.
 3. **Merge gate.** Only `MERGED` continues. `OPEN`, `CLOSED` or no PR: stop, change nothing, and say so.
 4. **Safety gates, all read-only, before any mutation.** Any failure stops the run.
-   - The tree is clean except the known noise in `AGENTS.md`, and `git fetch origin` succeeds.
+   - The tree is clean except the known noise in `AGENTS.md`, and `git fetch --prune origin` succeeds. It
+     only updates remote-tracking refs, and pruning drops refs for deleted remote branches so the tests
+     below cannot match a stale one.
    - `headRepositoryOwner.login` equals the owner in `$SLUG`. A fork, or a null owner (a deleted fork), is
      not this repo's branch: skip every remaining gate that looks at `$SOURCE` and skip steps 6 and 7,
      say so, and still do steps 5 and 8.
    - `SOURCE` is not `BASE`.
    - If a local `refs/heads/$SOURCE` exists, call its tip `LOCAL_TIP`. `HEAD_REF_OID` must be present
      locally (run `git fetch origin "pull/$N/head"` if it is not; still missing is unverified). Then the
-     local tip must be published, by either test:
+     local tip must be published, by any one test:
      - **(a)** `git merge-base --is-ancestor "$LOCAL_TIP" "$HEAD_REF_OID"` succeeds: the branch is equal to
        or behind the PR head.
      - **(b)** its tree equals the tree at the tip of a remote branch:
        `git for-each-ref --format='%(tree)' refs/remotes/origin | grep -qxF "$(git rev-parse "$LOCAL_TIP^{tree}")"`.
-       This covers a PR merged before a follow-up commit was pushed, with that follow-up carried to another
-       branch (a cherry-pick has a different SHA, so (a) fails). It proves the content is published, not the
-       commit history; say so in the report.
+       This covers a PR merged before a follow-up commit was pushed, with that follow-up on another remote
+       branch (a cherry-pick has a different SHA, so (a) fails).
+     - **(c)** `git cherry "origin/$BASE" "$LOCAL_TIP" "$HEAD_REF_OID"` prints no line starting with `+`:
+       every commit past the PR head is patch-equivalent to a commit already in the base. This covers a
+       follow-up that was carried to a new branch and merged after the base moved on, when (b) no longer
+       matches, and a PR that was rebased or force-pushed.
 
-     When neither holds, stop and name the commits in `"$HEAD_REF_OID".."$LOCAL_TIP"` as unpublished work.
+     (b) and (c) prove the content is published, not these commit SHAs. Report every local-only commit the
+     deletion will drop, by full SHA (`git log --format=%H "$HEAD_REF_OID".."$LOCAL_TIP"`), and say they
+     stay recoverable only from the reflog.
+
+     When none holds, stop and name the commits in `"$HEAD_REF_OID".."$LOCAL_TIP"` as unpublished work.
      Say how to carry them forward: a new branch from `origin/$BASE`, `git cherry-pick` of those commits,
-     published through `pr-create`, then rerun `pr-complete "$N"`.
+     published through `pr-create`, then rerun `pr-complete "$N"` once that PR is merged. If the follow-up
+     is on an open PR, leave this branch until then.
    - `git worktree list --porcelain` shows `refs/heads/$SOURCE` checked out in no other worktree.
    - `git ls-remote --exit-code --heads origin "refs/heads/$SOURCE"`: exit 2 means the branch is already
      gone (GitHub may delete on merge), which counts as done. Exit 0 means it exists: its SHA must equal
@@ -87,6 +97,8 @@ the number.
   checked-out branch.
 - The bundled authorization covers only the base switch and fast-forward and the deletion of the verified
   merged source branch. It does not cover dirty work, unpublished commits or any other branch.
+- "Unpublished" means content found in no remote branch and not in `origin/$BASE`. Tests (b) and (c) delete
+  a branch whose commit SHAs exist only locally but whose content is published; the report names them.
 - Report each skipped step with its reason.
 - Keep full SHAs from the evidence. Do not abbreviate them in the report.
 
