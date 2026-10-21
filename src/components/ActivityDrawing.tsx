@@ -17,9 +17,14 @@ const ROWS = ACTIVITY_WEEKS.length
 const SAMPLES = 220
 const DRAW_IN_MS = 4000
 const HOVER_MS = 700
-// The vertical plot band as fractions of the band element (`main`), so the lines pass over the headline whatever
-// the viewport. Horizontally the lines run the full width of the canvas, edge to edge.
-const BAND = { top: 0.17, bottom: 0.86 }
+// The plot fills the whole canvas: edge to edge across, and down the full height with a small inset top and bottom
+// (a fraction of the height), so the lines pass over the header, headline and footer whatever the viewport.
+const INSET = 0.03
+// Peak height as a multiple of the row spacing, so the proportions hold as the rows spread over the screen.
+const AMPLITUDE_ROWS = 9
+// The hovered day's marker: radius and the ring around it, in CSS px.
+const DAY_DOT = 4.5
+const DAY_RING = 1.5
 
 const SCALE = busyScale(ACTIVITY_WEEKS)
 const PROFILES = ACTIVITY_WEEKS.map((week) => weekProfile(week.days, SCALE))
@@ -46,8 +51,8 @@ function readPalette(canvas: HTMLCanvasElement) {
 }
 
 /**
- * The last 80 weeks of activity as stacked lines, one per week, drawn edge to edge over the positioned parent (the
- * whole home page); the vertical band comes from the `data-activity-band` element inside it. Purely decorative:
+ * The last 80 weeks of activity as stacked lines, one per week, drawn over the whole positioned parent (the home
+ * page), edge to edge and top to bottom. Purely decorative:
  * the canvas and the readout are aria-hidden and the figures live in `ActivityTotals`. Pointer events are taken from
  * the parent so the canvas never intercepts clicks or text selection.
  */
@@ -68,8 +73,6 @@ export function ActivityDrawing() {
     let palette = readPalette(canvas)
     let width = 0
     let height = 0
-    let plotTop = 0 // the vertical plot band, in canvas coordinates; set by resize()
-    let plotBottom = 0
     let frame = 0
     let startedAt: number | null = null // set when the drawing first scrolls into view
     // The hovered week's top stroke is re-drawn left to right from `since`; null when nothing is hovered.
@@ -95,12 +98,8 @@ export function ActivityDrawing() {
 
     const resize = () => {
       const dpr = Math.min(2, window.devicePixelRatio || 1)
-      const box = canvas.getBoundingClientRect()
-      const band = (host.querySelector('[data-activity-band]') ?? host).getBoundingClientRect()
       width = canvas.clientWidth
       height = canvas.clientHeight
-      plotTop = band.top - box.top + band.height * BAND.top
-      plotBottom = band.top - box.top + band.height * BAND.bottom
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
@@ -113,10 +112,10 @@ export function ActivityDrawing() {
 
       const x0 = 0
       const x1 = width
-      const top = plotTop
-      const bottom = plotBottom
+      const top = height * INSET
+      const bottom = height * (1 - INSET)
       const rowHeight = (bottom - top) / (ROWS - 1)
-      const amplitude = rowHeight * 9
+      const amplitude = rowHeight * AMPLITUDE_ROWS
       const shown = rowsShown(now)
       const pointAt = (week: number, u: number) => ({
         x: x0 + (x1 - x0) * u,
@@ -160,7 +159,7 @@ export function ActivityDrawing() {
 
       // The settled layer: every week in its resting style, oldest first. Each week is filled before it is
       // stroked, so newer weeks hide the older lines behind them.
-      const key = `${canvas.width}x${canvas.height}|${top}|${bottom}|${shown}|${palette.ink}|${palette.fill}|${palette.cobalt}`
+      const key = `${canvas.width}x${canvas.height}|${shown}|${palette.ink}|${palette.fill}|${palette.cobalt}`
       if (key !== layerKey) {
         layerKey = key
         layer.width = canvas.width
@@ -195,14 +194,19 @@ export function ActivityDrawing() {
         ctx.stroke()
 
         const week = ACTIVITY_WEEKS[hot.week]
-        // The dot travels with the line, then rests at the hovered day.
-        const dot = progress < 1 ? pointAt(hot.week, progress) : pointAt(hot.week, (hot.day + 0.5) / 7)
-        const px = dot.x
-        const py = dot.y
-        ctx.fillStyle = palette.cobalt
-        ctx.beginPath()
-        ctx.arc(px, py, progress < 1 ? 2.6 : 2.4, 0, Math.PI * 2)
-        ctx.fill()
+        const rest = pointAt(hot.week, (hot.day + 0.5) / 7)
+        if (progress === 1) {
+          // The hovered day: an accent dot with a ring in the blend's neutral colour (the page, once blended), so it
+          // stays visible over the other lines.
+          ctx.fillStyle = palette.fill
+          ctx.beginPath()
+          ctx.arc(rest.x, rest.y, DAY_DOT + DAY_RING, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.fillStyle = palette.cobalt
+          ctx.beginPath()
+          ctx.arc(rest.x, rest.y, DAY_DOT, 0, Math.PI * 2)
+          ctx.fill()
+        }
 
         const contributions = week.days.reduce<number>((sum, count) => sum + (count ?? 0), 0)
         const day = week.days[hot.day]
@@ -215,8 +219,6 @@ export function ActivityDrawing() {
         }`
         tipLines[2].style.color = palette.cobalt
 
-        // The readout anchors to the hovered day's point, not to the travelling dot.
-        const rest = pointAt(hot.week, (hot.day + 0.5) / 7)
         // Shown first: a hidden tip has no layout box to measure.
         tip.style.display = 'block'
         const { left, top } = clampTip({
@@ -270,8 +272,6 @@ export function ActivityDrawing() {
       draw(performance.now())
     })
     resizeObserver.observe(canvas)
-    const band = host.querySelector('[data-activity-band]')
-    if (band) resizeObserver.observe(band)
 
     const onTheme = () => {
       palette = readPalette(canvas)

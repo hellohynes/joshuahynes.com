@@ -8,7 +8,7 @@ export function Home() {
   return (
     <div className="relative flex min-h-dvh flex-col px-[clamp(1.5rem,6.8vw,6rem)]">
       <SiteHeader section={null} />
-      <main id="main" tabIndex={-1} data-activity-band className="flex flex-1 flex-col justify-center py-12">
+      <main id="main" tabIndex={-1} className="flex flex-1 flex-col justify-center py-12">
         <h1 className="m-0 text-[15vw] font-medium md:text-[clamp(3rem,11vw,11rem)] leading-[0.9] tracking-[-0.05em] text-ink">
           {site.headline.map((line) => (
             <span key={line} className="block">
