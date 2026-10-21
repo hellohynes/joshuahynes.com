@@ -4,7 +4,19 @@ import type { Site } from './types.ts'
 export const site: Site = {
   name: 'Joshua Hynes',
   role: 'Design Director',
-  headline: ['Design leader.', 'Builds with AI.'],
+  headline: {
+    first: 'Design leader.',
+    verbs: [
+      'Building', 'Spelunking', 'Deep diving', 'Tinkering', 'Prototyping', 'Sketching', 'Wrangling',
+      'Untangling', 'Shipping', 'Exploring', 'Tuning', 'Weaving', 'Mapping', 'Orchestrating', 'Distilling',
+      'Remixing', 'Debugging', 'Composing', 'Iterating', 'Pairing', 'Refactoring', 'Whittling', 'Scaffolding',
+      'Probing', 'Questioning', 'Rehearsing', 'Conducting', 'Brewing', 'Forging', 'Carving', 'Folding',
+      'Stitching', 'Decoding', 'Curating', 'Hacking', 'Noodling', 'Charting', 'Surveying', 'Sharpening',
+      'Polishing', 'Steering', 'Tending', 'Pruning', 'Conjuring', 'Doodling', 'Foraging', 'Kneading',
+      'Hatching', 'Sanding', 'Riffing',
+    ],
+    rest: 'with AI.',
+  },
   intro: [
     'I’m ',
     { strong: 'Joshua Hynes' },

@@ -10,11 +10,8 @@ export function Home() {
       <SiteHeader section={null} compact />
       <main id="main" tabIndex={-1} className="flex flex-1 flex-col justify-center py-12">
         <h1 className="m-0 text-[15vw] font-medium md:text-[clamp(3rem,11vw,11rem)] leading-[0.9] tracking-[-0.05em] text-ink">
-          {site.headline.map((line) => (
-            <span key={line} className="block">
-              {line}
-            </span>
-          ))}
+          <span className="block">{site.headline.first}</span>
+          <span className="block">{`${site.headline.verbs[0]} ${site.headline.rest}`}</span>
         </h1>
       </main>
       <footer className="flex flex-col gap-3 pt-6 md:flex-row md:items-baseline md:justify-between md:gap-10">

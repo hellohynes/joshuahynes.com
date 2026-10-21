@@ -19,7 +19,7 @@ const validItem = (over: Partial<WorkItem> = {}): WorkItem => ({
 const validSite = (over: Partial<Site> = {}): Site => ({
   name: 'Joshua Hynes',
   role: 'Design Director',
-  headline: ['Design leader.', 'Builds with AI.'],
+  headline: { first: 'Design leader.', verbs: ['Building', 'Spelunking'], rest: 'with AI.' },
   intro: ['I am ', { strong: 'Joshua' }, '.'],
   history: [{ company: 'Dialpad', title: 'Director', dates: '2018–Present', logo: 'dialpad' }],
   contact: { email: 'me@example.com' },
@@ -102,9 +102,40 @@ describe('validateSite', () => {
     expect(problems[0]).toContain('contact.email')
   })
 
-  it('flags an empty headline array', () => {
-    const problems = validateSite(validSite({ headline: [] }))
-    expect(problems).toHaveLength(1)
-    expect(problems[0]).toContain('headline')
+  describe('headline', () => {
+    const headline = (over: Partial<Site['headline']>): Site => validSite({
+      headline: { first: 'Design leader.', verbs: ['Building', 'Spelunking'], rest: 'with AI.', ...over },
+    })
+
+    it.each([['first'], ['rest']] as const)('flags an empty %s', (field) => {
+      const problems = validateSite(headline({ [field]: '  ' }))
+      expect(problems).toHaveLength(1)
+      expect(problems[0]).toContain(`headline.${field}`)
+    })
+
+    it('flags a headline with no verbs', () => {
+      const problems = validateSite(headline({ verbs: [] }))
+      expect(problems).toHaveLength(1)
+      expect(problems[0]).toContain('headline.verbs')
+    })
+
+    it('flags a blank verb', () => {
+      const problems = validateSite(headline({ verbs: ['Building', ' '] }))
+      expect(problems).toHaveLength(1)
+      expect(problems[0]).toContain('headline.verbs[1]')
+    })
+
+    it('flags a verb longer than 16 characters but accepts exactly 16', () => {
+      expect(validateSite(headline({ verbs: ['Building', 'x'.repeat(16)] }))).toEqual([])
+      const problems = validateSite(headline({ verbs: ['Building', 'x'.repeat(17)] }))
+      expect(problems).toHaveLength(1)
+      expect(problems[0]).toContain('headline.verbs[1]')
+    })
+
+    it('flags a duplicate verb once per duplicate, ignoring case', () => {
+      const problems = validateSite(headline({ verbs: ['Building', 'Tuning', 'building', 'TUNING', 'Mapping'] }))
+      expect(problems).toHaveLength(2)
+      expect(problems.every((p) => p.includes('duplicate'))).toBe(true)
+    })
   })
 })

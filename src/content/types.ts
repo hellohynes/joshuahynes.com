@@ -40,7 +40,7 @@ export type Role = {
 export type Site = {
   name: string
   role: string
-  headline: string[]
+  headline: { first: string; verbs: string[]; rest: string }
   intro: IntroPart[]
   history: Role[]
   contact: { email: string }

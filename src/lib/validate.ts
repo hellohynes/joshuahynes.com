@@ -48,12 +48,40 @@ export function validateItems(items: readonly Item[]): string[] {
   return problems
 }
 
+const MAX_VERB_LENGTH = 16
+
+function validateHeadline(headline: Site['headline']): string[] {
+  const problems: string[] = []
+  for (const field of ['first', 'rest'] as const) {
+    if (!headline[field].trim()) problems.push(`site: headline.${field} is empty`)
+  }
+  if (headline.verbs.length === 0) problems.push('site: headline.verbs is empty')
+  const seen = new Set<string>()
+  const reported = new Set<string>()
+  for (const [i, verb] of headline.verbs.entries()) {
+    if (!verb.trim()) {
+      problems.push(`site: headline.verbs[${i}] is blank`)
+      continue
+    }
+    if (verb.length > MAX_VERB_LENGTH) {
+      problems.push(`site: headline.verbs[${i}] "${verb}" is longer than ${MAX_VERB_LENGTH} characters`)
+    }
+    const key = verb.toLowerCase()
+    if (seen.has(key) && !reported.has(key)) {
+      problems.push(`site: headline.verbs[${i}] "${verb}" is a duplicate`)
+      reported.add(key)
+    }
+    seen.add(key)
+  }
+  return problems
+}
+
 export function validateSite(site: Site): string[] {
   const problems: string[] = []
   for (const field of ['name', 'role'] as const) {
     if (!site[field].trim()) problems.push(`site: ${field} is empty`)
   }
-  if (site.headline.length === 0) problems.push('site: headline is empty')
+  problems.push(...validateHeadline(site.headline))
   if (site.intro.length === 0) problems.push('site: intro is empty')
   if (site.history.length === 0) problems.push('site: history is empty')
   if (!site.contact.email.trim()) problems.push('site: contact.email is empty')
