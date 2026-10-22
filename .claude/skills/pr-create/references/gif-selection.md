@@ -6,7 +6,8 @@ unless the user asks for a replacement; add one when an update has none.
 The GIF is required. Never publish a guessed, inaccessible, non-GIF or placeholder URL. If a validated GIF
 cannot be selected, stop before any push or PR mutation and say why. The user can supply a GIF URL or say
 to publish without one. Only that explicit instruction allows a PR with no GIF; record it in the handoff.
-A supplied URL gets the same validation (selection step 7); turn a Giphy page URL into the media form.
+A supplied URL gets the same validation (selection step 8); turn a Giphy page URL into the media form.
+The person check (step 7) does not apply to a GIF the user chose.
 
 ## Search angles
 
@@ -48,7 +49,13 @@ For a breaking change, use `careful warning`, `handle with care`, `proceed with 
    min(5, pool_size)`.
 6. Reject empty IDs and placeholders such as `XXXXX`, `path/to/gif`, example IDs, or a Giphy page URL.
    Use the clean form `https://media.giphy.com/media/<ID>/giphy.gif`.
-7. Validate it: `curl -sSL -o /dev/null -w '%{http_code} %{content_type}\n' "<url>"` must print
+7. Read the candidate's title from Giphy's oEmbed endpoint, which works from the ID alone:
+   `curl -sSL "https://giphy.com/services/oembed?url=https://giphy.com/gifs/<ID>"`, field `title`
+   (also `author_name`). Skip a candidate whose title or author names a real person, such as a "by
+   <person>" credit or a talk-show host. Show, studio, brand and character names are fine. Take the next
+   index in the pool, wrapping inside the first five, and repeat; when all five name a person, move to the
+   next five. An exhausted pool is a failed selection. Use the title for the alt text.
+8. Validate it: `curl -sSL -o /dev/null -w '%{http_code} %{content_type}\n' "<url>"` must print
    `200 image/gif`. If the check cannot run or fails, the selection failed; follow the rule above.
 
 Do not use robot, AI or automation-themed GIFs unless the PR is about those topics.

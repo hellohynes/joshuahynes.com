@@ -104,6 +104,8 @@ the number.
   merged source branch. It does not cover dirty work, unpublished commits or any other branch.
 - "Unpublished" means content found in no remote branch and not in `origin/$BASE`. Tests (b) and (c) delete
   a branch whose commit SHAs exist only locally but whose content is published; the report names them.
+- Keep scratch output in shell variables, not temp files. A script that contains a removal command can be
+  blocked by the harness's safety check, which stops the whole run before any step executes.
 - Report each skipped step with its reason.
 - Keep full SHAs from the evidence. Do not abbreviate them in the report.
 
