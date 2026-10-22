@@ -20,9 +20,8 @@ Use pnpm (`packageManager` pins the version) and Node from `.nvmrc`. Never npm o
 
 - Never edit on `main`. Work on `feat/`, `fix/`, `chore/` or `docs/` branches.
 - Commit, push and open PRs only when asked. Preserve unrelated changes in the working tree.
-- Commits run a Husky pre-commit hook (`lint-staged`: Oxlint on staged source, `pnpm check:agents` when
-  tooling files are staged). Fix a failure; never bypass it with `--no-verify`. CI repeats the full gates
-  on every PR.
+- Commits run a Husky pre-commit hook (`lint-staged`: Oxlint on staged source, then `pnpm check:agents`).
+  Fix a failure; never bypass it with `--no-verify`. CI repeats the full gates on every PR.
 - `vite.config.ts` must keep exactly one line containing `base: `, and no comment may contain that text
   (the deploy workflows rewrite it with `sed`).
 - Known working-tree noise, ignored when checking for a clean tree: `backup` (a gitlink with local

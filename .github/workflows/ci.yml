@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   checks:
-    name: Lint, test, build and content
+    name: CI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

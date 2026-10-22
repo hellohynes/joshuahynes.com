@@ -67,8 +67,8 @@ A piece with `draft: true` is routed, listed and rendered in development only (`
 
 ## Pull request checks and the commit hook
 
-- **CI** (`.github/workflows/ci.yml`) runs on every pull request: a frozen-lockfile install, then `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm check` and `pnpm check:agents`. It is separate from PR Preview, which only builds and publishes the preview. The workflow's name is `CI`, so a branch protection rule can require it.
-- **Pre-commit hook** (Husky, installed by `pnpm install` through the `prepare` script) runs `lint-staged` (`lint-staged.config.mjs`). It runs Oxlint on the staged `.ts`, `.tsx`, `.js` and `.mjs` files, and `pnpm check:agents` once when anything under `.agents/`, `.claude/`, `.codex/`, `AGENTS.md` or `scripts/check-agent-tooling*` is staged. A failure blocks the commit and leaves the changes staged. It does not run tests or the build; CI does. `git commit --no-verify` skips it.
+- **CI** (`.github/workflows/ci.yml`) runs on every pull request: a frozen-lockfile install, then `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm check` and `pnpm check:agents`. Its single job is named `CI`, which is the check name a branch protection rule requires. CI does not gate anything by itself: PR Preview and the production deploy run independently, so require `CI` in branch protection to block a merge on a failure.
+- **Pre-commit hook** (Husky, installed by `pnpm install` through the `prepare` script) runs `lint-staged` (`lint-staged.config.mjs`), which runs Oxlint on the staged `.js`, `.jsx`, `.mjs`, `.cjs`, `.ts`, `.tsx`, `.mts` and `.cts` files, and then `pnpm check:agents` on every commit. The agent check is not a lint-staged rule because lint-staged skips deleted files, and deleting a skill or its Claude copy breaks their parity. That check reads the working tree, not the index, so an unstaged copy can satisfy it; CI is the backstop. A failure blocks the commit and leaves the changes staged. The hook does not run tests or the build; CI does. `git commit --no-verify` skips it.
 
 ## Deploys and base paths
 

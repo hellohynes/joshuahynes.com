@@ -1,6 +1,5 @@
-// Runs on staged files at commit. Oxlint gets the staged source files; the agent tooling check ignores file
-// arguments, so it is a function and runs once whenever any tooling file is staged.
+// Runs Oxlint on the staged source files at commit. The agent tooling check runs from .husky/pre-commit
+// instead: lint-staged skips deleted files, and deleting a skill or its Claude copy breaks their parity.
 export default {
-  '*.{ts,tsx,js,mjs}': 'oxlint',
-  '{.agents/**,.claude/**,.codex/**,AGENTS.md,scripts/check-agent-tooling*}': () => 'pnpm check:agents',
+  '*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}': 'oxlint',
 }
