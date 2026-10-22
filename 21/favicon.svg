@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36" height="36" fill="none">
+  <!-- The JH glyph in a square: the square, minus the glyph's circle, plus the glyph itself, as one even-odd
+       path. The J and H are knocked out exactly as in the glyph (its path comes from the design, unchanged).
+       Black in a light browser, white in a dark one. -->
+  <style>
+    path { fill: #000; }
+    @media (prefers-color-scheme: dark) { path { fill: #fff; } }
+  </style>
+  <path fill-rule="evenodd" d="M0 0H36V36H0Z M18 0A18 18 0 1 1 18 36A18 18 0 1 1 18 0Z M18 0C11.0777 0 5.06957 3.90729 2.05843 9.63643H18.3973L16.2077 23.1981V23.1994C15.8181 25.7413 13.6221 27.6879 10.9723 27.6879C8.76729 27.6879 6.876 26.3404 6.07886 24.4234L9.13243 23.7921C9.55543 24.3463 10.2214 24.7037 10.9723 24.7037C12.0806 24.7037 13.005 23.9233 13.23 22.8831L14.8937 12.6501H0.808714C0.282857 14.3409 0 16.137 0 18C0 27.9411 8.05886 36 18 36C19.6984 36 21.3416 35.7647 22.8986 35.325L25.3684 20.0661H18.5014L19.0401 17.0524H25.8557L27.0566 9.63771H30.0703L26.1154 34.0701C31.9796 31.1027 36 25.0213 36 18C36 8.05886 27.9411 0 18 0Z"/>
+</svg>
