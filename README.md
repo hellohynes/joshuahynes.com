@@ -65,6 +65,11 @@ A piece with `draft: true` is routed, listed and rendered in development only (`
 
 `pnpm check` validates the content (ids, dates, colours, one to three `impact` points) and fails if any published piece, or `src/content/site.ts`, still contains a string starting with `TODO:`. The contact email in `site.ts` is set, so the check passes until a new placeholder is added. The production workflow (`.github/workflows/production.yml`) runs it, so placeholders cannot ship to production. The `deploy.yml` and `pr-preview.yml` workflows do not run it.
 
+## Pull request checks and the commit hook
+
+- **CI** (`.github/workflows/ci.yml`) runs on every pull request: a frozen-lockfile install, then `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm check` and `pnpm check:agents`. It is separate from PR Preview, which only builds and publishes the preview. The workflow's name is `CI`, so a branch protection rule can require it.
+- **Pre-commit hook** (Husky, installed by `pnpm install` through the `prepare` script) runs `lint-staged` (`lint-staged.config.mjs`). It runs Oxlint on the staged `.ts`, `.tsx`, `.js` and `.mjs` files, and `pnpm check:agents` once when anything under `.agents/`, `.claude/`, `.codex/`, `AGENTS.md` or `scripts/check-agent-tooling*` is staged. A failure blocks the commit and leaves the changes staged. It does not run tests or the build; CI does. `git commit --no-verify` skips it.
+
 ## Deploys and base paths
 
 Static hosts serve real files only, so the build writes a copy of the app shell for every route: `work/index.html`, `about/index.html`, `work/<id>/index.html` for each published piece, and `404.html` (see `vite-plugins/route-html.ts`). Unknown paths such as `/work/nope` fall through to the app's Not found view.

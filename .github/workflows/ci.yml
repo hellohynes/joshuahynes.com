@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint, test, build and content
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      # packageManager in package.json pins the pnpm version that Corepack downloads.
+      - name: Enable Corepack
+        run: corepack enable
+
+      # HUSKY=0 skips the git hook install that the prepare script runs.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          HUSKY: 0
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Check content
+        run: pnpm check
+
+      - name: Check agent tooling
+        run: pnpm check:agents
