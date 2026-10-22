@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/20/favicon.svg" />
+    <link rel="apple-touch-icon" href="/20/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Joshua Hynes</title>
+    <script>
+      // Apply a stored theme before first paint so the page does not flash.
+      try {
+        var t = localStorage.getItem('theme')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+      } catch (e) {
+        /* storage unavailable: fall back to the system preference */
+      }
+    </script>
+    <script type="module" crossorigin src="/20/assets/index-CgD6uSic.js"></script>
+    <link rel="stylesheet" crossorigin href="/20/assets/index-DmqogZuc.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
