@@ -1,0 +1,36 @@
+name: PR format
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-format-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: PR format
+    # Dependabot writes its own titles and branch names.
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      # The title and branch name reach the shell as environment variables, never interpolated into the script.
+      - name: Check the PR title
+        run: node scripts/check-format.mjs title "$PR_TITLE"
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+
+      - name: Check the branch name
+        run: node scripts/check-format.mjs branch "$PR_BRANCH"
+        env:
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}

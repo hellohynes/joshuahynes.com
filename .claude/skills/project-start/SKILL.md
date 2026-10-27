@@ -20,8 +20,10 @@ input: ask for the description.
    unset. Stop and ask when the tree is dirty (unless the user accepts carrying the changes) or the
    current branch is not `BASE_BRANCH` (unless the user says to branch from it).
 2. **Name the branch.** `{type}/{slug}`: `feat` by default; `fix`, `chore` or `docs` when the input
-   clearly says so. The slug is lowercase kebab-case, 3 to 5 meaningful words. Example:
-   `feat/contact-section`.
+   clearly says so (any Conventional Commit type is allowed). The slug is lowercase kebab-case, 3 to 5
+   meaningful words. Example: `feat/contact-section`. Check the name with
+   `node scripts/check-format.mjs branch "{branch}"` before creating it; the pre-commit hook and CI
+   enforce the same rule.
 3. **Apply** (skip in dry-run, where you only report the commands):
    - `git fetch origin`, then `git pull --ff-only origin "$BASE_BRANCH"` when on the base. A fetch or
      fast-forward failure stops before creating the branch. Never fall back to merge, rebase or reset.

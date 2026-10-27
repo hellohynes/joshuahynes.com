@@ -42,8 +42,9 @@ read-only refresh, not publication: confirm before any push or PR mutation.
    `HEAD_SHA` equal to the current HEAD, and a `BASE_SHA` equal to the refreshed base. Missing, stale or
    mismatched: stop with one action, run `pr-prep` again.
 6. **Title:** `type: description` in lowercase conventional form (`feat`, `fix`, `chore`, `docs`,
-   `refactor`, `test`), imperative, under about 70 characters, no ticket key. Keep an existing PR's title
-   unless asked.
+   `refactor`, `test`, `ci`, and the other Conventional Commit types), imperative, under about 70
+   characters, no ticket key. Check it with `node scripts/check-format.mjs title "<title>"`; the PR format
+   CI check enforces the same rule. Keep an existing PR's title unless asked.
 7. **Body:** one `## Summary` that states the problem and who it affects, then the solution, then short
    bullets of concrete changes. Add `## Notes` only for something the reviewer must act on or know, such
    as a setting to change. Remove any empty section entirely. Run `writing-help` in edit mode on the

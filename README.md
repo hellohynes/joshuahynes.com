@@ -21,6 +21,7 @@ Node 24 and `pnpm@10.34.6` (see `.nvmrc` and `package.json`).
 | `pnpm check` | Validate the content and fail on any `TODO:` placeholder (see below). |
 | `pnpm activity` | Refresh `src/data/activity.ts`, the data behind the home drawing (see below). Needs the `gh` CLI, signed in. |
 | `pnpm check:agents` | Verify the Claude and Codex agent tooling match (see Agent tooling). Not part of `pnpm check`. |
+| `pnpm check:format` | Check a commit message file, PR title or branch name against Conventional Commits: `pnpm check:format title "feat: add a thing"`, `branch [name]` or `commit-msg <file>`. |
 
 ## Content model
 
@@ -68,7 +69,9 @@ A piece with `draft: true` is routed, listed and rendered in development only (`
 ## Pull request checks and the commit hook
 
 - **CI** (`.github/workflows/ci.yml`) runs on every pull request: a frozen-lockfile install, then `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm check` and `pnpm check:agents`. Its single job is named `CI`, which is the check name a branch protection rule requires. CI does not gate anything by itself: PR Preview and the production deploy run independently, so require `CI` in branch protection to block a merge on a failure.
-- **Pre-commit hook** (Husky, installed by `pnpm install` through the `prepare` script) runs `lint-staged` (`lint-staged.config.mjs`), which runs Oxlint on the staged `.js`, `.jsx`, `.mjs`, `.cjs`, `.ts`, `.tsx`, `.mts` and `.cts` files, and then `pnpm check:agents` on every commit. The agent check is not a lint-staged rule because lint-staged skips deleted files, and deleting a skill or its Claude copy breaks their parity. That check reads the working tree, not the index, so an unstaged copy can satisfy it; CI is the backstop. A failure blocks the commit and leaves the changes staged. The hook does not run tests or the build; CI does. `git commit --no-verify` skips it.
+- **PR format** (`.github/workflows/pr-format.yml`) runs on every pull request, including when the title is edited, and checks the PR title and head branch name against Conventional Commits (`scripts/check-format.mjs`). Its job is named `PR format`, so it can be required in branch protection next to `CI`. Dependabot PRs are skipped.
+- **Pre-commit hook** (Husky, installed by `pnpm install` through the `prepare` script) first checks the branch name (`type/short-kebab-slug`; `main`, `master`, `gh-pages`, detached HEAD and `dependabot/` or `renovate/` branches are exempt), then runs `lint-staged` (`lint-staged.config.mjs`), which runs Oxlint on the staged `.js`, `.jsx`, `.mjs`, `.cjs`, `.ts`, `.tsx`, `.mts` and `.cts` files, and then `pnpm check:agents` on every commit. The agent check is not a lint-staged rule because lint-staged skips deleted files, and deleting a skill or its Claude copy breaks their parity. That check reads the working tree, not the index, so an unstaged copy can satisfy it; CI is the backstop. A failure blocks the commit and leaves the changes staged. The hook does not run tests or the build; CI does. `git commit --no-verify` skips it.
+- **Commit-msg hook** checks every commit message against Conventional Commits: a header like `type: description` or `type(scope): description` with one of `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert` (an optional `!` marks a breaking change), at most 100 characters, no trailing period, and a blank line before any body. It also rejects AI attribution (a `Co-Authored-By` trailer naming an assistant, or a "generated with" line), which `AGENTS.md` already forbids. Headers that git writes itself (`Merge ...`, `Revert "..."`, `fixup!`, `squash!`, `amend!`) pass. Branch names are checked the same way on commit and in CI.
 
 ## Deploys and base paths
 

@@ -20,8 +20,13 @@ Use pnpm (`packageManager` pins the version) and Node from `.nvmrc`. Never npm o
 
 - Never edit on `main`. Work on `feat/`, `fix/`, `chore/` or `docs/` branches.
 - Commit, push and open PRs only when asked. Preserve unrelated changes in the working tree.
-- Commits run a Husky pre-commit hook (`lint-staged`: Oxlint on staged source, then `pnpm check:agents`).
-  Fix a failure; never bypass it with `--no-verify`. CI repeats the full gates on every PR.
+- Commit messages, PR titles and branch names follow Conventional Commits: `type: description` for the
+  first two (`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`;
+  optional `(scope)` and `!`), `type/short-kebab-slug` for branches. Check one with
+  `pnpm check:format title "<text>"` (or `branch`).
+- Commits run Husky hooks: pre-commit checks the branch name, runs `lint-staged` (Oxlint on staged
+  source), then `pnpm check:agents`; commit-msg checks the message format. Fix a failure; never bypass it
+  with `--no-verify`. CI repeats the full gates and checks the PR title and branch name on every PR.
 - `vite.config.ts` must keep exactly one line containing `base: `, and no comment may contain that text
   (the deploy workflows rewrite it with `sed`).
 - Known working-tree noise, ignored when checking for a clean tree: `backup` (a gitlink with local
