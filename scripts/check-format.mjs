@@ -4,21 +4,28 @@
 //   node scripts/check-format.mjs title <text>        a PR title
 //   node scripts/check-format.mjs branch [name]       a branch name; the current branch when omitted
 import { execFileSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import { readFileSync, realpathSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 export const TYPES = ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'build', 'ci', 'chore', 'revert']
 
 const HEADER_MAX = 100
-const HEADER = /^(?<type>[a-z]+)(?:\((?<scope>[a-z0-9._/-]+)\))?!?: (?<description>\S.*)$/
-// Headers that git writes itself, which the author does not choose.
-const GIT_HEADER = /^(Merge |Revert "|(fixup|squash|amend)! )/
+// type, an optional (scope) of any text, an optional ! for a breaking change, a colon and a description.
+const HEADER = /^(?<type>[a-z]+)(?:\([^()]+\))?!?: (?<description>\S.*)$/
+// Headers that git or GitHub write themselves, which the author does not choose.
+const GIT_HEADER = /^(Merge |Revert "|Reapply "|Squashed commit of the following|(fixup|squash|amend)! )/
+const GITHUB_TITLE = /^(Revert|Reapply) "/
 const BRANCH = /^(?<type>[a-z]+)\/[a-z0-9]+(?:-[a-z0-9]+)*$/
-const BRANCH_EXEMPT = /^(main|master|gh-pages|HEAD|(dependabot|renovate)\/.+)$/
+// main-like branches, detached HEAD, bot branches, and branches that tools name themselves: Claude Code
+// worktrees (worktree-agent-<id>), Codex (codex/), Claude (claude/), spec worktrees (spec/) and GitHub's
+// revert button (revert-<number>-<branch>).
+const BRANCH_EXEMPT = /^(main|master|gh-pages|HEAD|worktree-.+|revert-\d+-.+|(dependabot|renovate|codex|claude|spec)\/.+)$/
+// Git's cut line: `git commit -v` puts the diff below it, and the commit-msg hook sees that diff.
+const SCISSORS = /^# -{24} >8 -{24}$/
 const AI_ATTRIBUTION = [
   /^co-authored-by:.*\b(claude|anthropic|codex|openai|copilot|chatgpt)\b/im,
-  /generated (with|by) .*\b(claude|codex|copilot|chatgpt)\b/i,
-  /\u{1F916}/u,
+  /^[\s\u{1F916}]*generated (with|by) .*\b(claude|codex|copilot|chatgpt)\b/imu,
+  /^\s*\u{1F916}\s*generated (with|by)\b/imu,
 ]
 
 function validateHeader(header) {
@@ -33,11 +40,15 @@ function validateHeader(header) {
 }
 
 export function validateTitle(title) {
-  return validateHeader(title.trim())
+  const trimmed = title.trim()
+  return GITHUB_TITLE.test(trimmed) ? [] : validateHeader(trimmed)
 }
 
 export function validateCommitMessage(text) {
-  const lines = text.split(/\r?\n/).filter((line) => !line.startsWith('#'))
+  let lines = text.split(/\r?\n/)
+  const cut = lines.findIndex((line) => SCISSORS.test(line))
+  if (cut >= 0) lines = lines.slice(0, cut)
+  lines = lines.filter((line) => !line.startsWith('#'))
   while (lines.length > 0 && lines[0].trim() === '') lines.shift()
   if (lines.length === 0) return ['The message is empty.']
 
@@ -79,4 +90,7 @@ function main([command, ...args]) {
   return 1
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) process.exit(main(process.argv.slice(2)))
+// realpath on both sides: a symlinked path must not make the check silently do nothing.
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
+  process.exit(main(process.argv.slice(2)))
+}

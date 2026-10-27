@@ -14,8 +14,9 @@ concurrency:
 jobs:
   format:
     name: PR format
-    # Dependabot writes its own titles and branch names.
-    if: github.actor != 'dependabot[bot]'
+    # A bot (Dependabot, Renovate) writes its own titles and branch names. This tests who opened the PR, not
+    # who triggered the run, so a person updating a bot's PR does not fail it.
+    if: github.event.pull_request.user.type != 'Bot'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
