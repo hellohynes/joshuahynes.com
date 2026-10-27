@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "check": "node scripts/check-content.mjs",
     "check:agents": "node scripts/check-agent-tooling.mjs",
+    "check:format": "node scripts/check-format.mjs",
     "prepare": "husky",
     "test": "vitest run --passWithNoTests",
     "contributions": "node scripts/update-contributions.mjs",

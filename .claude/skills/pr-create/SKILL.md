@@ -33,17 +33,20 @@ read-only refresh, not publication: confirm before any push or PR mutation.
      empty one (an empty value resets the list). When any of them ends with `gh auth git-credential`, the
      push may run as the active `gh` account: stop if that account cannot push and tell the user. In this
      repo `.git/config` resets the list to `osxkeychain` and the origin URL names `hellohynes`.
-3. Resolve `BASE_REF` (`origin/<default branch>`), run `git fetch origin`, capture `BASE_SHA` and
-   `HEAD_SHA`. If `git rev-list --count "$BASE_REF"..HEAD` is zero, report nothing to publish and stop.
+3. Check the branch name with `node scripts/check-format.mjs branch`; stop on a failure, because the PR
+   format CI check would reject it. Resolve `BASE_REF` (`origin/<default branch>`), run `git fetch origin`,
+   capture `BASE_SHA` and `HEAD_SHA`. If `git rev-list --count "$BASE_REF"..HEAD` is zero, report nothing to publish and stop.
 4. Look up an existing PR: `gh pr list --repo "$SLUG" --head "$BRANCH" --state all --json
    number,state,author,url,title,baseRefName,body`. The command must succeed; a failed lookup is unknown and
    blocks everything. An empty result means none. For an existing PR its live base is authoritative.
 5. Read the latest `pr-prep` report for this branch in `<date>/reports/`. Require `Verdict: Ready`, a
    `HEAD_SHA` equal to the current HEAD, and a `BASE_SHA` equal to the refreshed base. Missing, stale or
    mismatched: stop with one action, run `pr-prep` again.
-6. **Title:** `type: description` in lowercase conventional form (`feat`, `fix`, `chore`, `docs`,
-   `refactor`, `test`), imperative, under about 70 characters, no ticket key. Keep an existing PR's title
-   unless asked.
+6. **Title:** `type: description` in lowercase conventional form, imperative, no ticket key. The types are
+   `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore` and `revert`
+   (`TYPES` in `scripts/check-format.mjs`). Aim for about 70 characters; the check fails above 100 or on a
+   trailing period. Check it with `node scripts/check-format.mjs title "<title>"`; the PR format CI check
+   enforces the same rule. Keep an existing PR's title unless asked.
 7. **Body:** one `## Summary` that states the problem and who it affects, then the solution, then short
    bullets of concrete changes. Add `## Notes` only for something the reviewer must act on or know, such
    as a setting to change. Remove any empty section entirely. Run `writing-help` in edit mode on the
