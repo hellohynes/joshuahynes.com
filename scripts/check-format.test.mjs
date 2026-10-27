@@ -41,6 +41,10 @@ describe('validateCommitMessage', () => {
     expect(validateCommitMessage('fix: stop the drawing flicker\n\nThe canvas resized twice on load.\n')).toEqual([])
   })
 
+  it('accepts Windows line endings', () => {
+    expect(validateCommitMessage('fix: stop the flicker\r\n\r\nThe canvas resized twice.\r\n')).toEqual([])
+  })
+
   it('ignores comment lines that git adds to the editor message', () => {
     expect(validateCommitMessage('# Please enter a message\nfeat: add a thing\n# more\n')).toEqual([])
   })

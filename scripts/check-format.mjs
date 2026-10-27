@@ -37,7 +37,7 @@ export function validateTitle(title) {
 }
 
 export function validateCommitMessage(text) {
-  const lines = text.split('\n').filter((line) => !line.startsWith('#'))
+  const lines = text.split(/\r?\n/).filter((line) => !line.startsWith('#'))
   while (lines.length > 0 && lines[0].trim() === '') lines.shift()
   if (lines.length === 0) return ['The message is empty.']
 
