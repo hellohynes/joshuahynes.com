@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import type { Media } from '../../content/types.ts'
 import { useReducedMotion } from '../../figures/useFigureInput'
 import { assetUrl } from '../../lib/assets.ts'
-import { PAPER } from '../../lib/color.ts'
+import { readableText } from '../../lib/color.ts'
 
 const BASE = import.meta.env.BASE_URL
+
+/** The box a work picture shows until its file exists. */
+const PLACEHOLDER_BG = '#4a4a4a'
 
 /** Whether the element is on screen right now (not just once), so a video can pause when scrolled away. */
 function useOnScreen<T extends Element>() {
@@ -63,9 +66,9 @@ export function WorkMedia({ media, label, fit = 'cover', eager = false }: WorkMe
 
   if (!media) {
     return (
-      <div className="flex size-full items-center justify-center bg-[#4a4a4a]">
-        {/* paper, not muted: the muted grey is too low-contrast on this dark box in both themes */}
-        <span className="text-xl" style={{ color: PAPER }}>
+      <div className="flex size-full items-center justify-center" style={{ backgroundColor: PLACEHOLDER_BG }}>
+        {/* derived from the box, not the muted grey, which is too low-contrast on it in both themes */}
+        <span className="text-xl" style={{ color: readableText(PLACEHOLDER_BG) }}>
           {label}
         </span>
       </div>
