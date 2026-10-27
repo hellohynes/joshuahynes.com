@@ -6,7 +6,7 @@
   color-scheme: light;
   --bg: #ffffff;
   --ink: #161513;
-  --muted: #828696;
+  --muted: #6e7282; /* 4.78:1 on the white page; small muted text needs 4.5:1 */
   --rule: #c8cad2;
   --glyph: #303445;
   --accent: #b4491b;

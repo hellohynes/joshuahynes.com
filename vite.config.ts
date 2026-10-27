@@ -8,5 +8,7 @@ export default defineConfig({
   base: '/',
   test: {
     include: ['src/**/*.test.ts', 'vite-plugins/**/*.test.ts', 'scripts/**/*.test.mjs'],
+    // Vitest returns an empty string for CSS imports; the theme test reads the palette from index.css as text.
+    css: { include: [/src\/index\.css/] },
   },
 })
