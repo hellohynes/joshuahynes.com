@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Media } from '../../content/types.ts'
 import { useReducedMotion } from '../../figures/useFigureInput'
 import { assetUrl } from '../../lib/assets.ts'
+import { PAPER } from '../../lib/color.ts'
 
 const BASE = import.meta.env.BASE_URL
 
@@ -63,7 +64,10 @@ export function WorkMedia({ media, label, fit = 'cover', eager = false }: WorkMe
   if (!media) {
     return (
       <div className="flex size-full items-center justify-center bg-[#4a4a4a]">
-        <span className="text-xl text-muted">{label}</span>
+        {/* paper, not muted: the muted grey is too low-contrast on this dark box in both themes */}
+        <span className="text-xl" style={{ color: PAPER }}>
+          {label}
+        </span>
       </div>
     )
   }
