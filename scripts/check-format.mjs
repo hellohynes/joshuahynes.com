@@ -20,12 +20,16 @@ const BRANCH = /^(?<type>[a-z]+)\/[a-z0-9]+(?:-[a-z0-9]+)*$/
 // worktrees (worktree-agent-<id>), Codex (codex/), Claude (claude/), spec worktrees (spec/) and GitHub's
 // revert button (revert-<number>-<branch>).
 const BRANCH_EXEMPT = /^(main|master|gh-pages|HEAD|worktree-.+|revert-\d+-.+|(dependabot|renovate|codex|claude|spec)\/.+)$/
-// Git's cut line: `git commit -v` puts the diff below it, and the commit-msg hook sees that diff.
-const SCISSORS = /^# -{24} >8 -{24}$/
+// Git's cut line: `git commit -v` puts the diff below it, and the commit-msg hook sees that diff. The first
+// word is the comment character. Comment lines are dropped below on the default `#`, so a custom
+// core.commentChar is only handled for this cut line.
+const SCISSORS = /^\S+ -{24} >8 -{24}$/
+// A signature line may be quoted, bulleted or emphasised, and may start with the robot emoji.
+const SIGNATURE_PREFIX = String.raw`[\s>*_\-\u{1F916}️]*`
 const AI_ATTRIBUTION = [
   /^co-authored-by:.*\b(claude|anthropic|codex|openai|copilot|chatgpt)\b/im,
-  /^[\s\u{1F916}]*generated (with|by) .*\b(claude|codex|copilot|chatgpt)\b/imu,
-  /^\s*\u{1F916}\s*generated (with|by)\b/imu,
+  new RegExp(String.raw`^${SIGNATURE_PREFIX}generated (with|by) .*\b(claude|codex|copilot|chatgpt)\b`, 'imu'),
+  new RegExp(String.raw`^[\s>*_\-]*\u{1F916}️?\s*generated (with|by)\b`, 'imu'),
 ]
 
 function validateHeader(header) {
@@ -90,7 +94,14 @@ function main([command, ...args]) {
   return 1
 }
 
-// realpath on both sides: a symlinked path must not make the check silently do nothing.
-if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
-  process.exit(main(process.argv.slice(2)))
+// Realpath on both sides: a symlinked path must not make the check silently do nothing. A script path that
+// cannot be resolved (for example `node -`) means this module was imported, not run.
+function isMain() {
+  try {
+    return realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))
+  } catch {
+    return false
+  }
 }
+
+if (isMain()) process.exit(main(process.argv.slice(2)))
